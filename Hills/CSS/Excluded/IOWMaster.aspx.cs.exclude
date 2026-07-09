@@ -1,0 +1,831 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Ganini.Lib;
+using Resources;
+
+public partial class IOWMaster : System.Web.UI.Page
+{
+    #region Declaration
+    ProcessBus Bus = new ProcessBus();
+    List<EmployeeMasterMsg> EmpList = new List<EmployeeMasterMsg>();
+    List<IOWMsg> IOWList = new List<IOWMsg>();
+    List<IOWItemMsg> IOWItList = new List<IOWItemMsg>();
+   // List<StateMasterMsg> StateList = new List<StateMasterMsg>();
+    private static List<CompanyMsg> CmpList = new List<CompanyMsg>();
+    //List<IOWTypeMasterMsg> IOWTypeList = new List<IOWTypeMasterMsg>();
+    public static List<PackageMasterMsg> pklst = new List<PackageMasterMsg>();
+    public static List<TradeMasterMsg> Trlst = new List<TradeMasterMsg>();
+    public static List<ElementMasterMsg> elelst = new List<ElementMasterMsg>();
+    public static List<ElementMasterMsg> mklst = new List<ElementMasterMsg>();
+    private static List<ItemMsg> ITList = new List<ItemMsg>();
+    public static int DeleteIndex = 0;
+    public static int UpdateIndex = 0;
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    BaseClass BaseMsg = new BaseClass();
+    private Int32 WCompanyId = 0;
+    #endregion
+
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+           
+            LoadPackage();
+            LoadTrade();
+            LoadElement();
+            LoadCompany();
+            //LoadMake();
+            //AllClear(); scs 210816 why allclear with IOW seelction in all clear to run here
+           
+        }
+    }
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        
+        AllClear();
+        Pnlgv.Visible = false;
+        pnlAdd.Visible = false;
+        ddlCompany.SelectedIndex = 0;
+    }
+    protected void btnFilter_Click(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0)
+        {
+            LoadGridIOW(Convert.ToInt32(ddlCompany.SelectedValue));
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Location Not Selected" + "');", true);
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+        }
+    }
+    protected void ddlCompanyChanged(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0)
+        {
+            WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            Pnlgv.Visible = true;
+            pnlAdd.Visible = true;
+            AllClear();
+            //LoadGridIOW(WCompanyId);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Location Not Selected" + "');", true);
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+        }
+    }
+    protected void ddlItemChanged(object sender, EventArgs e)
+    {
+        if (ddlItem.SelectedIndex > 0)
+        {
+            Int32 WItemId = Convert.ToInt32(ddlItem.SelectedValue);
+            LoadddlItem();
+            ddlItem.SelectedValue = WItemId.ToString();
+            foreach (ItemMsg im in ITList)
+            {
+                if (im.ItemId == WItemId)
+                {
+                    txtItemCode.Text = im.ItemCode;
+                    txtItemUOM.Text = im.ItemUOM;
+                    chkIsItemImported.Checked = im.IsImported;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Item is Not Selected" + "');", true);
+        }
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (btnSave.Text.ToUpper() == "SAVE")
+        {
+            if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.CreatePermissionRestricted + "');", true);
+            }
+            else
+            {
+
+                if (IsValidSave() == 0)
+                {
+                    IOWSave();
+                }
+            }
+        }
+        else if (btnSave.Text.ToUpper() == "UPDATE")
+        {
+            if (!user.HasPermission(ProgramName, UserPermission.CanEdit.ToString()))
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.EditPermissionRestricted + "');", true);
+                AllClear();
+            }
+            else
+            {
+
+                if (IsValidSave() == 0)
+                {
+                    IOWSave();
+                }
+            }
+        }
+        else
+        {
+        }
+    }
+    protected void btnItemSave_Click(object sender, EventArgs e)
+    {
+       List<IOWItemMsg> IowItemLst = new List<IOWItemMsg>();
+       IowItemLst= LoadGridToList();
+       IOWItemInsertUpdate(IowItemLst);   //Save item
+    }
+    protected void btnAdd_Click(object sender, EventArgs e)
+    {
+        if (IsValidAdd() == 0)
+        {
+            if (btnAdd.Text == "Add")
+            {
+                btnAddclick();
+            }
+            else
+            {
+                btnAdd.Text = "Add";
+                btnUpdateClick();
+            }
+        }
+
+    }
+    #region GridEditing
+    protected void GrdIOW_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        string WCommandName = e.CommandName.ToString(); 
+        string WIOWCode = e.CommandArgument.ToString();
+        if (WCommandName == "UpdateIOW") //This it to Modify the IOW data
+        {
+            foreach (GridViewRow row in GrdIOWMaster.Rows)
+            {
+                if (((Label)row.FindControl("lblIOWCode")).Text == WIOWCode.ToString())
+                {
+                    string WPackage = ((Label)row.FindControl("lblPackageCode")).Text;
+                    string WTrade = ((Label)row.FindControl("lblTradeCode")).Text;
+                    string WElement = ((Label)row.FindControl("lblElementCode")).Text;
+
+                    txtIOWCode.Text = ((Label)row.FindControl("lblIOWCode")).Text;
+                    txtIOWName.Text = ((Label)row.FindControl("lblIOWName")).Text;
+                    txtIOWShortName.Text = ((Label)row.FindControl("lblIOWShortName")).Text;
+                    txtIOWUOM.Text = ((Label)row.FindControl("lblIOWUOM")).Text;
+                    txtIOWQuantity.Text = ((Label)row.FindControl("lblIOWQuantity")).Text;
+                    ChkIsCommonfactorsApplicable.Checked = ((CheckBox)row.FindControl("chkIsCommonFactorsApplicable")).Checked;
+                    ChkIsTemproryIOW.Checked = ((CheckBox)row.FindControl("chkTemproryIOW")).Checked;
+                    LoadPackage();
+                    LoadTrade();
+                    LoadElement();
+                    foreach (PackageMasterMsg pk in pklst)
+                    {
+                        if (pk.PackageCode == WPackage)
+                        {
+                            ddlPackage.SelectedValue = WPackage;
+                            break;
+                        }
+                    }
+                    foreach (TradeMasterMsg trd in Trlst)
+                    {
+                        if (trd.TradeCode == WTrade)
+                        {
+                            ddlTrade.SelectedValue = WTrade;
+                            break;
+                        }
+                    }
+                    foreach (ElementMasterMsg em in elelst)
+                    {
+                        if (em.ElementCode == WElement)
+                        {
+                            ddlElement.SelectedValue = WElement;
+                        }
+                    }
+                    btnSave.Text = "Update";
+                    Pnlgv.Visible = false;
+                    txtIOWCode.Enabled = false;
+                    break;
+                }
+            }
+        }
+        else //This it to Show IOW Item Data for further action
+        {
+            // IOWItem to be shown
+            WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            IOWItemFetch(WCompanyId, WIOWCode);
+           
+        }
+
+        
+
+    }
+
+    protected void grdIOWItem_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        string WCommandName = e.CommandName.ToString();
+        string WItemId = e.CommandArgument.ToString();
+         txtGridItemId.Text = ""; // initialise txtGridItemId selected
+        if (WCommandName == "IOWItemMod")
+        {
+            txtGridItemId.Text = WItemId;
+            foreach (GridViewRow row in grdIOWItem.Rows)
+            {
+                if (((Label)row.FindControl("lblItemId")).Text == WItemId)
+                {
+                    txtIOWcd.Text = ((Label)row.FindControl("lblIOWCode")).Text;
+                    txtIOWNm.Text = ((Label)row.FindControl("lblIOWName")).Text;
+                    LoadddlItem();
+                    ddlItem.SelectedValue=WItemId;
+                    txtItemQty.Text = ((Label)row.FindControl("lblItemQty")).Text;
+                    txtWastage.Text = ((Label)row.FindControl("lblWastage")).Text;
+                    txtItemUOM.Text = ((Label)row.FindControl("lblItemUOM")).Text;
+                    btnAdd.Text = "Update";
+                    Pnlgv.Visible = false;
+                    DelIOWItem(txtGridItemId.Text);  // delet the item in grid as it is moved for modification
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // delete IOWItem
+            DelIOWItem(WItemId);
+
+        }
+
+
+
+    }
+    #endregion
+    #endregion
+    #region Methods
+    #region IOW
+    private void LoadCompany()
+    {
+        CmpList = Bus.CompanyMasterSelect();
+        if (BaseMsg.IsAdmin == false)
+        {
+            CmpList = (from cmp in CmpList where cmp.CompanyId == BaseMsg.CompanyId select cmp).ToList();
+        }
+        if (CmpList != null && CmpList.Count > 0)
+        {
+            ddlCompany.DataSource = CmpList;
+            ddlCompany.DataBind();
+            ddlCompany.Items.Insert(0, "--Select Please--");
+            ddlCompany.SelectedIndex = 0;
+            if (CmpList.Count == 1)
+            {
+                ddlCompany.SelectedIndex = 1;
+                ddlCompany.Enabled = false;
+                WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+                LoadGridIOW(WCompanyId);
+            }
+            else
+            {
+                ddlCompany.Enabled = true;
+            }
+
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrCompanyData + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+        txtIOWCode.Enabled = true;
+    }
+    private void LoadPackage()
+    {
+        string EmpCode = BaseMsg.EmployeeCode;
+        PackageMasterMsg pkmsg = new PackageMasterMsg();
+        pkmsg.Flag = "R";
+        pklst = Bus.MasCRAMPackageInsertandUpdate(pkmsg);
+        if (pklst != null && pklst.Count > 0)
+        {
+            ddlPackage.DataSource = pklst;
+            ddlPackage.DataBind();
+            ddlPackage.Items.Insert(0, "--Select Please--");
+            ddlPackage.SelectedIndex = 0;
+            ddlPackage.Enabled = true;
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "IOW Package master Not Available" + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+        
+    }
+    private void LoadTrade()
+    {
+        string EmpCode = BaseMsg.EmployeeCode;
+        TradeMasterMsg trmsg = new TradeMasterMsg();
+        trmsg.Flag = "R";
+        Trlst = Bus.MasCRAMTradeInsertUpdate(trmsg);
+        if (Trlst != null && Trlst.Count > 0)
+        {
+            ddlTrade.DataSource = Trlst;
+            ddlTrade.DataBind();
+            ddlTrade.Items.Insert(0, "--Select Please--");
+            ddlTrade.SelectedIndex = 0;
+            ddlTrade.Enabled = true;
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "IOW Trade master Not Available" + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+
+    }
+    private void LoadElement()
+    {
+        string EmpCode = BaseMsg.EmployeeCode;
+        ElementMasterMsg elmsg = new ElementMasterMsg();
+        elmsg.Flag = "R";
+        elelst = Bus.MasCRAMElementInsertUpdate(elmsg);
+        if (elelst != null && elelst.Count > 0)
+        {
+            ddlElement.DataSource = elelst;
+            ddlElement.DataBind();
+            ddlElement.Items.Insert(0, "--Select Please--");
+            ddlElement.SelectedIndex = 0;
+            ddlElement.Enabled = true;
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "IOW Package master Not Available" + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+
+    }
+    private void LoadGridIOW(Int32 TemCompanyId)//To load data into grid.
+    {
+        IOWMsg iow = new IOWMsg();
+        iow.CompanyId = TemCompanyId;
+        iow.Flag = "R";
+        IOWList = Bus.MasIOWInsertUpdate(iow);
+        IOWFilter(IOWList);
+    }
+    private void IOWFilter(List<IOWMsg> IOwlst)
+    {
+
+        List<IOWMsg> FIOWList = new List<IOWMsg>();
+        if (txtFilter.Text.Trim().Length == 0)
+        {
+            FIOWList = IOwlst.ToList();
+        }
+        else
+        {
+            foreach (IOWMsg cm in IOwlst)
+            {
+                if (cm.IOWName.ToUpper().Contains(txtFilter.Text.Trim().ToUpper()))
+                {
+                    FIOWList.Add(cm);
+                }
+            }
+        }
+        if (IOwlst.Count == 0)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No IOW for the Filter Found .." + "');", true);
+            FIOWList = IOwlst.ToList();
+        }
+        GrdIOWMaster.DataSource = "";
+        GrdIOWMaster.DataSource = FIOWList;
+        GrdIOWMaster.DataBind();
+        Pnlgv.Visible = true;
+        pnlAdd.Visible = true;
+        pnlIOWItem.Visible = false;
+        pnlIOWitemAdd.Visible = false;
+    }
+    private void IOWSave()
+    {
+        WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        IOWMsg Cmp = new IOWMsg();
+        if (btnSave.Text.ToUpper() == "SAVE")
+        {
+            Cmp.Flag = "I";
+            Cmp.IsActive = true;
+        }
+        else
+        {
+            Cmp.Flag = "U";
+            Cmp.IsActive = Cmp.IsActive;
+        }
+        Cmp.CompanyId = Convert.ToInt32(ddlCompany.SelectedValue); //WCompanyId;
+        Cmp.PackageCode = ddlPackage.SelectedValue; //scs 220217 introduced
+        Cmp.TradeCode = ddlTrade.SelectedValue;
+        Cmp.ElementCode = ddlElement.SelectedValue;
+
+        Cmp.IOWCode = txtIOWCode.Text.Trim();
+        Cmp.IOWName = txtIOWName.Text.Trim();
+        Cmp.IOWUOM = txtIOWUOM.Text.Trim();
+        Cmp.IOWShortName = txtIOWShortName.Text.Trim();
+        Cmp.IOWQuantity = Convert.ToDouble(txtIOWQuantity.Text.Trim());
+        Cmp.IsCommonFactorsApplicable = ChkIsCommonfactorsApplicable.Checked;
+        Cmp.IsTemproryIOW = ChkIsTemproryIOW.Checked;
+
+
+
+        Cmp.CreatedBy = BaseMsg.EmployeeCode;
+        IOWList = Bus.MasIOWInsertUpdate(Cmp);
+        //Output Dispay
+        foreach (IOWMsg cmp in IOWList)
+        {
+            if (cmp.Result == "0")
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.SuccessFullySaved + "');", true);
+                AllClear();
+                //pnlPendind.Enabled = false;
+                txtIOWCode.Enabled = true;
+                btnSave.Text = "Save";
+                break;
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + cmp.Result + "');", true);
+                break;
+            }
+        }
+    }
+    #endregion
+
+    #region IOWItem
+    private void LoadddlItem()//To load data into grid.
+    {
+        if (ddlCompany.SelectedIndex > 0) //&& ddlItemCategory.SelectedIndex > 0 && ddlItemSubCategory.SelectedIndex > 0)
+        {
+            ItemMsg Cmp = new ItemMsg();
+            Cmp.Flag = "R";
+            Cmp.CreatedBy = BaseMsg.EmployeeCode;
+            Cmp.CompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            //if (ddlItemCategory.SelectedIndex == 0)
+            //{
+            Cmp.ItemCategoryId = 0;
+            //}
+            //else
+            //{
+            //    Cmp.ItemCategoryId = Convert.ToInt32(ddlItemCategory.SelectedValue);
+            //}
+            //if (ddlItemSubCategory.SelectedIndex == 0)
+            //{
+            Cmp.ItemSubCategoryId = 0;
+            //}
+            //else
+            //{
+            //     Cmp.ItemSubCategoryId = Convert.ToInt32(ddlItemSubCategory.SelectedValue);
+            //}
+           // List<ItemMsg> ITList = Bus.MasItemMasterInsertUpdateandDelete(Cmp);
+            ITList = Bus.MasItemMasterInsertUpdateandDelete(Cmp);
+            ddlLoadItem(ITList);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Pls Select Company " + "');", true);
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+        }
+    }
+    private void ddlLoadItem(List<ItemMsg> ITList)
+    {
+        ddlItem.DataSource = ITList;
+        ddlItem.DataBind();
+        ddlItem.Items.Insert(0, "--Select Please--");
+        ddlItem.SelectedIndex = 0;
+        ddlItem.Enabled = true;
+    }
+    private void IOWItemFetch(Int32 WCompanyId, string IOWCode)
+    {
+        pnlAdd.Visible = false;
+        Pnlgv.Visible = false;
+        pnlIOWItem.Visible = true;
+        pnlIOWitemAdd.Visible = true;
+        List<IOWItemMsg> IOWItlst = Bus.MasCRAMIOWItemSelectSp(WCompanyId, IOWCode);
+        LoadGridItem(IOWItlst);
+        LoadddlItem();
+        foreach (IOWItemMsg iwt in IOWItlst)
+        {
+            txtIOWcd.Text = iwt.IOWCode;
+            txtIOWNm.Text = iwt.IOWName;
+            break;
+        }
+        txtItemQty.Text = "";
+        txtItemUOM.Text = "";
+        txtWastage.Text = "";
+
+    }
+    private void LoadGridItem(List<IOWItemMsg> IOWItlst)
+    {
+        grdIOWItem.DataSource = "";
+        grdIOWItem.DataSource = IOWItlst;
+        grdIOWItem.DataBind();
+    }
+    private void btnAddclick()
+    { //Load grid to list and add the item and then reload the Grid
+        List<IOWItemMsg> IowItemLst = new List<IOWItemMsg>();
+        IowItemLst = LoadGridToList();
+        AddItemSelected(IowItemLst);
+        pnlItemAddClear();
+    }
+    private void btnUpdateClick()
+    {
+        // Load to list.. delete the Item in Grid .. Modify the list and reload to grid
+        List<IOWItemMsg> IowItemLst = new List<IOWItemMsg>();
+        IowItemLst = LoadGridToList();    
+        AddItemSelected(IowItemLst);
+        pnlItemAddClear();
+    }
+    private void pnlItemAddClear()
+    {
+        txtItemCode.Text = "";
+        txtItemUOM.Text = "";
+        chkIsItemImported.Checked = false;
+        ddlItem.SelectedIndex = 0;
+        //txtIOWcd.Text = "";
+        //txtIOWNm.Text = "";
+    }
+    private void AddItemSelected(List<IOWItemMsg> IowItemLst)
+    {
+        Int32 WItemId = Convert.ToInt32(ddlItem.SelectedValue);
+       
+        IOWItemMsg iwm = new IOWItemMsg();
+        iwm.CompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        iwm.IOWCode = txtIOWcd.Text;
+        iwm.IOWName = txtIOWNm.Text;
+        iwm.ItemId = Convert.ToInt32(ddlItem.SelectedValue);
+        // get ItemCode and IsImported for selected Item
+            LoadddlItem();
+            ddlItem.SelectedValue = WItemId.ToString();
+            foreach (ItemMsg im in ITList)
+            {
+                if (im.ItemId == WItemId)
+                {
+                    iwm.ItemName = im.ItemName;
+                    iwm.ItemCode = im.ItemCode; 
+                    iwm.ItemUOM = im.ItemUOM;
+                    iwm.IsImported = im.IsImported;
+                   
+                    break;
+                }
+            }
+        //
+        iwm.ItemQuantity = Convert.ToDouble(txtItemQty.Text);
+        iwm.Wastage = Convert.ToDouble(txtWastage.Text);
+        IowItemLst.Add(iwm);
+
+        LoadGridItem(IowItemLst);
+    }
+   
+    private void DelIOWItem(string WIOWItemID)
+    {
+        List<IOWItemMsg> IowItemLst = new List<IOWItemMsg>();
+        foreach (GridViewRow gvr in grdIOWItem.Rows)
+        {
+            if (((Label)gvr.FindControl("lblItemId")).Text == WIOWItemID)
+            {
+                //do not include the item in list and populate the grid --indicating item deleted
+            }
+            else
+            {
+                IOWItemMsg iwm = new IOWItemMsg();
+                iwm.CompanyId = Convert.ToInt32(((Label)gvr.FindControl("lblCompanyId")).Text);
+                iwm.IOWCode = (((Label)gvr.FindControl("lblIOWCode")).Text);
+                iwm.IOWName = (((Label)gvr.FindControl("lblIOWName")).Text);
+                iwm.ItemId = Convert.ToInt32(((Label)gvr.FindControl("lblItemId")).Text);
+                iwm.ItemCode = (((Label)gvr.FindControl("lblItemCode")).Text);
+                iwm.ItemName = (((Label)gvr.FindControl("lblItemName")).Text);
+                iwm.ItemUOM = (((Label)gvr.FindControl("lblItemUOM")).Text);
+                iwm.ItemQuantity = Convert.ToDouble(((Label)gvr.FindControl("lblItemQty")).Text);
+                iwm.Wastage = Convert.ToDouble(((Label)gvr.FindControl("lblWastage")).Text);
+                iwm.IsImported = (((CheckBox)gvr.FindControl("chkIsImported")).Checked);
+                IowItemLst.Add(iwm);
+            }
+
+        }
+        LoadGridItem(IowItemLst);
+    }
+    private List<IOWItemMsg> LoadGridToList()
+    {
+        List<IOWItemMsg> IOWItlst = new List<IOWItemMsg>();
+        foreach (GridViewRow gvr in grdIOWItem.Rows)
+        {
+            IOWItemMsg iwm = new IOWItemMsg();
+            iwm.CompanyId = Convert.ToInt32(((Label)gvr.FindControl("lblCompanyId")).Text);
+            iwm.IOWCode = (((Label)gvr.FindControl("lblIOWCode")).Text);
+            iwm.IOWName = (((Label)gvr.FindControl("lblIOWName")).Text);
+            iwm.ItemId = Convert.ToInt32(((Label)gvr.FindControl("lblItemId")).Text);
+            iwm.ItemCode = (((Label)gvr.FindControl("lblItemCode")).Text);
+            iwm.ItemName = (((Label)gvr.FindControl("lblItemName")).Text);
+            iwm.ItemUOM = (((Label)gvr.FindControl("lblItemUOM")).Text);
+            iwm.ItemQuantity = Convert.ToDouble(((Label)gvr.FindControl("lblItemQty")).Text);
+            iwm.Wastage = Convert.ToDouble(((Label)gvr.FindControl("lblWastage")).Text);
+            iwm.IsImported = (((CheckBox)gvr.FindControl("chkIsImported")).Checked);
+            IOWItlst.Add(iwm);
+        }
+        return IOWItlst;
+    }
+    private void IOWItemInsertUpdate(List<IOWItemMsg> it)
+    {
+        List<IOWItemMsg> IOWit = Bus.MasCRAMIOWItemInsertUpdate(it,BaseMsg.EmployeeCode);
+        foreach (IOWItemMsg iwm in IOWit)
+        {
+            if (iwm.Result.Substring(0, 1) == "0")
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.SuccessFullySaved + "');", true);
+                pnlAdd.Visible = false;
+                Pnlgv.Visible = false;
+                pnlIOWItem.Visible = true;
+                pnlIOWitemAdd.Visible = true;
+                btnSave.Text = "Save";
+                break;
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + iwm.Result + "');", true);
+                break;
+            }
+        }
+        //pnlIOWItem.Visible = false;
+        //pnlIOWitemAdd.Visible = false;
+    }
+
+
+    private void IOWItemsave()
+    {
+        pnlAdd.Visible = false;
+        Pnlgv.Visible = false;
+        pnlIOWItem.Visible = true;
+        pnlIOWitemAdd.Visible = true;
+    }
+    #endregion
+
+    #region Validation
+    private int IsValidSave()
+    {
+        int Error = 0;
+        string DisplayError = "";
+        if (txtIOWCode.Text.Trim() == "" || Convert.ToInt32(txtIOWCode.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + " IOWCode is Mandatory .";
+            //ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrorIOWCode + "');", true);
+            Error = 1;
+        }
+        if (txtIOWName.Text.Trim() == "" || Convert.ToInt32(txtIOWName.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + "--" + " IOW Name is Mandatory . ";
+            // ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrorIOWName + "');", true);
+            Error = 1;
+        }
+        if (txtIOWUOM.Text.Trim() == "" || Convert.ToInt32(txtIOWUOM.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + "--" + " UOM is Mandatory . ";
+
+            Error = 1;
+        }
+
+        if (txtIOWQuantity.Text.Trim() == "" || Convert.ToInt32(txtIOWQuantity.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + "--" + " IOW Quantity is Mandatory . ";
+            // ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrorIOWShortName + "');", true);
+            Error = 1;
+        }
+        //if (txtStandardRate.Text.Trim() == "" || Convert.ToInt32(txtStandardRate.Text.Trim().Length) == 0)
+        //{
+        //    DisplayError = DisplayError + "--" + " IOW Standard Rate is Mandatory . ";
+        //    // ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrorIOWShortName + "');", true);
+        //    Error = 1;
+        //}
+
+        try
+        {
+            Double Qty = Convert.ToDouble(txtIOWQuantity.Text);
+           
+        }
+        catch
+        {
+            DisplayError = DisplayError + "--" + " IOW Quantity to be numeric  . ";
+            Error = 1;
+        }
+       
+
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+    private int IsValidAdd()
+    {
+        int Error = 0;
+        string DisplayError = "";
+        if (ddlItem.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Item Is Mandatory pls Select .... ";
+            Error = 1;
+        }
+
+        if (txtItemQty.Text.Trim() == "" || Convert.ToInt32(txtItemQty.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + "--" + " Item Quantity is Mandatory . ";
+            Error = 1;
+        }
+        try
+        {
+            Double Qty = Convert.ToDouble(txtItemQty.Text);
+            if (Qty <= 0)
+            {
+                DisplayError = DisplayError + "--" + " Item Quantity to be numeric and greater than 0  . ";
+                Error = 1;
+            }
+        }
+        catch
+        {
+            DisplayError = DisplayError + "--" + " Item Quantity to be numeric  . ";
+            Error = 1;
+        }
+        try
+        {
+            if (txtWastage.Text == "")
+            {
+                txtWastage.Text = "0";
+            }
+            else
+            {
+                Double Wastage = Convert.ToDouble(txtWastage.Text);
+                if (Wastage < 0)
+                {
+                    DisplayError = DisplayError + "--" + " Wastage to be numeric and Positive number  . ";
+                    Error = 1;
+                }
+            }
+
+        }
+        catch
+        {
+            DisplayError = DisplayError + "--" + " Wastage to be numeric  . ";
+            Error = 1;
+        }
+        int DupItemKount = 0;
+        foreach (GridViewRow gvr in grdIOWItem.Rows)
+        {
+            if (((Label)gvr.FindControl("lblItemId")).Text == (ddlItem.SelectedValue))
+            {
+                DupItemKount = DupItemKount + 1;
+            }
+        }
+        if (DupItemKount > 0)
+        {
+            DisplayError = DisplayError + "--" + " Item Getting Added is Already Available in the Grid..Pls Select Some other Item  . ";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+
+
+    #endregion
+    #region Clear
+    public void AllClear()
+    {
+        txtIOWCode.Text = "";
+        txtIOWName.Text = "";
+        txtIOWUOM.Text = "";
+        //txtHSN.Text = "";
+        //txtStandardRate.Text = "0";
+        //txtNetWeight.Text = "0";
+        //txtGrossWeight.Text = "0";
+        //txtCGSTPercentage.Text = "0";
+        //txtSGSTPercentage.Text = "0";
+        //txtIGSTPercentage.Text = "0";
+        txtIOWCode.Enabled = true;
+        Pnlgv.Visible = true;
+        pnlAdd.Visible = true;
+        //pnlPendind.Enabled = true;
+        LoadGridIOW(WCompanyId); //SCS 210301
+        pnlPendind.Enabled = true;
+      
+    }
+    #endregion
+    #endregion        
+    }

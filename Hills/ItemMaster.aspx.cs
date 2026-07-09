@@ -1,0 +1,490 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Ganini.Lib;
+using Resources;
+
+public partial class ItemMaster : System.Web.UI.Page
+{
+    #region Declaration
+    ProcessBus Bus = new ProcessBus(); LibFunctions Lib = new LibFunctions();
+    List<EmployeeMasterMsg> EmpList = new List<EmployeeMasterMsg>();
+    List<ItemGroupMsg> ItemGroupList = new List<ItemGroupMsg>();
+    List<ItemCategoryMsg> ItemCatList = new List<ItemCategoryMsg>();
+    List<ItemSubCategoryMsg> SubCatList = new List<ItemSubCategoryMsg>();
+    List<ItemMsg> ITList = new List<ItemMsg>();
+
+    private static List<CompanyMessage> CmpList = new List<CompanyMessage>();
+   // private static List<GSTINState> GSTSt = new List<GSTINState>();
+    //List<ItemGroupTypeMasterMsg> ItemGroupTypeList = new List<ItemGroupTypeMasterMsg>();
+    //public static List<ItemGroupinStateMasterMsg> ItemGroupstateList = new List<ItemGroupinStateMasterMsg>();
+    public static int DeleteIndex = 0;
+    public static int UpdateIndex = 0;
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    BaseClass BaseMsg = new BaseClass();
+    private Int32 WCompanyId = 0;
+    #endregion
+
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+            LoadCompany();
+            
+        }
+    }
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        
+        AllClear();
+       // Pnlgv.Visible = false;
+        pnlAdd.Visible = false;
+        ddlCompany.Enabled = true;
+        ddlItemCategory.Enabled = true;
+        ddlItemSubCategory.Enabled = true; ;
+    }
+    protected void ddlCompanyChanged(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0)
+        {
+            LoadItemCategory();
+            LoadItemSubCategory();
+            LoadItemGroup();
+           
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Pls Select Company" + "');", true);
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+        }
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (btnSave.Text.ToUpper() == "SAVE")
+        {
+            if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.CreatePermissionRestricted + "');", true);
+            }
+            else
+            {
+
+                if (IsValidSave() == 0)
+                {
+                    ItemSave();
+                }
+            }
+        }
+        else if (btnSave.Text.ToUpper() == "UPDATE")
+        {
+            if (!user.HasPermission(ProgramName, UserPermission.CanEdit.ToString()))
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.EditPermissionRestricted + "');", true);
+                AllClear();
+            }
+            else
+            {
+
+                if (IsValidSave() == 0)
+                {
+                    ItemSave();
+                }
+            }
+        }
+        else
+        {
+        }
+    }
+  
+    protected void btnFilter_Click(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0 ) //&& ddlItemCategory.SelectedIndex >0 && ddlItemSubCategory.SelectedIndex >0)
+        {
+            LoadGridItem();
+            ddlCompany.Enabled = false;
+           // ddlItemCategory.Enabled = false;
+            //ddlItemSubCategory.Enabled = false;
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Pls Select Company " + "');", true);
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+        }
+    }
+    #region GridEditing
+    protected void GrdItem_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+     
+        int WItemId = Convert.ToInt32(e.CommandArgument.ToString());
+        foreach(GridViewRow row in GrdItemMaster.Rows)
+        {
+            if (((Label)row.FindControl("lblItemId")).Text == WItemId.ToString())
+            {
+               
+                txtItemCode.Text = ((Label)row.FindControl("lblItemCode")).Text;
+                txtItemName.Text = ((Label)row.FindControl("lblItemName")).Text;
+                txtItemId.Text = ((Label)row.FindControl("lblItemId")).Text;
+                txtItemUOM.Text = ((Label)row.FindControl("lblItemUOM")).Text;
+                txtItemMake.Text = ((Label)row.FindControl("lblItemMake")).Text;
+                ChkIsImported.Checked = (((CheckBox)row.FindControl("chkImported")).Checked);
+                chkIsActive.Checked = (((CheckBox)row.FindControl("chkActive")).Checked);
+
+                txtItemCategoryId.Text = (((Label)row.FindControl("lblItemCatId")).Text);
+                txtItemSubCategoryId.Text = (((Label)row.FindControl("lblItemSubCatId")).Text);
+                Int32 ItemGroupId = Convert.ToInt32(((Label)row.FindControl("lblItemGroupId")).Text);
+
+                string WItemCategoryName = ((Label)row.FindControl("lblItemCategoryName")).Text;
+                string WItemSubCategoryName = ((Label)row.FindControl("lblItemSubCategoryName")).Text;
+                string WItemGroupName = ((Label)row.FindControl("lblItemGroupName")).Text;
+
+
+                LoadItemCategory();
+                foreach (ItemCategoryMsg gs in ItemCatList)
+                {
+                    if (gs.ItemCategoryName == WItemCategoryName)
+                    {
+                        ddlItemCategory.SelectedValue = txtItemCategoryId.Text;
+                        break;
+                    }
+                }
+                LoadItemSubCategory();
+                foreach (ItemSubCategoryMsg gs in SubCatList)
+                {
+                    if (gs.ItemSubCategoryName == WItemSubCategoryName)
+                    {
+                        ddlItemSubCategory.SelectedValue = txtItemSubCategoryId.Text;
+                        break;
+                    }
+                }
+                LoadItemGroup();
+                foreach (ItemGroupMsg gs in ItemGroupList)
+                {
+                    if (gs.ItemGroupName == WItemGroupName)
+                    {
+                        ddlItemGroup.SelectedValue = ItemGroupId.ToString();
+                        break;
+                    }
+                }
+              
+                
+                chkIsActive.Visible = true;
+                btnSave.Text = "Update";
+                Pnlgv.Visible = false;
+                pnlAdd.Visible = true;
+                break;
+            }
+            
+        }
+
+        
+
+    }
+
+
+    #endregion
+    #endregion
+    #region Methods
+    private void LoadCompany()
+    {
+        //CmpList = Bus.CompanyMasterSelect();
+        //if (BaseMsg.IsAdmin == false)
+        //{
+        //    CmpList = (from cmp in CmpList where cmp.CompanyId == BaseMsg.CompanyId select cmp).ToList();
+        //}
+        CmpList = Lib.LoadCompany();
+        if (CmpList != null && CmpList.Count > 0)
+        {
+            ddlCompany.DataSource = CmpList;
+            ddlCompany.DataBind();
+            ddlCompany.Items.Insert(0, "--Select Please--");
+            ddlCompany.SelectedIndex = 0;
+            if (CmpList.Count == 1)
+            {
+                ddlCompany.SelectedIndex = 1;
+                LoadItemCategory();
+                LoadItemSubCategory();
+                LoadItemGroup();
+                LoadGridItem();
+            }
+            else
+            {
+                ddlCompany.Enabled = true;
+            }
+
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrCompanyData + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+
+    }
+    private void LoadItemCategory()
+    {
+        ItemCategoryMsg ItemCategory = new ItemCategoryMsg();
+        WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        ItemCategory.Flag = "R";
+        ItemCategory.CompanyId = WCompanyId;
+        ItemCatList = Bus.MasItemCategoryInsertUpdate(ItemCategory);
+
+        if (ItemCatList.Count > 0)
+        {
+            ddlItemCategory.DataSource = ItemCatList;
+            ddlItemCategory.DataBind();
+            ddlItemCategory.Items.Insert(0, "--Select Pls--");
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No Category Data Found" + "');", true);
+        }
+
+
+    }
+    private void LoadItemSubCategory()
+    {
+        ItemSubCategoryMsg ItemSubCategory = new ItemSubCategoryMsg();
+        WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        ItemSubCategory.Flag = "R";
+        ItemSubCategory.CompanyId = WCompanyId;
+        SubCatList = Bus.MasItemSubCategoryInsertUpdate(ItemSubCategory);
+
+        if (SubCatList.Count > 0)
+        {
+            ddlItemSubCategory.DataSource = SubCatList;
+            ddlItemSubCategory.DataBind();
+            ddlItemSubCategory.Items.Insert(0, "--Select Pls--");
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No Category Data Found" + "');", true);
+        }
+
+
+    }
+    private void LoadItemGroup()
+    {
+        ItemGroupMsg ItemGrp = new ItemGroupMsg();
+        WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        ItemGrp.Flag = "R";
+        ItemGrp.CompanyId = WCompanyId;
+        ItemGroupList = Bus.MasItemGroupInsertUpdateandDelete(ItemGrp);
+        if (ItemGroupList.Count > 0)
+        {
+
+            ddlItemGroup.DataSource = ItemGroupList;
+            ddlItemGroup.DataBind();
+            ddlItemGroup.Items.Insert(0, "--Select Please--");
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No Group Data Found" + "');", true);
+        }
+
+
+    }
+    private void LoadGridItem()//To load data into grid.
+    {
+        if (ddlCompany.SelectedIndex > 0 ) //&& ddlItemCategory.SelectedIndex > 0 && ddlItemSubCategory.SelectedIndex > 0)
+        {
+            ItemMsg Cmp = new ItemMsg();
+            Cmp.Flag = "R";
+            Cmp.CreatedBy = BaseMsg.EmployeeCode;
+            Cmp.CompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            //if (ddlItemCategory.SelectedIndex == 0)
+            //{
+                Cmp.ItemCategoryId = 0;
+            //}
+            //else
+            //{
+            //    Cmp.ItemCategoryId = Convert.ToInt32(ddlItemCategory.SelectedValue);
+            //}
+            //if (ddlItemSubCategory.SelectedIndex == 0)
+            //{
+                  Cmp.ItemSubCategoryId = 0;
+            //}
+            //else
+            //{
+            //     Cmp.ItemSubCategoryId = Convert.ToInt32(ddlItemSubCategory.SelectedValue);
+            //}
+            
+            ITList = Bus.MasItemMasterInsertUpdateandDelete(Cmp);
+            ItemFilter(ITList);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Pls Select Company " + "');", true);
+            Pnlgv.Visible = false;
+            pnlAdd.Visible = false;
+        }
+    }
+    private void ItemFilter(List<ItemMsg> cli)
+    {
+
+        List<ItemMsg> FCustList = new List<ItemMsg>();
+        if (txtFilter.Text.Trim().Length == 0)
+        {
+            FCustList = cli.ToList();
+        }
+        else
+        {
+            foreach (ItemMsg cm in cli)
+            {
+                if (cm.ItemName.ToUpper().Contains(txtFilter.Text.Trim().ToUpper()))
+                {
+                    FCustList.Add(cm);
+                }
+            }
+
+        }
+        if (FCustList.Count == 0)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No Item for the Filter Found .." + "');", true);
+            FCustList = cli.ToList();
+        }
+        GrdItemMaster.DataSource = "";
+        GrdItemMaster.DataSource = FCustList;
+        GrdItemMaster.DataBind();
+        Pnlgv.Visible = true;
+        pnlAdd.Visible = true;
+
+    }
+    private void ItemSave()
+    {
+        WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        ItemMsg Cmp = new ItemMsg();
+        if (btnSave.Text.ToUpper() == "SAVE")
+        {
+            Cmp.Flag = "I";
+            Cmp.ItemId = 0;
+            Cmp.IsActive = true;
+            
+        }
+        else
+        {
+            Cmp.Flag = "U";
+            Cmp.IsActive = chkIsActive.Checked;
+            Cmp.ItemId = Convert.ToInt32(txtItemId.Text);
+          
+        }
+        Cmp.CompanyId = WCompanyId;
+        Cmp.ItemGroupId = Convert.ToInt32(ddlItemGroup.SelectedValue);
+        Cmp.ItemCategoryId = Convert.ToInt32(ddlItemCategory.SelectedValue);
+        Cmp.ItemSubCategoryId = Convert.ToInt32(ddlItemSubCategory.SelectedValue);
+        Cmp.ItemCode = txtItemCode.Text;
+        Cmp.ItemName = txtItemName.Text;
+        if (txtItemMake.Text == null)
+        {
+            Cmp.ItemMake = "";
+        }
+        else
+        {
+            Cmp.ItemMake = txtItemMake.Text;
+        }
+        Cmp.ItemUOM = txtItemUOM.Text;
+        Cmp.IsImported = ChkIsImported.Checked;
+        Cmp.CreatedBy = BaseMsg.EmployeeCode;
+        ITList = Bus.MasItemMasterInsertUpdateandDelete(Cmp);
+        //Output Dispay
+        foreach (ItemMsg cmp in ITList)
+        {
+            if (cmp.Result == "0")
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.SuccessFullySaved + "');", true);
+                AllClear();
+                //pnlPendind.Enabled = false;
+                btnSave.Text = "Save";
+                break;
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + cmp.Result + "');", true);
+                break;
+            }
+        }
+    }
+
+    #endregion
+    #region Validation
+
+    private int IsValidSave()
+    {
+        int Error = 0;
+        string DisplayError = "";
+        if (txtItemName.Text.Trim() == "" || Convert.ToInt32(txtItemName.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + " ItemGroupCode is Mandatory .";
+            Error = 1;
+        }
+        if (txtItemCode.Text.Trim() == "" || Convert.ToInt32(txtItemCode.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + "--" + " ItemGroup Name is Mandatory . ";
+            Error = 1;
+        }
+        if (txtItemUOM.Text.Trim() == "" || Convert.ToInt32(txtItemUOM.Text.Trim().Length) == 0)
+        {
+            DisplayError = DisplayError + "--" + " Item UOM is Mandatory . ";
+            Error = 1;
+        }
+        if (ddlItemCategory.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Item Category is Mandatory . ";
+            Error = 1;
+        }
+        if (ddlItemSubCategory.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Item SubCategory is Mandatory . ";
+            Error = 1;
+        }
+        if (ddlItemGroup.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Item Group is Mandatory . ";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+ 
+
+    #endregion
+    #region Clear
+    public void AllClear()
+    {
+        txtItemCode.Text = "";
+        txtItemName.Text = "";
+        txtItemMake.Text = "";
+        txtItemUOM.Text = "";
+        txtItemId.Text = "0";
+        ChkIsImported.Checked = false;
+        ddlItemGroup.SelectedIndex = 0;
+        ddlItemCategory.SelectedIndex = 0;
+        ddlItemSubCategory.SelectedIndex = 0;
+        
+        Pnlgv.Visible = true;
+        pnlAdd.Visible = true;
+        pnlPendind.Enabled = true;
+        LoadGridItem(); //SCS 210301
+        pnlPendind.Enabled = true;
+        chkIsActive.Visible = false;
+
+    }
+    #endregion
+       
+    }

@@ -1,0 +1,930 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorCompanyCode" xml:space="preserve">
+    <value>Enter Company Code</value>
+  </data>
+  <data name="ErrorCompanyFlag" xml:space="preserve">
+    <value>Enter Company Type</value>
+  </data>
+  <data name="ErrorCompanyName" xml:space="preserve">
+    <value>Enter Company Name</value>
+  </data>
+  <data name="ErrorCompanyShortName" xml:space="preserve">
+    <value>Enter Company Shortname</value>
+  </data>
+  <data name="ErrParentCompany" xml:space="preserve">
+    <value>Select Parent Company</value>
+  </data>
+  <data name="SuccessFullySaved" xml:space="preserve">
+    <value>SuccessFully Saved</value>
+  </data>
+  <data name="ErrStateName" xml:space="preserve">
+    <value>Select  State Name</value>
+  </data>
+  <data name="EmployeeUpdatedSuccessfully" xml:space="preserve">
+    <value>Employee Updated Successfully</value>
+  </data>
+  <data name="ErrEmployeeDesignation" xml:space="preserve">
+    <value>Enter Designation</value>
+  </data>
+  <data name="ErrEmailId" xml:space="preserve">
+    <value>Enter Email Id</value>
+  </data>
+  <data name="ErrEmployeeCode" xml:space="preserve">
+    <value>Enter Employee Code</value>
+  </data>
+  <data name="ErrEmployeeName" xml:space="preserve">
+    <value>Enter Employee Name</value>
+  </data>
+  <data name="ErrEmployeePassword" xml:space="preserve">
+    <value>Enter Password</value>
+  </data>
+  <data name="CompanyDeletedSuccessfully" xml:space="preserve">
+    <value>Company Deleted Successfully</value>
+  </data>
+  <data name="CompanyUpdatedSuccessfully" xml:space="preserve">
+    <value>Company Updated Successfully</value>
+  </data>
+  <data name="EmployeeDeletedSuccessfully" xml:space="preserve">
+    <value>Employee Deleted Successfully</value>
+  </data>
+  <data name="SeriesDeletedSuccessfully" xml:space="preserve">
+    <value>Series Deleted Successfully</value>
+  </data>
+  <data name="SeriesUpdatedSuccessfully" xml:space="preserve">
+    <value>Series Updated Successfully</value>
+  </data>
+  <data name="ErrSeriesName" xml:space="preserve">
+    <value>Enter Series Name</value>
+  </data>
+  <data name="DeptDeletedSuccessfully" xml:space="preserve">
+    <value>Department Deleted Successfully</value>
+  </data>
+  <data name="DeptUpdatedSuccessfully" xml:space="preserve">
+    <value>Department Updated Successfully</value>
+  </data>
+  <data name="ErrDeptName" xml:space="preserve">
+    <value>Enter Department Name</value>
+  </data>
+  <data name="ErrDeptShortName" xml:space="preserve">
+    <value>Enter Department Short Name</value>
+  </data>
+  <data name="SalesCategoryDeletedSuccessfully" xml:space="preserve">
+    <value>Sales Category Deleted Successfully</value>
+  </data>
+  <data name="SalesCategoryUpdatedSuccessfully" xml:space="preserve">
+    <value>Sales Category Updated Successfully</value>
+  </data>
+  <data name="ErrSalesCategoryName" xml:space="preserve">
+    <value>Enter Sales Category Name</value>
+  </data>
+  <data name="ErrSalesCategoryShortName" xml:space="preserve">
+    <value>Enter Sales Category Short Name</value>
+  </data>
+  <data name="ErrCurrencyDays" xml:space="preserve">
+    <value>Enter Frequence Days</value>
+  </data>
+  <data name="ErrCurrencyName" xml:space="preserve">
+    <value>Enter Currency Name</value>
+  </data>
+  <data name="ErrCurrencyShortName" xml:space="preserve">
+    <value>Enter CurrencyShort Name</value>
+  </data>
+  <data name="ErrRemarks" xml:space="preserve">
+    <value>Enter Remarks</value>
+  </data>
+  <data name="ErrProductCategoryName" xml:space="preserve">
+    <value>Enter ProductCategory Name</value>
+  </data>
+  <data name="ErrProductCategoryShortName" xml:space="preserve">
+    <value>Enter ProductCategory Short Name</value>
+  </data>
+  <data name="CurrencyDeletedSuccessfully" xml:space="preserve">
+    <value>Currency Deleted Successfully</value>
+  </data>
+  <data name="CurrencyUpdatedSuccessfully" xml:space="preserve">
+    <value>Currency Updated Successfully</value>
+  </data>
+  <data name="ProductCategoryDeletedSuccessfully" xml:space="preserve">
+    <value>ProductCategory Deleted Successfully </value>
+  </data>
+  <data name="ProductCategoryUpdatedSuccessfully" xml:space="preserve">
+    <value>ProductCategory Updated Successfully</value>
+  </data>
+  <data name="ActNameDeletedSuccessfully" xml:space="preserve">
+    <value>ActName Deleted Successfully</value>
+  </data>
+  <data name="ActNameUpdatedSuccessfully" xml:space="preserve">
+    <value>ActName Updated Successfully</value>
+  </data>
+  <data name="ErrActName" xml:space="preserve">
+    <value>Enter or Select ActName</value>
+  </data>
+  <data name="ErrActRule" xml:space="preserve">
+    <value>Enter ActRule</value>
+  </data>
+  <data name="ErrChapter" xml:space="preserve">
+    <value>Enter Chapter</value>
+  </data>
+  <data name="ErrDescription" xml:space="preserve">
+    <value>Enter Description</value>
+  </data>
+  <data name="ErrHead" xml:space="preserve">
+    <value>Enter Head</value>
+  </data>
+  <data name="ErrSection" xml:space="preserve">
+    <value>Enter Section</value>
+  </data>
+  <data name="ErrActNameDual" xml:space="preserve">
+    <value>Select Either Existing Act or Enter New Act</value>
+  </data>
+  <data name="ActivityDeletedSuccessfully" xml:space="preserve">
+    <value>Activity Deleted Successfully</value>
+  </data>
+  <data name="ActivityUpdatedSuccessfully" xml:space="preserve">
+    <value>Activity Updated Successfully</value>
+  </data>
+  <data name="ErrActivityName" xml:space="preserve">
+    <value>Enter Activity Name</value>
+  </data>
+  <data name="ErrActNameselect" xml:space="preserve">
+    <value>Select Act Name</value>
+  </data>
+  <data name="ErrSeriesNameselect" xml:space="preserve">
+    <value>Select Series Name</value>
+  </data>
+  <data name="ErrDepartmentNameselect" xml:space="preserve">
+    <value>Select Department Name </value>
+  </data>
+  <data name="ErrNonCompliance" xml:space="preserve">
+    <value>Enter Non Compliance Y/N</value>
+  </data>
+  <data name="ErrRegularActivity" xml:space="preserve">
+    <value>Select Regular Activity</value>
+  </data>
+  <data name="ErrProductCategoryNameSelect" xml:space="preserve">
+    <value>Select ProductCategory Name</value>
+  </data>
+  <data name="ErrStateSpecific" xml:space="preserve">
+    <value>Select State Specific</value>
+  </data>
+  <data name="ErrGridActName" xml:space="preserve">
+    <value>Select Any Act Name from Grid</value>
+  </data>
+  <data name="RoleNotSaved" xml:space="preserve">
+    <value>Roles Not Saved</value>
+  </data>
+  <data name="SelectRole" xml:space="preserve">
+    <value>Select Atleast one Role</value>
+  </data>
+  <data name="ErrProgramRole" xml:space="preserve">
+    <value>Programs Name Updated Successfully</value>
+  </data>
+  <data name="ErrCompanyActname" xml:space="preserve">
+    <value>Company Name and Act Name required</value>
+  </data>
+  <data name="AccessPermissionRestricted" xml:space="preserve">
+    <value>Access Permission is restricted for the User</value>
+  </data>
+  <data name="CreatePermissionRestricted" xml:space="preserve">
+    <value>Create Permission is restricted for the User</value>
+  </data>
+  <data name="DeletePermissionRestricted" xml:space="preserve">
+    <value>Delete Permission is restricted for the User</value>
+  </data>
+  <data name="EditPermissionRestricted" xml:space="preserve">
+    <value>Edit Permission is restricted for the User</value>
+  </data>
+  <data name="PrintPermissionRestricted" xml:space="preserve">
+    <value>Print Permission is restricted for the User</value>
+  </data>
+  <data name="ActivityAssigned" xml:space="preserve">
+    <value>"Activity not Assigned" Click Edit to Update the Grid</value>
+  </data>
+  <data name="ErrEmpnotAssignedforcmp" xml:space="preserve">
+    <value>Employee not Created for Company</value>
+  </data>
+  <data name="ErrorGridSelect" xml:space="preserve">
+    <value>As Above "Activity Assigned"</value>
+  </data>
+  <data name="ErrGridSelect" xml:space="preserve">
+    <value>"Activity not Assigned" Click Edit to Update the Grid</value>
+  </data>
+  <data name="AccessPermissionSuccess" xml:space="preserve">
+    <value>Access permission made inactive Successfully</value>
+  </data>
+  <data name="ErrEditMode" xml:space="preserve">
+    <value>You are in edit mode, use edit control in the grid.</value>
+  </data>
+  <data name="ErrRoles" xml:space="preserve">
+    <value>There is no existing Roles. Please add Roles first.</value>
+  </data>
+  <data name="ErrUserName" xml:space="preserve">
+    <value>Enter User Name</value>
+  </data>
+  <data name="Errorstatename" xml:space="preserve">
+    <value>Enter State Name</value>
+  </data>
+  <data name="ErrStateShortName" xml:space="preserve">
+    <value>Enter State Short Name</value>
+  </data>
+  <data name="StateUpdatedSuccessfully" xml:space="preserve">
+    <value>Updated Successfully</value>
+  </data>
+  <data name="ErrAddress1" xml:space="preserve">
+    <value>Enter Address1</value>
+  </data>
+  <data name="ErrAddress2" xml:space="preserve">
+    <value>Enter Address2</value>
+  </data>
+  <data name="ErrAddress3" xml:space="preserve">
+    <value>Enter Address3</value>
+  </data>
+  <data name="ErrContactName" xml:space="preserve">
+    <value>Enter Contact Name</value>
+  </data>
+  <data name="ErrCountry" xml:space="preserve">
+    <value>Enter Country</value>
+  </data>
+  <data name="ErrCustomerCode" xml:space="preserve">
+    <value>Enter Customer Code</value>
+  </data>
+  <data name="ErrCustomerName" xml:space="preserve">
+    <value>Enter Customer Name</value>
+  </data>
+  <data name="ErrsalesCategory" xml:space="preserve">
+    <value>Select sales Category</value>
+  </data>
+  <data name="ErrSAPCustomerCode" xml:space="preserve">
+    <value>Enter SAPCustomer Code</value>
+  </data>
+  <data name="UpdatedSuccessfully" xml:space="preserve">
+    <value>Updated Successfully</value>
+  </data>
+  <data name="ErrCustomer" xml:space="preserve">
+    <value>Select Customer</value>
+  </data>
+  <data name="ErrDSRDate" xml:space="preserve">
+    <value>Select DSRDate</value>
+  </data>
+  <data name="ErrDsrNumber" xml:space="preserve">
+    <value>Enter DSR Number</value>
+  </data>
+  <data name="ErrEnquiryDate" xml:space="preserve">
+    <value>Select Enquiry Reference Date</value>
+  </data>
+  <data name="ErrEnquiryReference" xml:space="preserve">
+    <value>Enter Enquiry Reference</value>
+  </data>
+  <data name="InvalidDSRDate" xml:space="preserve">
+    <value>DSR Date should be less than or equal to todays date.</value>
+  </data>
+  <data name="InvalidEnquiryDate" xml:space="preserve">
+    <value>Enquiry Reference Date should be less than or equal to todays date.</value>
+  </data>
+  <data name="ErrCommission" xml:space="preserve">
+    <value>Enter Commission</value>
+  </data>
+  <data name="ErrCurrency" xml:space="preserve">
+    <value>Select Currency</value>
+  </data>
+  <data name="ErrCurrencyClause" xml:space="preserve">
+    <value>Enter Currency Clause</value>
+  </data>
+  <data name="ErrCustomerDrawingNumber" xml:space="preserve">
+    <value>Enter Customer Drawing Number</value>
+  </data>
+  <data name="ErrCustomerPartNumber" xml:space="preserve">
+    <value>Enter Customer Part Number</value>
+  </data>
+  <data name="ErrCustomerProject" xml:space="preserve">
+    <value>Enter Customer Project</value>
+  </data>
+  <data name="ErrDepartmentSequence" xml:space="preserve">
+    <value>Select DepartmentSequence</value>
+  </data>
+  <data name="ErrDestinationPort" xml:space="preserve">
+    <value>Enter Destination Port</value>
+  </data>
+  <data name="ErrDueDate" xml:space="preserve">
+    <value>Enter DueDate</value>
+  </data>
+  <data name="ErrEngineModel" xml:space="preserve">
+    <value>Engine Model</value>
+  </data>
+  <data name="ErrFreightTerms" xml:space="preserve">
+    <value>Enter Freight Terms</value>
+  </data>
+  <data name="ErrPaymentTerms" xml:space="preserve">
+    <value>Enter Payment Terms</value>
+  </data>
+  <data name="ErrPlantCode" xml:space="preserve">
+    <value>Select PlantCode</value>
+  </data>
+  <data name="ErrRanePartNumber" xml:space="preserve">
+    <value>Enter Rane Part Number</value>
+  </data>
+  <data name="ErrRMClause" xml:space="preserve">
+    <value>Enter RMClause</value>
+  </data>
+  <data name="ErrScenarioNumber" xml:space="preserve">
+    <value>Enter Scenario Number</value>
+  </data>
+  <data name="ErrSeries" xml:space="preserve">
+    <value>Select Series</value>
+  </data>
+  <data name="ErrVolume" xml:space="preserve">
+    <value>Enter Volume</value>
+  </data>
+  <data name="ErrWeekofSupply" xml:space="preserve">
+    <value>Enter Week of Supply</value>
+  </data>
+  <data name="ErrYear" xml:space="preserve">
+    <value>Enter Year</value>
+  </data>
+  <data name="ErrYoyDiscount" xml:space="preserve">
+    <value>Enter YoyDiscount</value>
+  </data>
+  <data name="ErrForRecord" xml:space="preserve">
+    <value>No Format for this Category-"Record"</value>
+  </data>
+  <data name="ErrDSRFromDate" xml:space="preserve">
+    <value>Select From Date</value>
+  </data>
+  <data name="ErrDSRToDatte" xml:space="preserve">
+    <value>Select To Date</value>
+  </data>
+  <data name="SelectCategory" xml:space="preserve">
+    <value>Select Category</value>
+  </data>
+  <data name="SelectCustomerCode" xml:space="preserve">
+    <value>Select Customer Code</value>
+  </data>
+  <data name="ErrQouteTimePeriod" xml:space="preserve">
+    <value>Enter Qoute Time Period</value>
+  </data>
+  <data name="SelectProduct" xml:space="preserve">
+    <value>Select Product</value>
+  </data>
+  <data name="SelectStatus" xml:space="preserve">
+    <value>Select Status</value>
+  </data>
+  <data name="ErrDesignation" xml:space="preserve">
+    <value>Enter Designation</value>
+  </data>
+  <data name="ErrFax" xml:space="preserve">
+    <value>Enter Fax Number</value>
+  </data>
+  <data name="ErrLandLine" xml:space="preserve">
+    <value>Enter LandLine Number</value>
+  </data>
+  <data name="ErrMobile" xml:space="preserve">
+    <value>Enter Mobile Number</value>
+  </data>
+  <data name="ErrSequenceName" xml:space="preserve">
+    <value>Enter Sequence Name</value>
+  </data>
+  <data name="ErrSubCurrencyname" xml:space="preserve">
+    <value>Enter Sub Currency Name</value>
+  </data>
+  <data name="ErrSubCurrencyshname" xml:space="preserve">
+    <value>Enter Sub Currency Short Name</value>
+  </data>
+  <data name="ErrDate" xml:space="preserve">
+    <value>Select The Date</value>
+  </data>
+  <data name="ErrDespatchDate" xml:space="preserve">
+    <value>Select DespatchDate</value>
+  </data>
+  <data name="ErrReceiptDate" xml:space="preserve">
+    <value>Select ReceiptDate</value>
+  </data>
+  <data name="MsgForGrdnotLoad" xml:space="preserve">
+    <value>Data not available for this Master.Please Add Data for the Master</value>
+  </data>
+  <data name="ErrSequenceNumber" xml:space="preserve">
+    <value>Enter Sequence Number</value>
+  </data>
+  <data name="Errdatevaidate" xml:space="preserve">
+    <value>You Must Select Despatch Date greater than the ReceiptDate</value>
+  </data>
+  <data name="ErrTerms" xml:space="preserve">
+    <value>Only one Terms for the DSR Part Number detail</value>
+  </data>
+  <data name="ErrCustomerClassification" xml:space="preserve">
+    <value>Select Customer Classification</value>
+  </data>
+  <data name="selectCompanyName" xml:space="preserve">
+    <value>Select Company Name</value>
+  </data>
+  <data name="ErrCustomerIssueNo" xml:space="preserve">
+    <value>Enter Customer Issue Number</value>
+  </data>
+  <data name="ErrRaneIssueNo" xml:space="preserve">
+    <value>Enter Rane Issue Number</value>
+  </data>
+  <data name="ErrRemarksDate" xml:space="preserve">
+    <value>Select Remarks Date </value>
+  </data>
+  <data name="ErrForgotPwd" xml:space="preserve">
+    <value>Enter Valid User Name</value>
+  </data>
+  <data name="ErrMail" xml:space="preserve">
+    <value>Enter To Address</value>
+  </data>
+  <data name="IsVaidMailAddress" xml:space="preserve">
+    <value>Enter Valid Mail Address</value>
+  </data>
+  <data name="SendSucessfully" xml:space="preserve">
+    <value>Your Mail Send Sucessfuly</value>
+  </data>
+  <data name="ErrDueEnqDate" xml:space="preserve">
+    <value>Due date must be greater than or equal to Enquiry Reference date</value>
+  </data>
+  <data name="ErrDevelopmentType" xml:space="preserve">
+    <value>Select Development Type</value>
+  </data>
+  <data name="ErrEngProdVolume" xml:space="preserve">
+    <value>Enter Eng Production Volume</value>
+  </data>
+  <data name="ErrRolename" xml:space="preserve">
+    <value>Enter Role Name</value>
+  </data>
+  <data name="Errcategorytype" xml:space="preserve">
+    <value>Select Category Type</value>
+  </data>
+  <data name="ErrQuoteDate" xml:space="preserve">
+    <value>Select Quote Date</value>
+  </data>
+  <data name="ErrQuoteStatus" xml:space="preserve">
+    <value>Select Quote Status</value>
+  </data>
+  <data name="DBSize" xml:space="preserve">
+    <value>Inform Administrator has Database size crossed 2.5 GB.</value>
+  </data>
+  <data name="ErrInteger" xml:space="preserve">
+    <value>Enter only Numbers in Engine Production Volume</value>
+  </data>
+  <data name="ErrintQouteTimePeriod" xml:space="preserve">
+    <value>Enter only Numbers in QouteTime Period</value>
+  </data>
+  <data name="ErrDateInteger" xml:space="preserve">
+    <value>Enter only Integers in Date</value>
+  </data>
+  <data name="ErrActuarecpDate" xml:space="preserve">
+    <value>Enter Actual Receipt Date</value>
+  </data>
+  <data name="ErrVolumeInteger" xml:space="preserve">
+    <value>Enter only Numbers in  Volume</value>
+  </data>
+  <data name="ErrYearInteger" xml:space="preserve">
+    <value>Enter only Numbers in  Year</value>
+  </data>
+  <data name="ErrActReceiptDate" xml:space="preserve">
+    <value>ActualReceipt Date shoud be Grater than or equal to Receipt Date</value>
+  </data>
+  <data name="ErrDespatch" xml:space="preserve">
+    <value>Despatch Date shoud be less than or equal to current Date</value>
+  </data>
+  <data name="ErrDespatchCal" xml:space="preserve">
+    <value>Despatch Date shoud be greater than or equal to current Receipt Date or Actual Receipt Date</value>
+  </data>
+  <data name="ErrorAuditClassificationTypeName" xml:space="preserve">
+    <value>Enter Audit Classification Type Name</value>
+  </data>
+  <data name="ErrorHierarchyNumber" xml:space="preserve">
+    <value>Enter Hierarchy Number</value>
+  </data>
+  <data name="ErrorIssueCategoryName" xml:space="preserve">
+    <value>Enter Issue Category Name</value>
+  </data>
+  <data name="ErrorIssueCategoryShName" xml:space="preserve">
+    <value>Enter Isse Category Sh Name</value>
+  </data>
+  <data name="ErrorColour" xml:space="preserve">
+    <value>Enter Colour Name</value>
+  </data>
+  <data name="ErrorRemarks" xml:space="preserve">
+    <value>Enter Remarks</value>
+  </data>
+  <data name="ErrorRiskCategoryName" xml:space="preserve">
+    <value>Enter Risk Category Name</value>
+  </data>
+  <data name="ErrorAddr1" xml:space="preserve">
+    <value>Enter Address1</value>
+  </data>
+  <data name="ErrorEnterpriseName" xml:space="preserve">
+    <value>Enter Enterprise Name</value>
+  </data>
+  <data name="ErrCharacter" xml:space="preserve">
+    <value>Enter only Characters</value>
+  </data>
+  <data name="ErrPositiveNumbers" xml:space="preserve">
+    <value>Enter only Positive Number</value>
+  </data>
+  <data name="ErrNumbers" xml:space="preserve">
+    <value>Enter only Numbers</value>
+  </data>
+  <data name="ErrorRiskImageFile" xml:space="preserve">
+    <value>Enter Risk Image File Name</value>
+  </data>
+  <data name="ErrEnterpriseName" xml:space="preserve">
+    <value>Select Enterprise Name</value>
+  </data>
+  <data name="ErrIsAuditorFalse" xml:space="preserve">
+    <value>IsAuditor is False Employee and Manager Name should not be equal</value>
+  </data>
+  <data name="ErrIsAuditorTrue" xml:space="preserve">
+    <value>For an Auditor Employee and Manager Name are to be same</value>
+  </data>
+  <data name="ErrEmail" xml:space="preserve">
+    <value>Enter Email Id</value>
+  </data>
+  <data name="ErrorNumber" xml:space="preserve">
+    <value>Value should be Numeric</value>
+  </data>
+  <data name="ErrPhone" xml:space="preserve">
+    <value>Enter Phone Number</value>
+  </data>
+  <data name="ErrImpactOfTheRisk" xml:space="preserve">
+    <value>Enter Impact Of The Risk</value>
+  </data>
+  <data name="ErrManagementAssessmentOfRisk" xml:space="preserve">
+    <value>Enter Management Assessment Of Risk</value>
+  </data>
+  <data name="ErrorAuditClassficationName" xml:space="preserve">
+    <value>Enter Audit Classfication Name</value>
+  </data>
+  <data name="ErrorColumnHeadingName" xml:space="preserve">
+    <value>Enter Column Heading Name</value>
+  </data>
+  <data name="ErrorProbabilityOfOccurence" xml:space="preserve">
+    <value>Enter Probability Of Occurence</value>
+  </data>
+  <data name="ErrorProcessClassificationName" xml:space="preserve">
+    <value>Enter Process Classification Name</value>
+  </data>
+  <data name="ErrorRiskName" xml:space="preserve">
+    <value>Enter Risk Definition</value>
+  </data>
+  <data name="ErrProbabilityOfNonDeduction" xml:space="preserve">
+    <value>Enter Probability Of Non Deduction</value>
+  </data>
+  <data name="ErrParentCompanyName" xml:space="preserve">
+    <value>Select Parent Company Name</value>
+  </data>
+  <data name="ErrPassword" xml:space="preserve">
+    <value>Enter Password</value>
+  </data>
+  <data name="ErrorColumnDecSize" xml:space="preserve">
+    <value>Enter Decimal Size</value>
+  </data>
+  <data name="ErrorColumnSize" xml:space="preserve">
+    <value>Enter Column Size</value>
+  </data>
+  <data name="ErrorCtrlQus" xml:space="preserve">
+    <value>Enter Control Questions</value>
+  </data>
+  <data name="ErrorERPPgmName" xml:space="preserve">
+    <value>Enter ERP Program Name</value>
+  </data>
+  <data name="ErrorRiskRelColName" xml:space="preserve">
+    <value>Enter Risk Related Column Name</value>
+  </data>
+  <data name="ErrorRootCause" xml:space="preserve">
+    <value>Enter Root Cause Master</value>
+  </data>
+  <data name="ErrorSOPReffile" xml:space="preserve">
+    <value>Browse SOPreference File Name</value>
+  </data>
+  <data name="ErrActivity" xml:space="preserve">
+    <value>Select Activity Name</value>
+  </data>
+  <data name="ErrNumber" xml:space="preserve">
+    <value>Enter only Numbers</value>
+  </data>
+  <data name="ErrorSeqNumber" xml:space="preserve">
+    <value>Enter Sequence Number</value>
+  </data>
+  <data name="ErrorResponsiblePerson" xml:space="preserve">
+    <value>Enter Responsible Person</value>
+  </data>
+  <data name="ErrReviewPerson" xml:space="preserve">
+    <value>Enter Review Person</value>
+  </data>
+  <data name="selectCompanyRisk" xml:space="preserve">
+    <value>Select Company Risk</value>
+  </data>
+  <data name="selectRiskCategory" xml:space="preserve">
+    <value>Select Risk Category</value>
+  </data>
+  <data name="selectSubProcessName" xml:space="preserve">
+    <value>Select Sub Process Name</value>
+  </data>
+  <data name="ErrFinancialYear" xml:space="preserve">
+    <value>Enter Financial Year</value>
+  </data>
+  <data name="ErrFromDate" xml:space="preserve">
+    <value>Select From Date</value>
+  </data>
+  <data name="ErrFromToDate" xml:space="preserve">
+    <value>From Date should be Less than the To Date</value>
+  </data>
+  <data name="ErrPositveNo" xml:space="preserve">
+    <value>Enter Only Positive Number</value>
+  </data>
+  <data name="ErrRisk" xml:space="preserve">
+    <value>Select Risk Definition</value>
+  </data>
+  <data name="ErrRiskCategory" xml:space="preserve">
+    <value>Select Risk Category</value>
+  </data>
+  <data name="ErrSubProcessName" xml:space="preserve">
+    <value>Enter Sub Process Name</value>
+  </data>
+  <data name="ErrToDate" xml:space="preserve">
+    <value>Select To Date</value>
+  </data>
+  <data name="ErrorRiskColData" xml:space="preserve">
+    <value>Enter Risk Column Data</value>
+  </data>
+  <data name="ErrorSequenceNo" xml:space="preserve">
+    <value>Enter Only Characters/ Numbers </value>
+  </data>
+  <data name="ErrRiskReated" xml:space="preserve">
+    <value>Select Risk Related Column Name</value>
+  </data>
+  <data name="ErrDeciNumberGreater" xml:space="preserve">
+    <value>Decimal Number Value is More than Actual Length of Variable</value>
+  </data>
+  <data name="ErrGrdSelect" xml:space="preserve">
+    <value>No Matching data avaiable for this subprocess and Activity</value>
+  </data>
+  <data name="ErrorAuditName" xml:space="preserve">
+    <value>Enter Audit Observation Name</value>
+  </data>
+  <data name="ErrorNoOfErrors" xml:space="preserve">
+    <value>Enter No of Errors</value>
+  </data>
+  <data name="ErrorObserReffile" xml:space="preserve">
+    <value>Browse Observation File</value>
+  </data>
+  <data name="ErrorSampleSize" xml:space="preserve">
+    <value>Enter Sample Size</value>
+  </data>
+  <data name="ErrorValueImpact" xml:space="preserve">
+    <value>Enter Value Impact</value>
+  </data>
+  <data name="ErrSampleErrors" xml:space="preserve">
+    <value>Sample Size should be greater than or equal to No of errors</value>
+  </data>
+  <data name="selectControlQuestion" xml:space="preserve">
+    <value>Select Control Question</value>
+  </data>
+  <data name="selectRating" xml:space="preserve">
+    <value>Select Rating</value>
+  </data>
+  <data name="selectRootCause" xml:space="preserve">
+    <value>Select Root Cause</value>
+  </data>
+  <data name="ErrMgmtResponse" xml:space="preserve">
+    <value>Enter Management Response</value>
+  </data>
+  <data name="ErrMgmtResponseatCorporate" xml:space="preserve">
+    <value>Enter Management Response Corporate</value>
+  </data>
+  <data name="ErrorComments" xml:space="preserve">
+    <value>Enter Comments</value>
+  </data>
+  <data name="MsgForDatanotLoad" xml:space="preserve">
+    <value>Data is not avaliable</value>
+  </data>
+  <data name="selectDesignation" xml:space="preserve">
+    <value>Select Designation</value>
+  </data>
+  <data name="selectResponsiblePerson" xml:space="preserve">
+    <value>Select Responsible Person</value>
+  </data>
+  <data name="selectReviewPerson" xml:space="preserve">
+    <value>Select Review Person</value>
+  </data>
+  <data name="ErrActivityName1" xml:space="preserve">
+    <value>Chose ActivityName</value>
+  </data>
+  <data name="ErrAuditFrmYr" xml:space="preserve">
+    <value>Chose Audit From Month  </value>
+  </data>
+  <data name="ErrAuditToYr" xml:space="preserve">
+    <value>Chose Audit To Month  </value>
+  </data>
+  <data name="ErrFinFrmYr" xml:space="preserve">
+    <value>Chose Finacial From Month  </value>
+  </data>
+  <data name="ErrFinToYr" xml:space="preserve">
+    <value>Chose Finacial To Month  </value>
+  </data>
+  <data name="ErrFiscalYear" xml:space="preserve">
+    <value>Chose Fiscal Year</value>
+  </data>
+  <data name="ErrProcessName" xml:space="preserve">
+    <value>Chose ProcessName</value>
+  </data>
+  <data name="ErrsubProcessName1" xml:space="preserve">
+    <value>Chose Sub Process Name</value>
+  </data>
+  <data name="ErrAuditor" xml:space="preserve">
+    <value>Atleast One Auditor Needs to be Selected</value>
+  </data>
+  <data name="ErrPerson" xml:space="preserve">
+    <value>Atleast One Person Needs to be Selected</value>
+  </data>
+  <data name="ErrorSOPName" xml:space="preserve">
+    <value>SOPName should not be empty</value>
+  </data>
+  <data name="ErrorSOPOwner" xml:space="preserve">
+    <value>SOPOwner should be there for a SOP</value>
+  </data>
+  <data name="ErrorERPReportName" xml:space="preserve">
+    <value>Report Name should have a valid Name</value>
+  </data>
+  <data name="ErrFileUpload" xml:space="preserve">
+    <value>Select File From Browse Button</value>
+  </data>
+  <data name="ErrFrmDat" xml:space="preserve">
+    <value>Enter From Date</value>
+  </data>
+  <data name="ErrMusDat" xml:space="preserve">
+    <value>Enter Muster Date</value>
+  </data>
+  <data name="ErrToDat" xml:space="preserve">
+    <value>Enter To Date</value>
+  </data>
+  <data name="SelectType" xml:space="preserve">
+    <value>Select Type</value>
+  </data>
+  <data name="ErrMusterDate" xml:space="preserve">
+    <value>Muster Date Should be Less than or Equal to From Date</value>
+  </data>
+  <data name="EntPositiveNumbers" xml:space="preserve">
+    <value>Enter Postive Numbers Only</value>
+  </data>
+  <data name="HandKg" xml:space="preserve">
+    <value>HandKg2 should be greater than HandKg1</value>
+  </data>
+  <data name="ShearKg" xml:space="preserve">
+    <value>ShearKg2 should be greater than ShearKg1</value>
+  </data>
+  <data name="ErrFromToSameDate" xml:space="preserve">
+    <value>Both Dates and Year are Same..Please Select Different</value>
+  </data>
+  <data name="ErrBonusPerc" xml:space="preserve">
+    <value>Enter the Bonus Percentage</value>
+  </data>
+  <data name="ErrInvoiceDate" xml:space="preserve">
+    <value>Selected Invoice Date Should be less than or equal to Current Date</value>
+  </data>
+  <data name="ErrNoData" xml:space="preserve">
+    <value>No Data Available</value>
+  </data>
+  <data name="ErrPackQty" xml:space="preserve">
+    <value>Enter Pack Qty</value>
+  </data>
+  <data name="ErrPackRate" xml:space="preserve">
+    <value>Enter Pack Rate</value>
+  </data>
+  <data name="ErrGrid" xml:space="preserve">
+    <value>Enter Invoice Qty for atleast one item</value>
+  </data>
+  <data name="ErrDCNo" xml:space="preserve">
+    <value>Select Invoice No</value>
+  </data>
+  <data name="ProcAlreadyCompleted" xml:space="preserve">
+    <value>Process is Already Completed for this Period or Furture Period is not Process</value>
+  </data>
+  <data name="ProcComplete" xml:space="preserve">
+    <value>Process Completed</value>
+  </data>
+  <data name="ErrCenterData" xml:space="preserve">
+    <value>Center data not Found</value>
+  </data>
+  <data name="ErrCompanyData" xml:space="preserve">
+    <value>Company data Not Found</value>
+  </data>
+</root>

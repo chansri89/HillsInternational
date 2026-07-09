@@ -1,0 +1,41 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.master" AutoEventWireup="true" CodeFile="CRAMIOWRateUpdate.aspx.cs" Inherits="CRAMIOWRateUpdate" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <asp:Panel ID="Panel2" runat="server" Height="16px" Width="870px"> </asp:Panel>
+<asp:Label ID="lblStatMas" runat="server" Align= "center" Text="CRAM IOW Rate Updation for Selected Year Month" 
+         width="570px" Font-Size ="12pt" Font-Bold="True" CssClass="XSmall"
+        style="text-align: center" Height="29px"></asp:Label>
+<div style="overflow:auto; height: 664px;">
+
+    <asp:panel ID="pnlAdd" runat="server" Width="639px" GroupingText="Select Rate Year Month" CssClass="XXSmall" Height="52px">
+    <table style="width: 91%"  align="left">
+            <tr>
+               <td  style="width: 70px">
+                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true" Font-Bold="true"   ></asp:Label>
+           </td>
+             <td style="width: 100px" >
+                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true"
+                    DataTextField="CompanyName" DataValueField="CompanyId"
+                    Width="248px"  AutoPostBack="true"    OnSelectedIndexChanged="ddlCompanyChanged" Height="16px"  >
+                 </asp:DropDownList>
+            </td>
+                <td style="width: 102px; text-align: left;">
+                    <asp:Label ID="lblRateMonth" runat="server" Text="Rate Month" DataTextField="RateYearMonth" DataValueField="RateYearMonth" 
+                       Font-Bold="True"></asp:Label>
+                </td>
+                <td style="width: 129px">
+                    <asp:DropDownList ID="ddlRateMonth" runat="server"  MaxLength="8"   ></asp:DropDownList>
+                </td>
+                               
+                <td style="width: 129px">
+                    <asp:Button ID="btnUpdate" runat="server" Text="Update"      onclick="btnUpdate_Click"  />
+                </td>
+                </tr>
+               
+        </table>
+    </asp:panel>
+    
+    </div>
+
+</asp:Content>
+

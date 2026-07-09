@@ -1,0 +1,102 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.master" AutoEventWireup="true" CodeFile="CRAMElementMaster.aspx.cs" Inherits="CRAMElementMaster" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <asp:Panel ID="Panel2" runat="server" Height="16px" Width="870px"> </asp:Panel>
+<asp:Label ID="lblStatMas" runat="server" Align= "center" Text="Element Master" 
+        Font ="arial" width="450px" Font-Size ="12pt" Font-Bold="True" Font-Names="arial" 
+        style="text-align: center" Height="26px"></asp:Label>
+<div style="overflow:auto; height: 664px;">
+    <%--<asp:Panel ID="Panel1" runat="server" Height="41px">
+        <asp:Button ID="btnAdd" runat="server" Text="Add"
+            Font-Names="arial" onclick="btnAdd_Click1" />
+    </asp:Panel>--%>
+    <asp:panel ID="Pnlgv" runat="server" Height="359px" Width="641px" 
+        GroupingText="Edit Element Grid" Font-Size="XX-Small">
+        <div style="overflow:auto; height:340px; width:631px">
+    <asp:GridView ID="GrdElementMaster" runat="server" CellPadding="3" 
+            Font-Size="X-Small" Width="611px" Font-Names="arial" AutoGenerateColumns="False" 
+            Height="102px" GridLines="Vertical" BackColor="White" BorderColor="#999999" 
+                BorderStyle="None" BorderWidth="1px" 
+                onrowcancelingedit="GrdElementMaster_RowCancelingEdit"                
+                onrowediting="GrdElementMaster_RowEditing" 
+                onrowupdating="GrdElementMaster_RowUpdating">
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
+        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
+            HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+         <asp:TemplateField HeaderText="ElementCode" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblElementCode" runat="server" Text='<%# Eval("ElementCode") %>'  Font-Names="arial" Font-Size="X-Small"></asp:Label></ItemTemplate>
+  <%--           <EditItemTemplate>
+            <asp:TextBox ID="txtElement" runat="server" Text='<%# Bind("ElementCode") %>' ReadOnly="true" Font-Names="arial" Font-Size="X-Small"></asp:TextBox></EditItemTemplate>--%>
+                <HeaderStyle Width="40px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Element Name" >
+            <ItemTemplate>
+            <asp:Label ID="lblElementName" runat="server" Text='<%# Eval("ElementName") %>'  Font-Names="arial" Font-Size="X-Small" Width="100px"></asp:Label></ItemTemplate>
+             <EditItemTemplate>
+            <asp:TextBox ID="txtElementName" runat="server" Text='<%# Bind("ElementName") %>'  Font-Names="arial" Font-Size="X-Small" Width="150px"></asp:TextBox></EditItemTemplate>
+                <HeaderStyle Width="150px" />
+                 <ItemStyle Width="150px" />
+            </asp:TemplateField>
+
+             <asp:CommandField HeaderText="Edit" ShowEditButton="True" >
+            <HeaderStyle Width="30px" />
+            </asp:CommandField>
+            <asp:CommandField HeaderText="Delete" ShowDeleteButton="True" Visible="False" >
+            <HeaderStyle Width="20px" />
+            </asp:CommandField>
+                    </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+    </div>
+    </asp:panel>
+    <br />
+    <asp:panel ID="pnlAdd" runat="server" Width="639px" GroupingText="Add Element" 
+        Font-Size="XX-Small" Height="52px">
+    <table style="width: 98%"  align="left">
+            <tr>
+
+                <td style="width: 102px; text-align: left;">
+                    <asp:Label ID="lblElementCode" runat="server" Text="Element Code"  
+                        Font-Names="arial" Font-Size="X-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="width: 129px">
+                    <asp:TextBox ID="txtElementcode" runat="server" Font-Names="arial" MaxLength="8" 
+                        Font-Size="X-Small"></asp:TextBox>
+                </td>
+                <td style="width: 102px; text-align: left;">
+                    <asp:Label ID="lblElementName" runat="server" Text="Element Name"  
+                        Font-Names="arial" Font-Size="X-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="width: 129px">
+                    <asp:TextBox ID="txtElementName" runat="server" Font-Names="arial" MaxLength="64"
+                        Font-Size="X-Small" Width="308px"></asp:TextBox>
+                </td>
+
+                
+                <td style="width: 129px">
+                    <asp:Button ID="btnSave" runat="server" Text="Save" Font-Names="arial" 
+                        onclick="btnSave_Click" Font-Size="X-Small" />
+                </td>
+                </tr>
+                <%--<tr>
+                <td class="style21" style="width: 141px; text-align: left"> <asp:HiddenField ID="HidDeleteCount" Value="0" runat="server" />
+                <asp:HiddenField ID="HidUpdateCount" Value="0" runat="server" />
+                </td>
+            </tr>--%>
+        </table>
+    </asp:panel>
+    
+    </div>
+
+</asp:Content>
+

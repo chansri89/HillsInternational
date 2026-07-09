@@ -1,0 +1,166 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.master"  AutoEventWireup="true" CodeFile="rptAdvanceList.aspx.cs" Inherits="rptAdvanceList" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register assembly="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <%--<asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
+    <asp:Label ID="lblExceptionList" runat="server" Align= "center" Text="Advance Entry List"
+        Font ="Verdana" width="787px"  Font-Size ="12pt" Font-Bold="True" 
+        Font-Names="Verdana"  style="text-align: center" Height="29px"></asp:Label>
+       
+        <asp:Label ID = "lblStkOpDate" runat = "server" align = "center" Height="15px" Width = "901px" Text = "" ></asp:Label>
+
+     <script src="js/jquery-1.9.1.js" type="text/javascript"></script> <%--MasterPageFile="~/MasterPage4.master"--%>
+   <script type="text/javascript">
+       var prm = Sys.WebForms.PageRequestManager.getInstance();
+       //Raised before processing of an asynchronous postback starts and the postback request is sent to the server.
+       prm.add_beginRequest(BeginRequestHandler);
+       // Raised after an asynchronous postback is finished and control has been returned to the browser.
+       prm.add_endRequest(EndRequestHandler);
+
+       function BeginRequestHandler(sender, args) {
+           //Shows the modal popup - the update progress
+           var popup = $find('<%= modalPopup.ClientID %>');
+           if (popup != null) {
+               popup.show();
+           }
+       }
+       function EndRequestHandler(sender, args) {
+           //Hide the modal popup - the update progress
+           var popup = $find('<%= modalPopup.ClientID %>');
+           if (popup != null) {
+               popup.hide();
+           }
+       }
+
+       </script>
+       <asp:UpdateProgress ID="UpdateProgress" runat="server">
+<ProgressTemplate>
+
+<asp:Image ID="imgprocess" ImageUrl="~/Images/progressBar.gif" AlternateText="Processing" runat="server" />
+</ProgressTemplate>
+</asp:UpdateProgress>
+
+<asp:modalpopupextender ID="modalPopup" runat="server" TargetControlID="UpdateProgress"
+PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
+
+ <asp:Panel ID="pnlPendind" runat="server" Height="41px" Width="952px">
+        <table style="height: 22px; width: 908px;">
+            <tr>
+            <td class="style28">
+                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true" 
+                     OnSelectedIndexChanged = "ddlCompanySelected" AutoPostBack="true"
+                    Font-Names="Arial" DataTextField="CompanyName" DataValueField="CompanyId"
+                    Style="font-size: X-Small" Width="153px" Height="16px"  >
+                 </asp:DropDownList>
+            </td>
+            <td class="style38">
+                <asp:Label ID="lblTransType" runat="server" Text="Location" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlDepot"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="LocationName" DataValueField="LocationCode"
+                    Style="font-size: X-Small" Width="130px" Height="16px"  >
+                 </asp:DropDownList>
+            </td>
+                 
+             <td class="style39" >
+                    <asp:Label ID="lblFromDate" runat="server" Text="From Date" Font-Size="X-Small" Font-Names="Verdana" Visible="true"
+                         style="font-size: small; font-weight: bold; font-family: 'Times New Roman', Times, serif;"></asp:Label>
+                </td>
+                <td class="style37" >
+                    <asp:TextBox ID="txtFromDate" runat="server" Text="" Width="83px" 
+                        Enabled="true" Visible="true"
+                        Font-Size="XX-Small" style="font-family: Verdana;" Height="20px" ></asp:TextBox>
+                    <asp:ImageButton ID="imgFromDate" runat="server" ImageUrl="~/Images/Calendar.gif"  Visible="true"/>
+                    <asp:CalendarExtender ID="CalendarExtender1" TargetControlID="txtFromDate" runat="server" 
+                    PopupButtonID="imgFromDate" Format="dd-MM-yyyy"></asp:CalendarExtender>
+                    
+                </td>   
+           
+                <td style="font-size: xx-small; font-family: Verdana; " class="style31">
+                    <asp:Label ID="lblToDate" runat="server"  Text="To Date" Font-Size="X-Small" Font-Bold="False" Font-Names="Verdana" 
+                        style="font-size: small; font-weight: bold; font-family: 'Times New Roman', Times, serif;"></asp:Label>
+                    
+                </td>
+                <td style="width: 130px; height: 32px;">
+                    <asp:TextBox ID="txtToDate" runat="server" Text="" Width="72px" 
+                        Font-Size="XX-Small"  Height="20px" Enabled="true"
+                      style="font-family: Verdana;"  ></asp:TextBox>
+                    <asp:ImageButton ID="imgToDate" runat="server" ImageUrl="~/Images/Calendar.gif" />
+                    <asp:CalendarExtender ID="CalendarExtender2" TargetControlID="txtToDate" runat="server"
+                     PopupButtonID="imgToDate" Format="dd-MM-yyyy"></asp:CalendarExtender>
+               
+                </td>
+               
+                <td >
+                         <asp:Button ID="btnView" runat="server" Font-Names="Verdana" Font-Size="X-Small" 
+                               Height="21px" onclick="btnView_Click"  style="font-size: small; font-family: 'Times New Roman', Times, serif; font-weight: 700;" 
+                               Text="View" Width="43px" />
+                 </td>        
+                  <td >
+                           
+                           <asp:Button ID="btnClear" runat="server" Font-Names="Verdana" Font-Size="X-Small" 
+                               Height="21px" onclick="btnClear_Click"  style="font-size: small; font-family: 'Times New Roman', Times, serif; font-weight: 700;" 
+                               Text="Clear" Width="43px" />
+                       </td>  
+ 
+                             
+            </tr>
+               
+        </table>
+    </asp:Panel>
+    <style type="text/css">
+        .WordWrap {
+            width: 100%;
+            word-break: break-all;
+        }
+        .style31
+        {
+            height: 32px;
+            width: 68px;
+        }
+        .style36
+        {
+            width: 105px;
+        }
+        .style37
+        {
+            width: 134px;
+        }
+        .style38
+        {
+            width: 46px;
+        }
+        .style39
+        {
+            width: 100px;
+        }
+    </style>
+<asp:Panel ID="pnlExList" runat="server" Height="459px" style="margin-left: 0px" 
+        Width="1248px">
+
+        <div style="width: 1238px; height: 438px;">
+    <rsweb:ReportViewer ID="ReportViewer1" runat="server" Font-Names="Verdana" 
+        Font-Size="8pt" Height="420px" InteractiveDeviceInfos="(Collection)" 
+        WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Width="1227px"
+        ShowFindControls="false" ShowBackButton="false"   
+                ShowPageNavigationControls = "true" ShowPrintButton = "true" 
+                ShowRefreshButton = "false">
+        <LocalReport ReportPath="">
+        </LocalReport>
+    </rsweb:ReportViewer>
+          <%--  <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+                ConnectionString="<%$ ConnectionStrings:DefaultConnection %>" 
+                SelectCommand="SELECT * FROM [BugNet_ApplicationLog]"></asp:SqlDataSource>--%>
+     </div>
+</asp:Panel>
+
+
+</asp:Content>
+

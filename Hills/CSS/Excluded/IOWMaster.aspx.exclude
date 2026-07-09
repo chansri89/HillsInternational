@@ -1,0 +1,518 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="IOWMaster.aspx.cs" Inherits="IOWMaster" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+ <%-- <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
+
+  <asp:Label ID="lblIOWMaster" runat="server" Align= "center" Text="IOW Master" 
+        Font ="Verdana" width="787px"
+        Font-Size ="12pt" Font-Bold="True" Font-Names="Verdana" 
+        style="text-align: center"></asp:Label>
+   <%--<asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
+    <div style="overflow:auto; height: 988px; width: 1246px;">
+        <%--</td></tr>
+    </table>--%>    <%--</asp:Panel>DataKeyNames="IOWCode"--%>
+    <asp:Panel ID="pnlPendind" runat="server" Height="28px" Width="562px">
+        <table style="height: 22px; width: 380px;">
+            <tr>
+                      <td class="style28" style="width: 70px">
+                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="CompanyName" DataValueField="CompanyId"
+                    Style="font-size: X-Small" Width="248px"  AutoPostBack="true" 
+                     OnSelectedIndexChanged="ddlCompanyChanged" Height="16px"  >
+                 </asp:DropDownList>
+            </td>
+                <td class="style28" style="width: 70px">
+                <asp:Label ID="lblFilter" runat="server" Text="Filter" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="X-Small" ></asp:Label>
+           </td>
+
+            <td class="style28" style="width: 70px">
+                <asp:TextBox ID="txtFilter" runat="server" Text="" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="X-Small" ></asp:TextBox>
+           </td>
+                <td class="style28" style="width: 62px" >
+                         <asp:Button ID="btnFilter" runat="server" Font-Names="Verdana" Font-Size="X-Small" 
+                               Height="21px" onclick="btnFilter_Click"  style="font-size: X-small; font-family: 'Times New Roman', Times, serif; font-weight: 700;" 
+                               Text="Filter" Width="43px" />
+                 </td>      
+                             
+            </tr>
+               
+        </table>
+    </asp:Panel>
+
+    <asp:panel ID="Pnlgv" runat="server" Width="1165px" Height="308px" 
+            ToolTip="Click on IOW Name row to Edit and update">
+        <div id="divIOW" runat="server"  
+            style="overflow:auto; height:302px; width:1149px">
+
+    <asp:GridView ID="GrdIOWMaster" runat="server" CellPadding="3" 
+            Font-Size="XX-Small" Width="1128px" Font-Names="Verdana" AutoGenerateColumns="False" 
+            Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
+            OnRowCommand="GrdIOW_RowCommand">
+               <%-- onrowcancelingedit="GrdIOWMaster_RowCancelingEdit"   
+                onrowediting="GrdIOWMaster_RowEditing" BackColor="White" --%>
+                <%--onrowupdating="GrdIOWMaster_RowUpdating"--%> 
+
+
+        <EditRowStyle Font-Size="XX-Small" />
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
+        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
+            HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+
+       
+        <Columns>
+            <asp:TemplateField HeaderText="CompanyId"  Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+             <HeaderStyle Width="10px" />
+            </asp:TemplateField>
+ 
+
+           <asp:TemplateField HeaderText="Package Code" Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblPackageCode" runat="server" Text='<%# Eval("PackageCode") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+            <asp:TemplateField HeaderText="Package Name" Visible="true">
+            <ItemTemplate>
+            <asp:Label ID="lblPackageName" runat="server" Text='<%# Eval("PackageName") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
+               </asp:TemplateField>
+ 
+            <asp:TemplateField HeaderText="Trade Code" Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblTradeCode" runat="server" Text='<%# Eval("TradeCode") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+
+          <asp:TemplateField HeaderText="Trade Name" Visible="true">
+             <ItemTemplate>
+            <asp:Label ID="lblTradeName" runat="server" Text='<%# Eval("TradeName") %>'   Width="40px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="40px" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Element Code" Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblElementCode" runat="server" Text='<%# Eval("elementCode") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+            <asp:TemplateField HeaderText="Element Name" Visible="true">
+             <ItemTemplate>
+            <asp:Label ID="lblElementName" runat="server" Text='<%# Eval("ElementName") %>'   Width="30px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="30px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="IOW Code" Visible="true">
+            <ItemTemplate>
+            <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>' Width="30px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="30px"/>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="IOW Name" Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblIOWName" runat="server" Text='<%# Eval("IOWName") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+ 
+         <asp:TemplateField HeaderText="Click IOW Name for Update" Visible="true" >
+            <ItemTemplate>  
+            <asp:LinkButton ID="lnkCustName" Width="550px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
+             CommandName ="UpdateIOW" Text ='<%#Eval("IOWName") %>'></asp:LinkButton>
+              </ItemTemplate> <HeaderStyle Width="550px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="IOW Sh.Name" Visible="True">
+            <ItemTemplate>
+            <asp:Label ID="lblIOWShortName" runat="server" Text='<%# Eval("IOWShortName") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+
+           
+            <asp:TemplateField HeaderText="IOW UOM">
+             <ItemTemplate>
+            <asp:Label ID="lblIOWUOM" runat="server" Text='<%# Eval("IOWUOM") %>' Width="30px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="30px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="IOW Qty" Visible="true">
+             <ItemTemplate>
+            <asp:Label ID="lblIOWQuantity" runat="server" Text='<%# Eval("IOWQuantity") %>'   Width="30px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="30px" /><ItemStyle Width = "40px" HorizontalAlign="Right" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Is Temprory IOW">
+             <ItemTemplate>
+              <asp:CheckBox ID="chkTemproryIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>'
+            Font-Names="Verdana" Font-Size="XX-Small" Width="30px" Enabled="false"></asp:CheckBox>
+             </ItemTemplate>
+                <HeaderStyle Width="30px" />
+                <ItemStyle HorizontalAlign="Center" />
+            </asp:TemplateField>
+
+              <asp:TemplateField HeaderText="Is Comm FactAppl">
+             <ItemTemplate>
+              <asp:CheckBox ID="chkIsCommonFactorsApplicable" runat="server" Checked='<%# Eval("IsCommonFactorsApplicable") %>'
+            Font-Names="Verdana" Font-Size="XX-Small" Width="30px" Enabled="false"></asp:CheckBox>
+             </ItemTemplate>
+                <HeaderStyle Width="30px" />
+                <ItemStyle HorizontalAlign="Center" />
+            </asp:TemplateField>
+        <asp:TemplateField HeaderText="Click IowItem" Visible="true" >
+            <ItemTemplate>  
+            <asp:LinkButton ID="lnkIOWItemName" Width="60px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
+             CommandName ="IOWItem" Text ="IOW Item"></asp:LinkButton>
+              </ItemTemplate> <HeaderStyle Width="60px" />
+            </asp:TemplateField>
+            
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+    </div>
+    <%--</td>
+    </tr>--%>
+    </asp:panel>
+    <asp:panel ID="pnlAdd" runat="server" Width="1061px"  
+            GroupingText=" Iow Add / Modify" Font-Size="X-Small"
+            style="margin-top: 0px" Height="122px">
+    <table style="width: 99%; height: 80px;" >
+            <tr>
+ 
+      
+                <td class="style28" style="width: 69px; height: 46px;">
+                    <asp:Label ID="lblIOWName" runat="server" Text="IOW Name"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:TextBox ID="txtIOWName" runat="server" Font-Names="Verdana" 
+                        MaxLength="1024" TextMode="MultiLine"
+                        Font-Size="XX-Small" height="37px" width="289px"></asp:TextBox>
+                </td>
+                    <td style="width: 71px; text-align: left; height: 46px;">
+                    <asp:Label ID="lblIOWCode" runat="server" Text="IOW Code"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:TextBox ID="txtIOWCode" runat="server" Font-Names="Verdana" MaxLength="16"
+                        Font-Size="XX-Small" height="18px" Width="89px"></asp:TextBox>
+                </td>
+                <td style="width: 71px; text-align: left; height: 46px;">
+                    <asp:Label ID="lblPackage" runat="server" Text="Package"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:DropDownList ID="ddlPackage"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="PackageName" DataValueField="PackageCode"
+                    Style="font-size: X-Small" Width="102px"  Height="16px"  >
+                 </asp:DropDownList>
+                </td>
+ 
+                 <td style="width: 71px; text-align: left; height: 46px;">
+                    <asp:Label ID="lblTrade" runat="server" Text="Trade"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:DropDownList ID="ddlTrade"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="TradeName" DataValueField="TradeCode"
+                    Style="font-size: X-Small" Width="102px"  Height="16px"  >
+                 </asp:DropDownList>
+                </td>
+ 
+
+                 <td style="width: 71px; text-align: left; height: 46px;">
+                    <asp:Label ID="lblElement" runat="server" Text="Element"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:DropDownList ID="ddlElement"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="ElementName" DataValueField="ElementCode"
+                    Style="font-size: X-Small" Width="102px"  Height="16px"  >
+                 </asp:DropDownList>
+                </td>
+ 
+
+            </tr>
+            <tr>
+                  <td style="width: 79px; text-align: left; height: 42px;">
+                    <asp:Label ID="lblIOWShortName" runat="server" Text="IOW Sh.Name" 
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                 <td style="height: 42px">
+                    <asp:TextBox ID="txtIOWShortName" runat="server" Font-Names="Verdana" MaxLength="128"
+                        Font-Size="XX-Small" Width="282px" height="23px"></asp:TextBox>
+                </td>
+                <td style="width: 128px; text-align: left; height: 46px;">
+                    <asp:Label ID="lblIOWUOM" runat="server" Text="IOW UOM"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:TextBox ID="txtIOWUOM" runat="server" Font-Names="Verdana" MaxLength="16"
+                        Font-Size="XX-Small" height="18px" width="69px"></asp:TextBox>
+                </td>
+                <td style="width: 79px; text-align: left; height: 42px;">
+                    <asp:Label ID="lblIOWQuantity" runat="server" Text="IOW Qty"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                 <td style="height: 42px">
+                    <asp:TextBox ID="txtIOWQuantity" runat="server" Font-Names="Verdana" MaxLength="16"
+                        Font-Size="XX-Small" Width="71px" height="18px"></asp:TextBox>
+                </td>
+                <td class="style23" style="width: 100px" align="center">
+                    <asp:CheckBox ID="chkIsActive" runat="server" Font-Names="Verdana" Visible="false"
+                        Font-Size="X-Small" Text="Is Active"  />
+                </td>
+                   <td class="style23" style="width: 100px" align="center">
+                    <asp:CheckBox ID="ChkIsTemproryIOW" runat="server" Font-Names="Verdana" 
+                        Font-Size="X-Small" Text="Is Temp IOW" Visible="true"  />
+                </td>
+   <td></td>
+                 <td class="style23" style="width: 100px" align="center">
+                    <asp:CheckBox ID="ChkIsCommonfactorsApplicable" runat="server" Font-Names="Verdana" 
+                        Font-Size="X-Small" Text="Is Common Fact Appl?" Visible="true"  />
+                </td>
+  
+        
+                <td style="width: 41px; height: 42px;">
+                    <asp:Button ID="btnSave" runat="server" Text="Save" Font-Names="Verdana" 
+                        onclick="btnSave_Click" Font-Size="XX-Small" />
+                </td>
+                <td class="style28" style="width: 64px; height: 42px;">
+                    <asp:Button ID="btnClear" runat="server" Text="Clear" Font-Names="Verdana" 
+                        onclick="btnClear_Click" Font-Size="XX-Small" />
+                </td>
+                </tr>
+               
+        </table>
+    </asp:panel>
+         <asp:panel ID="pnlIOWitemAdd" runat="server" Width="992px"  Font-Size="X-Small"
+            style="margin-top: 0px" Height="119px" 
+            GroupingText = "IOW Item Add / Modify">
+            <table style="width: 980px">
+                <tr>
+                    <td style="width: 71px; text-align: left; height: 46px;">
+                    <asp:Label ID="Label2" runat="server" Text="IOW Code"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:TextBox ID="txtIOWcd" runat="server" Font-Names="Verdana" MaxLength="16" ReadOnly="true"
+                        Font-Size="XX-Small" height="24px" Width="102px"></asp:TextBox>
+                </td>
+                     <td class="style28" style="width: 69px; height: 46px;">
+                    <asp:Label ID="lblIOWNm" runat="server" Text="IOW Name"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 46px">
+                    <asp:TextBox ID="txtIOWNm" runat="server" Font-Names="Verdana" 
+                        MaxLength="1024" TextMode="MultiLine" ReadOnly="true"
+                        Font-Size="XX-Small" height="44px" width="698px"></asp:TextBox>
+                </td>
+                </tr>
+            </table>
+    <table style="width: 89%; height: 41px;" >
+    
+            <tr>
+                  <td style="width: 57px; text-align: left; height: 35px;">
+                    <asp:Label ID="Label6" runat="server" Text="Item" 
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                 <td style="height: 35px">
+                    <asp:DropDownList ID="ddlItem" runat="server" Font-Names="Verdana" MaxLength="128"
+                     DataTextField="ItemName" DataValueField="ItemId" AutoPostBack="true" OnSelectedIndexChanged = "ddlItemChanged"
+                        Font-Size="XX-Small" Width="174px" height="16px"></asp:DropDownList>
+                </td>
+                <td style="width: 70px; text-align: left; height: 35px;">
+                    <asp:Label ID="Label7" runat="server" Text="Item UOM"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                <td style="height: 35px">
+                    <asp:TextBox ID="txtItemUOM" runat="server" Font-Names="Verdana" MaxLength="16" ReadOnly="true"
+                        Font-Size="XX-Small" height="18px" width="69px"></asp:TextBox>
+                </td>
+                 <td class="style21" style="width: 280px" align="center">
+                    <asp:CheckBox ID="chkIsItemImported" runat="server" Font-Names="Verdana" 
+                        Font-Size="X-Small" Text="Is Import Item" Visible="true"  Enabled="false" />
+                </td>
+                <td style="width: 79px; text-align: left; height: 35px;">
+                    <asp:Label ID="Label8" runat="server" Text="Item Qty"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                 <td style="height: 35px">
+                    <asp:TextBox ID="txtItemQty" runat="server" Font-Names="Verdana" MaxLength="16"
+                        Font-Size="XX-Small" Width="71px" height="18px"></asp:TextBox>
+                </td>
+                <td style="width: 79px; text-align: left; height: 35px;">
+                    <asp:Label ID="Label1" runat="server" Text="Wastage"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+                 <td style="height: 35px">
+                    <asp:TextBox ID="txtWastage" runat="server" Font-Names="Verdana" MaxLength="16"
+                        Font-Size="XX-Small" Width="71px" height="18px"></asp:TextBox>
+                </td>
+
+               <%-- <td class="style23" style="width: 100px" align="center">
+                    <asp:CheckBox ID="CheckBox1" runat="server" Font-Names="Verdana" Visible="false"
+                        Font-Size="X-Small" Text="Is Active"  />
+                </td>
+                   <td class="style23" style="width: 100px" align="center">
+                    <asp:CheckBox ID="CheckBox2" runat="server" Font-Names="Verdana" 
+                        Font-Size="X-Small" Text="Is Temp IOW" Visible="true"  />
+                </td>--%>
+        
+                <td style="width: 41px; height: 35px;">
+                    <asp:Button ID="btnAdd" runat="server" Text="Add" Font-Names="Verdana" BackColor="Aqua"
+                        onclick="btnAdd_Click" Font-Size="XX-Small" Width="50px" />
+                </td>
+                <td style="width: 41px; height: 35px;">
+                    <asp:TextBox ID="txtGridItemId" runat="server" Font-Names="Verdana" MaxLength="16" Visible="false"
+                        Font-Size="XX-Small" Width="10px" height="18px"></asp:TextBox>
+                </td>
+                 <td style="width: 41px; height: 35px;">
+                    <asp:TextBox ID="txtItemCode" runat="server" Font-Names="Verdana" MaxLength="16" Visible="false"
+                        Font-Size="XX-Small" Width="10px" height="18px"></asp:TextBox>
+                </td>
+                </tr>
+               
+        </table>
+    </asp:panel>  
+         <asp:panel ID="pnlIOWItem" runat="server" Width="886px" Height="306px" Font-Size="X-Small"
+            GroupingText="IOW Item grid">
+        <div id="div1" runat="server"  
+            style="overflow:auto; height:284px; width:865px">
+<table>
+<tr>
+ <td style="width: 562px; text-align: right; height: 25px;">
+                    <asp:Label ID="Label3" runat="server" Text="Click to Save Item In Grid ----->"  
+                        Font-Names="Verdana" Font-Size="XX-Small" Font-Bold="True"></asp:Label>
+                </td>
+     <td style="width: 41px; height: 25px;">
+                    <asp:Button ID="btnItemSave" runat="server" Text="Save" Font-Names="Verdana" BackColor="Aquamarine"
+                        onclick="btnItemSave_Click" Font-Size="XX-Small" Width="50px" />
+                </td>
+</tr>
+</table>
+    <asp:GridView ID="grdIOWItem" runat="server" CellPadding="3" 
+            Font-Size="XX-Small" Width="844px" Font-Names="Verdana" AutoGenerateColumns="False" 
+            Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px"
+             OnRowCommand="grdIOWItem_RowCommand"
+           >
+               
+        <EditRowStyle Font-Size="XX-Small" />
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
+        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
+        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
+            HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+
+       
+        <Columns>
+            <asp:TemplateField HeaderText="CompanyId"  Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+             <HeaderStyle Width="10px" />
+            </asp:TemplateField>
+ 
+
+           <asp:TemplateField HeaderText="IOW Code" Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="40px"/><ItemStyle Width = "40px" />
+               </asp:TemplateField>
+            <asp:TemplateField HeaderText="IOW Name" Visible="false">
+            <ItemTemplate>
+            <asp:Label ID="lblIOWName" runat="server" Text='<%# Eval("IOWName") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="300px"/><ItemStyle Width = "300px" />
+               </asp:TemplateField>
+ 
+            <asp:TemplateField HeaderText="ItemID" Visible="true">
+            <ItemTemplate>
+            <asp:Label ID="lblItemId" runat="server" Text='<%# Eval("ItemId") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+
+          <asp:TemplateField HeaderText="Item Name" Visible="true">
+             <ItemTemplate>
+            <asp:Label ID="lblItemName" runat="server" Text='<%# Eval("ItemName") %>'   Width="250px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="250px" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Item Code" Visible="true">
+            <ItemTemplate>
+            <asp:Label ID="lblItemCode" runat="server" Text='<%# Eval("ItemCode") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
+               </asp:TemplateField>
+            <asp:TemplateField HeaderText="Item UOM" Visible="true">
+             <ItemTemplate>
+            <asp:Label ID="lblItemUOM" runat="server" Text='<%# Eval("ITEMUOM") %>'   Width="30px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="30px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="Item Qty" Visible="true">
+            <ItemTemplate>
+            <asp:Label ID="lblItemQty" runat="server" Text='<%# Eval("ItemQuantity") %>' Width="40px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="40px"/>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Wastage" Visible="true">
+            <ItemTemplate>
+            <asp:Label ID="lblWastage" runat="server" Text='<%# Eval("Wastage") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>
+ 
+    
+          <%-- <asp:TemplateField HeaderText="IOW Sh.Name" Visible="True">
+            <ItemTemplate>
+            <asp:Label ID="lblIOWShortName" runat="server" Text='<%# Eval("IOWShortName") %>'  Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+              <HeaderStyle Width="50px"/><ItemStyle Width = "50px" />
+               </asp:TemplateField>--%>
+
+        <%--   
+            <asp:TemplateField HeaderText="IOW UOM">
+             <ItemTemplate>
+            <asp:Label ID="lblIOWUOM" runat="server" Text='<%# Eval("IOWUOM") %>' Width="30px" Font-Names="Verdana" Font-Size="XX-Small"></asp:Label></ItemTemplate>
+                <HeaderStyle Width="30px" />
+            </asp:TemplateField>--%>
+      
+             <asp:TemplateField HeaderText="Is Imported">
+             <ItemTemplate>
+              <asp:CheckBox ID="chkIsImported" runat="server" Checked='<%# Eval("IsImported") %>'
+            Font-Names="Verdana" Font-Size="XX-Small" Width="30px" Enabled="false"></asp:CheckBox>
+             </ItemTemplate>
+                <HeaderStyle Width="30px" />
+                <ItemStyle HorizontalAlign="Center" />
+            </asp:TemplateField>
+
+ 
+        <asp:TemplateField HeaderText="Del Item" Visible="true" >
+            <ItemTemplate>  
+            <asp:LinkButton ID="lnkIOWItemNameDel" Width="60px" runat ="server" CommandArgument='<%#Eval("ItemId")%>'
+             CommandName ="IOWItemDel" Text ="Del Item"></asp:LinkButton>
+              </ItemTemplate> <HeaderStyle Width="60px" />
+            </asp:TemplateField>
+        <asp:TemplateField HeaderText="Mod Item" Visible="true" >
+            <ItemTemplate>  
+            <asp:LinkButton ID="lnkIOWItemNameMod" Width="60px" runat ="server" CommandArgument='<%#Eval("ItemId")%>'
+             CommandName ="IOWItemMod" Text ="Mod Item"></asp:LinkButton>
+              </ItemTemplate> <HeaderStyle Width="60px" />
+            </asp:TemplateField>
+                       
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+    </div>
+    <%--</td>
+    </tr>--%>
+    </asp:panel>
+
+    </div>
+</asp:Content>
+

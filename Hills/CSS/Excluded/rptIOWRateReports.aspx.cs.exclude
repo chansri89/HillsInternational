@@ -1,0 +1,211 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Resources;
+using Ganini.Lib;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using Microsoft.Reporting.WebForms; //required for creating local report scs 231213
+
+public partial class rptIOWRateReports : System.Web.UI.Page
+{
+    ProcessBus Bus = new ProcessBus();
+    // CrystalDecisions.CrystalReports.Engine.ReportDocument oReport = new CrystalDecisions.CrystalReports.Engine.ReportDocument();
+    BaseClass BaseMsg = new BaseClass();
+    Validation Isvalid = new Validation();
+    private static List<EmployeeMasterMsg> EmpList = new List<EmployeeMasterMsg>();
+    //private static List<PFEStablishmentMsg> PFEList = new List<PFEStablishmentMsg>();/
+    public static List<PackageMasterMsg> PMList = new List<PackageMasterMsg>();
+    DateTime frmDate;
+    DateTime toDate;
+    private static List<CompanyMsg> CmpList = new List<CompanyMsg>();
+    public static string ProgramName = string.Empty;
+    private static string TranType = "";
+    public static string CreatePermission = "";
+    public static string ParameterFlag = "";
+   
+    #region Events
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            lblExceptionList.Text = "IOW Item Rate Report";
+            LoadCompany();
+            LoadPackage();
+        }
+    }
+
+    protected void btnView_Click(object sender, EventArgs e)
+    {
+        if (IsView() == 0)
+        {
+            System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+            dateinfo.ShortDatePattern = "dd-MM-yyyy";
+            ReportMsg RepMsg = new ReportMsg();
+            
+            RepMsg.CompanyId = Convert.ToInt32(ddlCompany.SelectedValue); // 
+            RepMsg.PackageCode  = (ddlPackage.SelectedValue); // 
+            RepMsg.NoOfMonths = Convert.ToInt32(txtNoOfMonths.Text);
+            LoadReport(RepMsg);
+        }
+    }
+    protected void btnClear_Click(object sender, EventArgs e)
+    {
+        pnlExList.Visible = false;
+    }
+  
+    private void LoadCompany()
+    {
+        CmpList = Bus.CompanyMasterSelect();
+
+        if (CmpList != null && CmpList.Count > 0)
+        {
+            ddlCompany.DataSource = CmpList;
+            ddlCompany.DataBind();
+            ddlCompany.Items.Insert(0, "--Select Please--");
+            ddlCompany.SelectedIndex = 0;
+            if (CmpList.Count == 1)
+            {
+                ddlCompany.SelectedIndex = 1;
+                //LoadPackage();
+            }
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Company Data not Found" + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+    }
+    private void LoadPackage()
+    {
+        PackageMasterMsg pkmsg = new PackageMasterMsg();
+        pkmsg.Flag = "R";
+        PMList = Bus.MasCRAMPackageInsertandUpdate(pkmsg);
+        if (PMList.Count >0)
+        {
+            ddlPackage.DataSource = PMList;
+            ddlPackage.DataBind();
+            ddlPackage.Items.Insert(0, "ALL");
+            ddlPackage.SelectedIndex = 0;
+            ddlPackage.Enabled = true;
+            ddlPackage.Focus();
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Package Data Not found " + "');", true);
+        }
+    }
+
+    public void LoadReport(ReportMsg reportMsg)
+    {
+
+        string ReportTitle = ddlCompany.SelectedItem.ToString();
+        string ReportTitle1 = ddlPackage.SelectedItem.ToString() + " Package ";
+        string RepPeriod = " From " ;
+        string RunDate = "RunDate :" + System.DateTime.UtcNow.AddMinutes(330).ToString("dd-MM-yyyy HH:mm");
+
+        DataTable dtAp = new DataTable();
+        DataTable dt = new DataTable();
+        dt = Bus.rptIOWRateSelect(reportMsg); //
+       // dt = Bus.rptTenderQuoteComparision(reportMsg); //rptTenderQuoteComparision
+        if (dt != null)
+        {
+            dtAp = dt;
+        }
+        if ((dtAp != null && dtAp.Rows.Count > 0))
+        {
+            Microsoft.Reporting.WebForms.ReportDataSource rptDatasource = new Microsoft.Reporting.WebForms.ReportDataSource("DataSet1", dtAp);
+            ReportViewer1.LocalReport.DataSources.Clear();
+            ReportViewer1.LocalReport.DataSources.Add(rptDatasource);
+            LocalReport rep = ReportViewer1.LocalReport;
+            String reppath = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["RptPath"]);//.GetSection("RptPath"));
+            string Wreppath = "\\" + "CRAM" + "\\"; // scs 201007 added for generating new reports area
+            reppath = reppath + Wreppath;
+            rep.ReportPath = reppath + "rptIOWRateReports.rdlc";
+
+            this.ReportViewer1.LocalReport.DisplayName =  ReportTitle1+"_" + System.DateTime.UtcNow.AddMinutes(330).ToString("yyyyMMdd");
+            try
+            {
+                ReportParameter rp1 = new ReportParameter();
+                rp1.Name = "ReportTitle";
+                rp1.Values.Add(ReportTitle);
+                ReportViewer1.LocalReport.SetParameters(rp1);
+
+                ReportParameter rp2 = new ReportParameter();
+                rp2.Name = "RepPeriod";
+                rp2.Values.Add(RepPeriod);
+                ReportViewer1.LocalReport.SetParameters(rp2);
+
+                ReportParameter rp3 = new ReportParameter();
+                rp3.Name = "RunDate";
+                rp3.Values.Add(RunDate);
+                ReportViewer1.LocalReport.SetParameters(rp3);
+
+                ReportParameter rp4 = new ReportParameter();
+                rp4.Name = "ReportTitle1";
+                rp4.Values.Add(ReportTitle1);
+                ReportViewer1.LocalReport.SetParameters(rp4);
+            }
+            catch (Exception ex)
+            {
+                string a = ex.ToString(); // dummy
+            }
+
+
+            ReportViewer1.Visible = true;
+            ReportViewer1.LocalReport.Refresh();
+            pnlExList.Visible = true;
+        }
+        else
+        {
+            //ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No Data Available for the Selected Period." + "');", true);
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Data not Available." + "');", true);
+            ReportViewer1.Visible = false;
+        }
+    }
+    #endregion
+    #region Validation
+    private int IsView()
+    {
+
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+        dateinfo.ShortDatePattern = "dd/MM/yyyy";
+        int Error = 0;
+        string DisplayError = "";
+        if (ddlCompany.SelectedIndex == 0 )
+        {
+            Error = 1;
+            DisplayError = "Company must be selected.. ";
+        }
+        try
+        {
+            Int32 x = Convert.ToInt32(txtNoOfMonths.Text);
+            if (x < 1 || x > 12)
+            {
+                Error = 1;
+                DisplayError = "Minimum No of Months should be 1 and Maximum 12 ";
+            }
+        }
+        catch
+        {
+            Error = 1;
+            DisplayError = "No of Months Should be Integer ..Minimum 1 and Maximum 12 ..";
+        }
+
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+    #endregion
+
+
+
+}

@@ -1,0 +1,216 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Resources;
+
+public partial class CRAMElementMaster : System.Web.UI.Page
+{ 
+    #region Declaration
+    ProcessBus Bus = new ProcessBus();
+    List<ElementMasterMsg> ElementList = new List<ElementMasterMsg>();
+    public static int DeleteIndex = 0;
+    public static int UpdateIndex = 0;
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    BaseClass BaseMsg = new BaseClass();
+    #endregion
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            LoadGrdElementMaster();
+            if (ElementList.Count == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.MsgForGrdnotLoad + "');", true);
+                Pnlgv.Visible = false;
+                pnlAdd.Visible = true;
+
+            }
+        }        
+       
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.CreatePermissionRestricted + "');", true);
+        }
+        else
+        {
+            if (IsValidSave() == 0)
+            {
+                ElementSave();
+            }
+        }
+    }
+    #endregion
+    #region Methods
+    private void LoadGrdElementMaster()
+    {
+        ElementMasterMsg Element = new ElementMasterMsg();
+        Element.Flag = "R";
+        ElementList = Bus.MasCRAMElementInsertUpdate(Element);
+        GrdElementMaster.DataSource = "";
+        GrdElementMaster.DataSource = ElementList;
+        GrdElementMaster.DataBind();
+        if (!user.HasPermission(ProgramName, UserPermission.CanEdit.ToString()))
+        {
+            GrdElementMaster.Columns[GrdElementMaster.Columns.Count - 2].Visible = false;
+        }
+        if (!user.HasPermission(ProgramName, UserPermission.CanDelete.ToString()))
+        {
+            GrdElementMaster.Columns[GrdElementMaster.Columns.Count - 1].Visible = false;
+        }
+        Pnlgv.Visible = true;
+    }
+
+    private void ElementSave()
+    {
+        ElementMasterMsg Element = new ElementMasterMsg();
+        Element.Flag = "I";
+
+        Element.ElementName = txtElementName.Text.Trim();
+        Element.ElementCode = txtElementcode.Text.Trim();
+        //Element.CreatedBy = BaseMsg.EmployeeCode;
+        ElementList = Bus.MasCRAMElementInsertUpdate(Element);
+        //Output Dispay
+        foreach (ElementMasterMsg ElementSave in ElementList)
+        {
+            if (ElementSave.ElementResult == "0")
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.SuccessFullySaved + "');", true);
+                AllClear();
+                break;
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + ElementSave.ElementResult + "');", true);
+                break;
+            }
+        }
+    }
+    public void ElementUpdate()
+    {
+        GridViewRow row = GrdElementMaster.Rows[UpdateIndex];
+        ElementMasterMsg Element = new ElementMasterMsg();
+        Element.Flag = "U";
+
+        string txtElementCode = ((Label)row.FindControl("lblElementCode")).Text;
+        TextBox txtElementname = (TextBox)row.FindControl("txtElementName");
+        
+       // CheckBox chkActive = (CheckBox)row.FindControl("chkIsActive");
+
+        Element.ElementCode = (txtElementCode.Trim());
+        Element.ElementName = txtElementname.Text.Trim();
+        ElementList = Bus.MasCRAMElementInsertUpdate(Element);
+        GrdElementMaster.EditIndex = -1;
+
+        foreach (ElementMasterMsg ElementUpdate in ElementList)
+        {
+            if (ElementUpdate.ElementResult == "0")
+            {
+                //ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + StackResource.ElementUpdatedSuccessfully + "');", true);
+
+                AllClear();
+                break;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + ElementUpdate.ElementResult + "');", true);
+                break;
+            }
+        }
+    }
+  
+    #endregion
+    #region Clear
+    public void AllClear()
+    {
+
+        txtElementName.Text = "";
+        txtElementcode.Text = "";
+        LoadGrdElementMaster();
+
+    }
+    #endregion
+    #region Validation
+    private int IsValidSave()
+    {
+
+        int Error = 0;
+         string DisplayError = "";
+         if ((txtElementName.Text.Trim() == "" || txtElementName.Text.Trim().Length.ToString() == "0"))
+        {
+            DisplayError=DisplayError+"Element Name";
+            Error = 1;
+        }
+         if (txtElementcode.Text.Trim() == "" || txtElementcode.Text.Trim().Length.ToString() == "0")
+        {
+            DisplayError = DisplayError + "--" + "Element Code";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+    private int IsValidGridSave(string ElementName,string ElementCode)
+    {
+
+        int Error = 0;
+        string DisplayError = "";
+        if ((ElementName.Trim() == "" || ElementName.Trim().Length.ToString() == "0"))
+        {
+            DisplayError = DisplayError + "Element Name Mandatory.. ";
+            Error = 1;
+        }
+        if (ElementCode.Trim() == "" || ElementCode.Trim().Length.ToString() == "0")
+        {
+            DisplayError = DisplayError + "--" + "Element Code Is Mandatory";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+    #endregion
+    #region GrdEdit
+
+    protected void GrdElementMaster_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        UpdateIndex = e.RowIndex;
+        GridViewRow row = GrdElementMaster.Rows[UpdateIndex];
+        TextBox txtElementname = (TextBox)row.FindControl("txtElementName");
+        string ElementCode = ((Label)row.FindControl("lblElementCode")).Text;
+        if (IsValidGridSave(txtElementname.Text.Trim(), ElementCode.Trim()) == 0)
+        {
+            ElementUpdate();
+        }
+    }
+    
+    protected void GrdElementMaster_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        GrdElementMaster.EditIndex = -1;
+        LoadGrdElementMaster();
+    }
+    protected void GrdElementMaster_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GrdElementMaster.EditIndex = e.NewEditIndex;
+        LoadGrdElementMaster();
+        GridViewRow row = GrdElementMaster.Rows[GrdElementMaster.EditIndex];
+        TextBox Elementname = (TextBox)row.FindControl("txtElementName");
+        Elementname.Focus();
+    }
+
+    #endregion
+}

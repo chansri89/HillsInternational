@@ -1,0 +1,176 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage3Orig.master.cs" Inherits="MasterPage3Orig" %>
+<%@ Register Assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head id="Head1" runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>Hills TIS</title>
+    <style type="text/css">
+        .style21
+        {
+            width: 112px;
+        }
+        .style23
+        {
+            width: 103px;
+        }
+        .style27
+        {
+            width: 1125px;
+        }
+        .style28
+        {
+            width: 81px;
+        }
+           .MenuStyle
+        {
+             font-weight:bold; font-family:Verdana; font-size:small; background-color:#336600;   font-style:italic;
+             width:auto; display:inline ; position:relative; float:left; list-style:none;
+        }
+        .XSmall
+        {
+            font-family:Arial; Font-Size:X-Small
+        }
+        .XXSmall
+        {
+            font-family:Arial; Font-Size:XX-Small
+        }
+    </style>
+            <script type="text/javascript" language="javascript">
+                function DisableBackButton() {
+                    window.history.forward()
+
+                }
+                DisableBackButton();
+                window.onload = DisableBackButton;
+                window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+                window.onunload = function () { void (0) }
+ </script>
+</head>
+<body id="body1" runat="server" oncontextmenu="return false" >
+     
+    <%--style="background: url(Images/LogoMasters.jpg) no-repeat; height: 606px; margin-top: 0px;">--%>
+    <form id="form1" runat="server">
+       <div class="wrap">
+       <div>
+             <%-- <div style="height:125px;width:1196px" />--%>
+            <asp:Panel ID="Panel2" runat="server" Height="55px" 
+                 BorderStyle ="Ridge" Width="1286px">
+        <table >
+            <tr>
+                <td>
+                    <asp:Image ID="Image3" runat="server" ImageUrl="~/Images/CompanyLeft.jpg" 
+                        Width="65px" Height="50px" style="margin-left: 0px" />
+                </td>
+            
+                <td class="style27" align = "center" style = "text-decoration:underline"> 
+                           <asp:Label ID="lblHeading" runat="server" Height="20px" 
+                         Text="Tender Insight System - Version:1:0:00" Font-Size = "Large" Font-Italic="true"
+                                Width="394px" ForeColor="Navy"  />   
+                </td>                    
+                <td>
+                    <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/CompanyRight.jpg" 
+                        Width="65px"  Height="50px" style="margin-left: 0px" />
+                </td><td></td>
+            </tr>
+        </table>
+    </asp:Panel>
+      </div>
+       <asp:Panel ID="Pnl2" runat="server" Style="z-index: 100; left: 1100px;
+            position: absolute; top: 35px; height: 23px; width: 60px;">
+        <asp:LinkButton id="lnkLogOut" runat="server" onclick="lnkLogOut_Click">Logout</asp:LinkButton>
+      </asp:Panel>
+   
+       <%--<asp:Panel ID="DivLoginDetails" runat="server" Style="z-index: 100; left: 290px; position: absolute; top: 77px; height: 23px; width: 973px;">--%>
+       <asp:Panel ID="DivLoginDetails" runat="server" Width="1289px" >
+          <asp:panel ID = "pnlSeparator" runat = "server"   Height="28px"  
+               Width = "1289px">
+         <table  style="width: 1033px; height: 12px">
+             <tr>
+                 <td ><%--<asp:SiteMapPath ID="SiteMapPath" runat="server" Font-Size= "X-Small" PathSeparator=" &gt; " Font-Bold="True" Font-Names="Verdana" >
+                </asp:SiteMapPath>--%>
+                 <asp:LinkButton id="LnkHome" runat="server" onclick="lnkHome_Click">Home</asp:LinkButton>
+           </td>
+                 <td class="style23">
+                 <asp:Label ID="lbluname" runat="server" ForeColor="#333399"  Width="113px" Height="16px"
+                     Font-Size="X-Small" Font-Bold="True" 
+                     Font-Names="Verdana" style="text-align:right"></asp:Label>
+             </td>
+                 <td class="style21">
+                 <asp:Label ID="lblDate" runat="server" ForeColor="#333399" 
+                     style="margin-left: 0px; text-align: right;" Width="114px" Height="16px" 
+                     Font-Size="X-Small" Font-Bold="True" Font-Names="Verdana"  ></asp:Label>
+              </td><%--</tr> <tr>--%>
+                 <td class="style28" >
+                     <asp:Label ID="lblVersionName" runat="server" ForeColor="#333399"  Width="59px" 
+                     Font-Size="X-Small" style="text-align: right; margin-left: 19px;" 
+                         Font-Bold="True" Text="Version: "
+                     Font-Names="Verdana" Height="20px"></asp:Label>
+                </td>
+                 <td  class="style23">
+                                     <asp:Label ID="lblVersionNumber" runat="server" ForeColor="#333399"  Width="94px" 
+                     Font-Size="X-Small" style="text-align:left" Font-Bold="True" 
+                     Font-Names="Verdana" Height="20px"></asp:Label>
+                     </td>
+
+                     <td  class="style23">
+                                     <asp:Label ID="Label1" runat="server" ForeColor="#333399"  Width="123px"  Text = "Back button Disabled"
+                     Font-Size="X-Small" style="text-align:left" Font-Bold="True" 
+                     Font-Names="Verdana" Height="20px"></asp:Label>
+                     </td>
+
+                     
+            </tr>
+      </table>
+                
+      </asp:panel>
+       </asp:Panel>
+
+  <%--  <form id="form1" runat="server">--%>
+
+    <asp:Panel ID="Panel1" runat="server" Height="39px" Width="1289px">
+    <div>
+        <asp:Menu ID="mnuMainMenu" runat="server"  DynamicHorizontalOffset="3" BorderStyle="Groove"
+            CssClass = "MenuStyle"  Orientation="Horizontal" ForeColor="White" RenderingMode="List"
+            StaticSubMenuIndent="10px"  >
+            <StaticSelectedStyle BackColor="#3366CC" /> <StaticMenuItemStyle HorizontalPadding="50px" VerticalPadding="5px" BackColor="#3366CC" />
+            <DynamicHoverStyle BackColor="#FF9900" ForeColor="White" BorderColor="Black" 
+                BorderStyle="Solid" />
+            <DynamicMenuStyle BackColor="#3366CC" /> 
+            <DynamicSelectedStyle BackColor="#FFCC66" />
+            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" 
+                BorderStyle="Ridge" />
+            <StaticHoverStyle BackColor="#FF9900" ForeColor="White" />
+        </asp:Menu> <%--Font-Bold="True" Font-Names="Verdana" Font-Size="10pt" ForeColor="White" BackColor="#336600" Width="1000px" "##336600"--%>
+        </div>
+     <%-- <div style="height: 38px">
+      <asp:Menu ID="mnuMainMenu" runat="server"  DynamicHorizontalOffset="3" BorderStyle="Groove"
+            CssClass = "MenuStyle"  Orientation="Horizontal" ForeColor="White" RenderingMode="List"
+            StaticSubMenuIndent="10px"  DynamicHoverStyle-BackColor="#6600FF">
+            <StaticSelectedStyle BackColor="#CC0066" /> <StaticMenuItemStyle HorizontalPadding="50px" VerticalPadding="5px" />
+            <DynamicHoverStyle BackColor="#990000" ForeColor="White" BorderColor="Black" 
+                BorderStyle="Solid" />
+            <DynamicMenuStyle BackColor="#336600" /> 
+            <DynamicSelectedStyle BackColor="#FFCC66" />
+            <DynamicMenuItemStyle HorizontalPadding="5px" VerticalPadding="2px" 
+                BorderStyle="Ridge" />
+            <StaticHoverStyle BackColor="#990000" ForeColor="White" />--%>
+       <%-- </asp:Menu>--%> <%--Font-Bold="True" Font-Names="Verdana" Font-Size="10pt" ForeColor="White" BackColor="#336600" Width="1000px" --%>
+      <%--  </div>--%>
+    </asp:Panel>
+    <div>
+    <%--<asp:ScriptManager ID="ScriptManager1" runat="server" />--%>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server"> 
+            <asp:Panel ID="Panel4" runat="server" Height="514px" Width="1289px"  
+                BackColor="#e8f6f6" >                      
+            </asp:Panel>
+        </asp:ContentPlaceHolder>
+    </div>
+ </div>
+    </form>
+   
+</body>
+</html>

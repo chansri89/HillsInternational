@@ -1,0 +1,164 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Resources;
+
+public partial class CRAMIOWRateUpdate : System.Web.UI.Page
+{ 
+    #region Declaration
+    ProcessBus Bus = new ProcessBus();
+    private static List<CompanyMsg> CmpList = new List<CompanyMsg>();
+    List<RateYearMsg> RYMList = new List<RateYearMsg>();
+    private Int32 WCompanyId = 0;
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    BaseClass BaseMsg = new BaseClass();
+    #endregion
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            LoadCompany();
+            //ddlRateMonth.Enabled = false;
+        }        
+       
+    }
+    protected void ddlCompanyChanged(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0)
+        {
+            WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            LoadRateYearMonth(WCompanyId);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Location Not Selected" + "');", true);
+           
+        }
+    }
+    protected void btnUpdate_Click(object sender, EventArgs e)
+    {
+        if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.CreatePermissionRestricted + "');", true);
+        }
+        else
+        {
+            if (IsValidSave() == 0)
+            {
+                Int32 WcompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+                string IOWCode = "ALL";
+                Int64 YearMonth = Convert.ToInt64(ddlRateMonth.SelectedValue);
+                string Result = Bus.CRAMIOWRateInsert(WcompanyId, IOWCode, YearMonth);
+                if (Result == "0")
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Rate Updated for IOW.." + "');", true);
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + Result + "');", true);
+                }
+            }
+        }
+    }
+    #endregion
+    #region Methods
+    private void LoadCompany()
+    {
+        CmpList = Bus.CompanyMasterSelect();
+        if (BaseMsg.IsAdmin == false)
+        {
+            CmpList = (from cmp in CmpList where cmp.CompanyId == BaseMsg.CompanyId select cmp).ToList();
+        }
+        if (CmpList != null && CmpList.Count > 0)
+        {
+            ddlCompany.DataSource = CmpList;
+            ddlCompany.DataBind();
+            ddlCompany.Items.Insert(0, "--Select Please--");
+            ddlCompany.SelectedIndex = 0;
+            if (CmpList.Count == 1)
+            {
+                ddlCompany.SelectedIndex = 1;
+                ddlCompany.Enabled = true;
+                WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+                LoadRateYearMonth(WCompanyId);
+                
+            }
+            else
+            {
+                ddlCompany.Enabled = true;
+            }
+
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrCompanyData + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+       
+    }
+
+    private void LoadRateYearMonth(Int32 CompanyId)
+    {
+            RYMList = Bus.MasItemRateYearMonthSelect(CompanyId);
+            //RYMList = (from ry in RYMList where ry.CompanyId == Convert.ToInt32(ddlCompany.SelectedValue) select ry).ToList();
+            if (RYMList != null && RYMList.Count > 0)
+            {
+                ddlRateMonth.DataSource = RYMList;
+                ddlRateMonth.DataTextField="RateYearMonth" ;
+                ddlRateMonth.DataValueField = "RateYearMonth";
+                ddlRateMonth.DataBind();
+                ddlRateMonth.Items.Insert(0, "--Select Please--");
+                ddlRateMonth.SelectedIndex = 0;
+                if (RYMList.Count == 1)
+                {
+                    ddlRateMonth.SelectedIndex = 1;
+
+                }
+                
+                ddlRateMonth.Enabled = true;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "No Item Rate master Available..Pls Upload Item Rate Master" + "');", true);
+            }
+        
+    }
+  
+    #endregion
+    #region Clear
+    private void AllClear()
+    {
+
+        ddlRateMonth.SelectedIndex = 0;
+        ddlCompany.SelectedIndex = 0;
+
+    }
+    #endregion
+    #region Validation
+    private int IsValidSave()
+    {
+        int Error = 0;
+         string DisplayError = "";
+         if (ddlCompany.SelectedIndex==0 || ddlRateMonth.SelectedIndex==0)
+        {
+            DisplayError=DisplayError+"Company and Rate Year Month are Mandatory..Pls Select";
+            Error = 1;
+        }
+    
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+ 
+    #endregion
+
+}

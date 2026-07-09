@@ -1,0 +1,216 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Resources;
+
+public partial class CRAMTradeMaster : System.Web.UI.Page
+{ 
+    #region Declaration
+    ProcessBus Bus = new ProcessBus();
+    List<TradeMasterMsg> TradeList = new List<TradeMasterMsg>();
+    public static int DeleteIndex = 0;
+    public static int UpdateIndex = 0;
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    BaseClass BaseMsg = new BaseClass();
+    #endregion
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            LoadGrdTradeMaster();
+            if (TradeList.Count == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.MsgForGrdnotLoad + "');", true);
+                Pnlgv.Visible = false;
+                pnlAdd.Visible = true;
+
+            }
+        }        
+       
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.CreatePermissionRestricted + "');", true);
+        }
+        else
+        {
+            if (IsValidSave() == 0)
+            {
+                TradeSave();
+            }
+        }
+    }
+    #endregion
+    #region Methods
+    private void LoadGrdTradeMaster()
+    {
+        TradeMasterMsg Trade = new TradeMasterMsg();
+        Trade.Flag = "R";
+        TradeList = Bus.MasCRAMTradeInsertUpdate(Trade);
+        GrdTradeMaster.DataSource = "";
+        GrdTradeMaster.DataSource = TradeList;
+        GrdTradeMaster.DataBind();
+        if (!user.HasPermission(ProgramName, UserPermission.CanEdit.ToString()))
+        {
+            GrdTradeMaster.Columns[GrdTradeMaster.Columns.Count - 2].Visible = false;
+        }
+        if (!user.HasPermission(ProgramName, UserPermission.CanDelete.ToString()))
+        {
+            GrdTradeMaster.Columns[GrdTradeMaster.Columns.Count - 1].Visible = false;
+        }
+        Pnlgv.Visible = true;
+    }
+
+    private void TradeSave()
+    {
+        TradeMasterMsg Trade = new TradeMasterMsg();
+        Trade.Flag = "I";
+
+        Trade.TradeName = txtTradeName.Text.Trim();
+        Trade.TradeCode = txtTradecode.Text.Trim();
+        //Trade.CreatedBy = BaseMsg.EmployeeCode;
+        TradeList = Bus.MasCRAMTradeInsertUpdate(Trade);
+        //Output Dispay
+        foreach (TradeMasterMsg TradeSave in TradeList)
+        {
+            if (TradeSave.TradeResult == "0")
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.SuccessFullySaved + "');", true);
+                AllClear();
+                break;
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + TradeSave.TradeResult + "');", true);
+                break;
+            }
+        }
+    }
+    public void TradeUpdate()
+    {
+        GridViewRow row = GrdTradeMaster.Rows[UpdateIndex];
+        TradeMasterMsg Trade = new TradeMasterMsg();
+        Trade.Flag = "U";
+
+        string txtTradeCode = ((Label)row.FindControl("lblTradeCode")).Text;
+        TextBox txtTradename = (TextBox)row.FindControl("txtTradeName");
+        
+       // CheckBox chkActive = (CheckBox)row.FindControl("chkIsActive");
+
+        Trade.TradeCode = (txtTradeCode.Trim());
+        Trade.TradeName = txtTradename.Text.Trim();       
+        TradeList = Bus.MasCRAMTradeInsertUpdate(Trade);
+        GrdTradeMaster.EditIndex = -1;
+
+        foreach (TradeMasterMsg TradeUpdate in TradeList)
+        {
+            if (TradeUpdate.TradeResult == "0")
+            {
+                //ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + StackResource.TradeUpdatedSuccessfully + "');", true);
+
+                AllClear();
+                break;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + TradeUpdate.TradeResult + "');", true);
+                break;
+            }
+        }
+    }
+  
+    #endregion
+    #region Clear
+    public void AllClear()
+    {
+
+        txtTradeName.Text = "";
+        txtTradecode.Text = "";
+        LoadGrdTradeMaster();
+
+    }
+    #endregion
+    #region Validation
+    private int IsValidSave()
+    {
+
+        int Error = 0;
+         string DisplayError = "";
+         if ((txtTradeName.Text.Trim() == "" || txtTradeName.Text.Trim().Length.ToString() == "0"))
+        {
+            DisplayError=DisplayError+"Trade Name";
+            Error = 1;
+        }
+         if (txtTradecode.Text.Trim() == "" || txtTradecode.Text.Trim().Length.ToString() == "0")
+        {
+            DisplayError = DisplayError + "--" + "Trade Code";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+    private int IsValidGridSave(string TradeName,string TradeCode)
+    {
+
+        int Error = 0;
+        string DisplayError = "";
+        if ((TradeName.Trim() == "" || TradeName.Trim().Length.ToString() == "0"))
+        {
+            DisplayError = DisplayError + "Trade Name Mandatory.. ";
+            Error = 1;
+        }
+        if (TradeCode.Trim() == "" || TradeCode.Trim().Length.ToString() == "0")
+        {
+            DisplayError = DisplayError + "--" + "Trade Code Is Mandatory";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+    #endregion
+    #region GrdEdit
+
+    protected void GrdTradeMaster_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        UpdateIndex = e.RowIndex;
+        GridViewRow row = GrdTradeMaster.Rows[UpdateIndex];
+        TextBox txtTradename = (TextBox)row.FindControl("txtTradeName");
+        string TradeCode = ((Label)row.FindControl("lblTradeCode")).Text;
+        if (IsValidGridSave(txtTradename.Text.Trim(), TradeCode.Trim()) == 0)
+        {
+            TradeUpdate();
+        }
+    }
+    
+    protected void GrdTradeMaster_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        GrdTradeMaster.EditIndex = -1;
+        LoadGrdTradeMaster();
+    }
+    protected void GrdTradeMaster_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GrdTradeMaster.EditIndex = e.NewEditIndex;
+        LoadGrdTradeMaster();
+        GridViewRow row = GrdTradeMaster.Rows[GrdTradeMaster.EditIndex];
+        TextBox Tradename = (TextBox)row.FindControl("txtTradeName");
+        Tradename.Focus();
+    }
+
+    #endregion
+}

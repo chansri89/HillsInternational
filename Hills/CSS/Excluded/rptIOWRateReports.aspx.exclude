@@ -1,0 +1,162 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.master"  AutoEventWireup="true" CodeFile="rptIOWRateReports.aspx.cs" Inherits="rptIOWRateReports" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<%@ Register assembly="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <%--<asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
+    <asp:Label ID="lblExceptionList" runat="server" Align= "center" 
+        Font ="Verdana" width="1244px"  Font-Size ="12pt" Font-Bold="True" 
+        Font-Names="Verdana"  style="text-align: center" Height="29px"></asp:Label>
+       
+        <%--<asp:Label ID = "lblStkOpDate" runat = "server" align = "center" Height="15px" Width = "901px" Text = "" ></asp:Label>--%>
+
+     <script src="js/jquery-1.9.1.js" type="text/javascript"></script> <%--MasterPageFile="~/MasterPage4.master"--%>
+   <script type="text/javascript">
+       var prm = Sys.WebForms.PageRequestManager.getInstance();
+       //Raised before processing of an asynchronous postback starts and the postback request is sent to the server.
+       prm.add_beginRequest(BeginRequestHandler);
+       // Raised after an asynchronous postback is finished and control has been returned to the browser.
+       prm.add_endRequest(EndRequestHandler);
+
+       function BeginRequestHandler(sender, args) {
+           //Shows the modal popup - the update progress
+           var popup = $find('<%= modalPopup.ClientID %>');
+           if (popup != null) {
+               popup.show();
+           }
+       }
+       function EndRequestHandler(sender, args) {
+           //Hide the modal popup - the update progress
+           var popup = $find('<%= modalPopup.ClientID %>');
+           if (popup != null) {
+               popup.hide();
+           }
+       }
+
+       </script>
+       <asp:UpdateProgress ID="UpdateProgress" runat="server">
+<ProgressTemplate>
+
+<asp:Image ID="imgprocess" ImageUrl="~/Images/progressBar.gif" AlternateText="Processing" runat="server" />
+</ProgressTemplate>
+</asp:UpdateProgress>
+
+<asp:modalpopupextender ID="modalPopup" runat="server" TargetControlID="UpdateProgress"
+PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
+
+ <asp:Panel ID="pnlPendind" runat="server" Height="43px" Width="1099px">
+        <table style="height: 22px; width: 1044px;">
+            <tr>
+                      <td class="style28" style="width: 70px">
+                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" 
+                              style="font-family: 'Times New Roman'" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="CompanyName" DataValueField="CompanyId"
+                    Style="font-size: X-Small" Width="158px"    Height="16px"  >
+                 </asp:DropDownList>
+            </td>
+
+          <td class="style45">
+                <asp:Label ID="lblPackage" runat="server" Text="Package" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="X-Small" ></asp:Label>
+           </td>
+             <td class="style44">
+                <asp:DropDownList ID="ddlPackage"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="PackageName" DataValueField="PackageCode"
+                    
+                    Style="font-size: X-Small" Width="109px" height="24px"  >
+                 </asp:DropDownList>
+            </td>
+
+             <td class="style46">
+                <asp:Label ID="lblNoOfMonths" runat="server" Text="Rate NoOfMonths" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="X-Small" ></asp:Label>
+           </td>        
+          <td>
+                   <asp:Textbox ID="txtNoOfMonths" runat="server" Font-Names="Verdana" Visible="true"  Text = "1"
+                                Font-Size="X-Small" Height="17px" Width="33px" MaxLength = "2" ></asp:Textbox>
+          </td>
+                <td class="style41" >
+                         <asp:Button ID="btnView" runat="server" Font-Names="Verdana" Font-Size="X-Small" 
+                               Height="21px" onclick="btnView_Click"  style="font-size: small; font-family: 'Times New Roman', Times, serif; font-weight: 700;" 
+                               Text="View" Width="43px" />
+                 </td>        
+                  <td >
+                           
+                           <asp:Button ID="btnClear" runat="server" Font-Names="Verdana" Font-Size="X-Small" 
+                               Height="21px" onclick="btnClear_Click"  style="font-size: small; font-family: 'Times New Roman', Times, serif; font-weight: 700;" 
+                               Text="Clear" Width="43px" />
+                       </td>  
+ 
+          <td>
+                   <asp:Textbox ID="txtItem" runat="server" Font-Names="Verdana" Visible="false"  Text = ""
+                                Font-Size="X-Small" Height="17px" Width="33px" MaxLength = "8" 
+                                  ></asp:Textbox> <%--ontextchanged="txtEmpCode_TextChanged" --%>
+          </td>
+    
+            <td style="text-align: left;" class="style43" >
+                   <asp:radiobuttonlist id="rbtType"  Visible="false" 
+                                    RepeatDirection="Horizontal" runat="server" Height="18px" 
+                    Width="221px" Font-Names="Times New Roman"  Font-Size="Small" 
+                  Font-Bold="true">
+                        <asp:listitem Text="Latest Month" Selected="true" Value="1" />
+	                    <asp:listitem Text="Previous Months" Selected="false" Value="2"  />
+	                                
+                                    
+                </asp:radiobuttonlist>              
+                 </td>                    
+            </tr>
+               
+        </table>
+    </asp:Panel>
+    <style type="text/css">
+        .WordWrap {
+            width: 100%;
+            word-break: break-all;
+        }
+        .style41
+    {
+        width: 63px;
+    }
+        .style43
+        {
+            width: 67px;
+        }
+        .style44
+        {
+            width: 129px;
+        }
+        .style45
+        {
+            width: 59px;
+        }
+        .style46
+        {
+            width: 93px;
+        }
+    </style>
+<asp:Panel ID="pnlExList" runat="server" Height="459px" style="margin-left: 0px" 
+        Width="1248px">
+
+        <div style="width: 1238px; height: 438px;">
+    <rsweb:ReportViewer ID="ReportViewer1" runat="server" Font-Names="Verdana" 
+        Font-Size="8pt" Height="420px" InteractiveDeviceInfos="(Collection)" 
+        WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Width="1216px"
+        ShowFindControls="false" ShowBackButton="false"   
+                ShowPageNavigationControls = "true" ShowPrintButton = "false" 
+                ShowRefreshButton = "false">
+        <LocalReport ReportPath="">
+        </LocalReport>
+    </rsweb:ReportViewer>
+          <%--  <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
+                ConnectionString="<%$ ConnectionStrings:DefaultConnection %>" 
+                SelectCommand="SELECT * FROM [BugNet_ApplicationLog]"></asp:SqlDataSource>--%>
+     </div>
+</asp:Panel>
+
+
+</asp:Content>
+

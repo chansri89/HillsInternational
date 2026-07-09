@@ -1,0 +1,1320 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI; 
+using System.Web.UI.WebControls;
+using System.Configuration;
+using System.IO;
+using Ganini.Lib;
+using System.Data.OleDb;
+using System.Data;
+using Resources;
+using System.Security.Cryptography;
+using System.Text;
+using Ganini.Security;
+using Microsoft.Reporting.WebForms; //required for creating local report scs 231213
+
+
+
+public partial class A_ProjectInputSheet : System.Web.UI.Page
+{
+    #region Declaration
+    #region XL
+    List<ExcelUploadMsg> excelUploadMsgList = new List<ExcelUploadMsg>();
+    List<ExcelUploadMsg> excelUploadMsgListTotal = new List<ExcelUploadMsg>();
+    ExcelUploadMsg exceUploadMsg = new ExcelUploadMsg();
+    string XLfilepath = "";
+    string filename = "";
+    string Validmsg = "";
+    private static string SheetName = "";
+    string ConnectionString = "";
+    string Query = "";
+    string Filetype = "";
+    int ExFormat = 0;
+    string OraFlag = "U";
+    int ChkResult = 0;
+    public static string UploadError = "";
+    private static string TranType = "";
+    public static string CreatePermission = "";
+    private static string DepotName = "";
+    private static string BankName = "";
+    #endregion
+    #region general
+    ProcessBus Bus = new ProcessBus(); LibFunctions Lib = new LibFunctions();
+    BaseClass BaseMsg = new BaseClass();
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    public static List<ProjectMsg> PMList = new List<ProjectMsg>();
+    public static List<ClientMsg> ClList = new List<ClientMsg>();
+    private static List<ProjectMsg> projList = new List<ProjectMsg>();
+    public static int OperationCount;
+    private static List<CompanyMessage> CmpList = new List<CompanyMessage>();
+    //int DBError = 0;
+
+    #endregion
+
+    #endregion Declaration
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+       
+        if (!Page.IsPostBack)
+        {
+            lblMessage.Text = "";
+            lblMessage.Visible = false;
+            Panel1.Visible = false;
+            LoadCompany();
+            try
+            {
+                SheetName = ConfigurationManager.AppSettings["ExcelFileSheetName"].ToString();
+                //lblPgmHdr.Text = " DSR IOW_Item Upload With Multi Sheet";
+                lblPgmHdr.Text = "M/L/P&M Rate Input -- Project Input ";
+            }
+            catch
+            {
+                Response.Redirect("Login.aspx");
+            }
+
+            pnlSheetName.Visible = false;
+        }
+        lblMessage.Visible = false;
+        btnUpload.Enabled = true;
+        DisablePanel();
+    }
+    protected void ddlClientChanged(object sender, EventArgs e)
+    {
+        if (ddlClient.SelectedIndex > 0 && ddlCompany.SelectedIndex > 0)
+        {
+            Int32 WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            string WClientCode = ddlClient.SelectedValue;
+            LoadProject(WCompanyId, WClientCode);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Company and Client are to be Selected" + "');", true);
+        }
+    }
+    protected void ddlCompanyChanged(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0)
+        {
+           Int32 WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+            //AllClear();
+            LoadClient(WCompanyId);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Location Not Selected" + "');", true);
+            //Pnlgv.Visible = false;
+            // pnlAdd.Visible = false;
+        }
+    }
+    protected void btnUpload_Click(object sender, EventArgs e)
+    {
+        if (IsValidUpload() == 0)
+        {
+            lblMessage.Text = "Upload Click. ";
+            lblMessage.Visible = true;
+            UploadError = ""; // scs 201008
+            UploadInProgress();
+        }
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        lblMessage.Text = "Saving from Grid..";
+        lblMessage.Visible = true;
+        MultiExcelUpload();
+        System.Threading.Thread.Sleep(1000); // just to create a sleep to ensure no double click works scs 240408
+    }
+    protected void btnDeSelect_Click(object sender, EventArgs e)
+    {
+        DeSelectAll();
+    }
+    protected void btnYes_Click(object sender, EventArgs e)
+    {
+        //Panel1.Visible = false;
+        //UploadInProgress();
+        FlUpdExcel.Enabled = true;
+        Panel1.Visible = false;
+    }
+    protected void btnNo_Click(object sender, EventArgs e)
+    {
+        Panel1.Visible = false;
+        FlUpdExcel.Enabled = true;
+        //txtNewRevNumber.Text = txtPrevRevisionNumber.Text;
+        //txtNewRevNumber.Focus();
+
+    }
+ 
+  
+ 
+    #endregion Events
+    #region Method
+    private void LoadCompany()
+    {
+        CmpList = Lib.LoadCompany();
+
+        if (CmpList != null && CmpList.Count > 0)
+        {
+            ddlCompany.DataSource = CmpList;
+            ddlCompany.DataBind();
+            ddlCompany.Items.Insert(0, "--Select Please--");
+            ddlCompany.SelectedIndex = 0;
+            if (CmpList.Count == 1)
+            {
+                ddlCompany.SelectedIndex = 1;
+                Int32 WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+                LoadClient(WCompanyId);
+            }
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Company Data not Found" + "');", true);
+            // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+    }
+    private void LoadClient(Int32 WCompanyId)
+    {
+        ClientMsg Cmp = new ClientMsg();
+        Cmp.Flag = "R";
+        Cmp.CreatedBy = BaseMsg.EmployeeCode;
+        Cmp.CompanyId = WCompanyId;
+        ClList = Bus.MasClientInsertUpdateandDelete(Cmp);
+        ClList = (from Cl in ClList where Cl.ClientType.Trim().ToUpper() == "CLIENT" select Cl).ToList();
+        ddlClient.DataSource = ClList;
+        ddlClient.DataBind();
+        ddlClient.Items.Insert(0, "-- Select Please --");
+        ddlClient.Enabled = true;
+        if (ClList.Count > 1)
+        {
+            //just Leave
+        }
+        else if (ClList.Count == 1)
+        {
+            ddlClient.SelectedIndex = 1;
+            string WClientCode = ddlClient.SelectedValue;
+            LoadProject(WCompanyId, WClientCode);
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Pls Create Clients for the selected Company" + "');", true);
+        }
+
+    }
+    private void LoadProject(Int32 WCompanyId, string WClientCode)//To load data into grid.
+    {
+        projList = Bus.MasClientProjectSelect(WCompanyId);
+        var proj = (from pj in projList where pj.ClientCode == WClientCode select new { pj.ClientProjectId, pj.ProjectName }).Distinct().ToList();
+        ddlProject.DataSource = proj;
+        ddlProject.DataBind();
+        ddlProject.Items.Insert(0, "-- Select Please --");
+
+    }
+    private void UploadInProgress()
+    {
+        if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+        // if (CreatePermission !="Y")
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "You Need Permission to Create Data" + "');", true);
+        }
+        else
+        {
+            if (ddlCompany.SelectedIndex == 0 )
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Company is Mandatory .. Pls Select" + "');", true);
+            }
+            else
+            {
+               
+                UploadClick();
+            }
+
+        }
+    }
+    private void LoadGrdUpLoadNotOK(List<DepotSalesMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+        List<DepotSalesMsg> upllst = new List<DepotSalesMsg>();
+        upllst = (from upl in UploadList where upl.Result.ToUpper() != "OK" select upl).ToList(); //select only not OK data VJ mail 200922
+        GrdWtNotOKDeptSales.DataSource = "";
+        DisablePanel();
+
+        GrdWtNotOKDeptSales.DataSource = "";
+        GrdWtNotOKDeptSales.DataSource = upllst;
+        GrdWtNotOKDeptSales.DataBind();
+        PnlNotOKDeptSales.Visible = true;
+        foreach (GridViewRow gvr in GrdWtNotOKDeptSales.Rows)
+        {
+            gvr.ForeColor = System.Drawing.Color.Red;
+        }
+    }
+    private void LoadGrdUpLoadStatus(List<DepotSalesMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+
+        GrdDepotSalesStatus.DataSource = "";
+        DisablePanel();
+        GrdDepotSalesStatus.DataSource = UploadList;
+        GrdDepotSalesStatus.DataBind();
+        PnlDepotSalesStatus.Visible = true;
+    }
+    private void LoadCheckForRegisteredUsers(DataTable dt)
+    {
+        DisablePanel();
+      
+    }
+    private void DisablePanel()
+    {
+        PnlDepotSalesStatus.Visible = false;
+        PnlNotOKDeptSales.Visible = false;
+        pnlNotOKTeaBoard.Visible = false;
+        PnlTeaBoardStatus.Visible = false;
+        pnlNotOkBankReceipt.Visible = false;
+        pnlBankReceiptStatus.Visible = false;
+        //pnlExList.Visible = false;
+    }
+ 
+    #endregion
+    #region Excelupl
+    private void UploadClick()
+    {
+        //if (ddlClient.SelectedIndex == 0 || ddlProject.SelectedIndex==0)
+        //{
+        //    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Select Client/ Project and File to be uploaded" + "');", true);
+        //}
+        //else
+        //{
+            
+                filename = Path.GetFileName(FlUpdExcel.FileName);
+                lblMessage.Text = "FileName Read"; //scs180310
+                string ValidMsg = ValidateUploadedFile();
+                if (ValidMsg == "")
+                {
+                    uploadFile();    //if (lblMessage.Text.Length == 0) //error while uploading
+
+                    if (UploadError.Length > 0) //(lblMessage.Text.Length > 0) //error while uploading scs 180310
+                    {
+                        // UpLoadType(); // SCS 201008 commented as we upload only excel files and hence below two lines
+                        ExFormat = 1;
+                        Filetype = "Excel";
+                        //XLUpload();
+                        LoadExcelSheetGrid();
+                    }
+                }
+                else
+                {
+                    lblMessage.Text = ValidMsg;
+                    lblMessage.Visible = true;
+                    pnlSheetName.Visible = false;
+                }
+            
+        //}
+    }
+    public string ValidateUploadedFile()
+    {
+        Validmsg = "";
+        HttpPostedFile UploadFile = FlUpdExcel.PostedFile;
+        lblMessage.Text = lblMessage.Text + " Validate File begins. ";
+        if (FlUpdExcel.FileName == "")
+        {
+            Validmsg = Validmsg + " Please select File. ";
+        }
+        else
+        {
+            filename = Path.GetFileName(FlUpdExcel.FileName);
+           
+            if (UploadFile.FileName == null)
+            {
+                Validmsg = Validmsg + " FileName Not valid and Uploaded. ";
+            }
+            else if (UploadFile.ContentLength > 0)
+            {
+                Validmsg = "";
+            }
+            else
+            {
+                Validmsg = Validmsg + " Data not found Please check the data. ";
+            }
+            //
+            FileInfo Info = new FileInfo(filename); //scs 230315 added to check only xls or xlsx getting loaded
+            string wextn = Info.Extension.ToString();
+            if (wextn.ToLower() != ".xls" && wextn.ToLower() != ".xlsx")
+            {
+                Validmsg = Validmsg + " Only XLS and XLSX files are supported ";
+            }
+            //
+        } // Validate for File extension,data count scs 280613
+        return Validmsg;
+    }
+    public void uploadFile()
+    {
+        try
+        {
+            //scs 210416 to keep filename unique added dateand time to file name
+            FileInfo Info = new FileInfo(filename);
+            string Wtime = System.DateTime.UtcNow.AddMinutes(330).ToString("yyyyMMddHHmmss");
+           
+            string wextn = Info.Extension.ToString();
+            string fname = filename.Substring(0, filename.IndexOf(wextn));
+            filename = fname + Wtime+wextn;
+         
+            // scs 210416 ends
+            UploadError = "";
+            string filePath = System.IO.Path.GetDirectoryName(FlUpdExcel.PostedFile.FileName);
+            XLfilepath = ConfigurationManager.AppSettings["FolderPath"].ToString(); // scs 0703
+            lblMessage.Text =  " UpLoad File begins at " + XLfilepath;
+            if (File.Exists(@XLfilepath + filename))
+            {
+                lblMessage.Text = lblMessage.Text + ".... XLFILE with same Name Delete ";
+                File.Delete(@XLfilepath + filename);
+            }
+            lblMessage.Text =  ".. Save New XLFILE";
+            FlUpdExcel.SaveAs(XLfilepath + filename);
+            UploadError = "OK";
+            txtFileName.Text = XLfilepath+filename; //save the file NAme in textbox scs 230912
+        }
+        catch (Exception ex)
+        {
+            lblMessage.Text =  " Check if File is being Used or you have Permission " + ex.ToString();
+            lblMessage.Visible = true;
+        }
+    }
+
+    private void LoadExcelSheetGrid()
+    {
+        List<ExcelSheetNameMsg> Shtlst = GetExcelShtNames(filename);
+        grdSheetName.DataSource = Shtlst;
+        grdSheetName.DataBind();
+        pnlSheetName.Visible = true;
+    }
+    private List<ExcelSheetNameMsg> GetExcelShtNames(string excelFile)
+    {
+        OleDbConnection objConn = null;
+        System.Data.DataTable dt = null;
+        FileInfo Info = new FileInfo(excelFile);
+        string WExtension = Info.Extension.ToString(); 
+
+        try
+        {
+            // Connection String. Change the excel file to the file you       // will search.
+            String connString = ""; 
+            if (WExtension.ToUpper() == ".XLS")
+            {
+                connString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XLfilepath + filename + ";Extended Properties='Excel 8.0;HDR=YES;IMEX=1'";
+            }
+            else
+            {
+                connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 12.0;HDR=Yes;IMEX=1'"; //HDR =Yes measns data is having column heading
+                // connString = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 16.0;HDR=Yes;IMEX=1'"; //HDR =Yes measns data is having column heading
+            }
+             objConn = new OleDbConnection(connString);        // Open connection with the database.
+            objConn.Open();    // Get the data table containg the schema guid.
+            dt = objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+
+            if (dt == null)
+            {
+                return null;
+            }
+            List<ExcelSheetNameMsg> Shtlst = new List<ExcelSheetNameMsg>();
+
+            // String[] excelSheets = new String[dt.Rows.Count];
+            // int i = 0;
+
+            // Add the sheet name to the string array.
+            foreach (DataRow row in dt.Rows)
+            {
+                int Windex = row["TABLE_NAME"].ToString().IndexOf("$");
+                if (row["TABLE_NAME"].ToString().Contains("'"))
+                {
+                    Windex = Windex + 2;
+                }
+                string WSheetName = row["TABLE_NAME"].ToString();
+                string DispSheetName = WSheetName.Replace("'", "");
+                ExcelSheetNameMsg shtMsg = new ExcelSheetNameMsg();
+                if (WSheetName.Length > Windex + 1) //Index starts with 0 hence windex+1
+                {
+                    ///When Printarea is ther in XL it adds it as Another sheet with larger name
+                    //i = i - 1;
+                }
+                else
+                {
+                    //excelSheets[i] = WSheetName;
+                    shtMsg.ExeclSheetName = WSheetName;
+                    shtMsg.DispSheetName = DispSheetName;
+                    shtMsg.ExeclFileName = txtFileName.Text;
+                    Shtlst.Add(shtMsg);
+                }
+
+                //i++;
+            }
+
+            // Loop through all of the sheets if you want too...
+            //for (int j = 0; j < excelSheets.Length; j++)
+            //{
+            //    // Query each excel sheet.
+
+
+            //}
+
+            return Shtlst;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+        finally
+        {
+            // Clean up.
+            if (objConn != null)
+            {
+                objConn.Close();
+                objConn.Dispose();
+            }
+            if (dt != null)
+            {
+                dt.Dispose();
+            }
+        }
+    }
+    private void DeSelectAll()
+    {
+        foreach (GridViewRow gvr in grdSheetName.Rows)
+        {
+            ((CheckBox)gvr.FindControl("chkUpLoadSheet")).Checked = false;
+        }
+    }
+
+    private void MultiExcelUpload()
+    {
+        int WCount = 0; List<ExcelSheetNameMsg> xlsht = new List<ExcelSheetNameMsg>();
+        foreach (GridViewRow gvr in grdSheetName.Rows)
+        {
+            if (((CheckBox)gvr.FindControl("chkUpLoadSheet")).Checked == true)
+            {
+                //WCount = 1; //Valid Selection
+                WCount = WCount + 1;
+                ExcelSheetNameMsg shmsg = new ExcelSheetNameMsg();
+                shmsg.ExeclFileName = ((Label)gvr.FindControl("lblExcelFileName")).Text;
+                shmsg.ExeclSheetName = ((Label)gvr.FindControl("lblSheetName")).Text;
+                shmsg.DispSheetName = ((Label)gvr.FindControl("lblDispSheetName")).Text;
+                shmsg.OnlyAmount = ((CheckBox)gvr.FindControl("chkOnlyAmount")).Checked;
+                xlsht.Add(shmsg);
+            }
+             
+        }
+        if (WCount == 0)
+        {
+            lblMessage.Text = "Atleast One Sheet Name needs to be selected..";
+        }
+        else if (WCount > 1)
+        {
+            lblMessage.Text = "Only One Sheet Name needs to be selected..";
+        }   
+        else
+        {
+            WCount = 1; // OK condition
+            
+        }
+        if (WCount != 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + "');", true);
+        }
+        else
+        {
+            List<ExcelUploadMsg> ExcelUploadMsgListTot = new List<ExcelUploadMsg>();
+            try
+            {
+                ExcelUploadMsgListTot = MultiSheetDataUpload(xlsht);
+                if (ExcelUploadMsgListTot.Count > 0)
+                {
+                    CheckandUploadData(ExcelUploadMsgListTot);
+                }
+                else
+                {
+                    lblMessage.Text = "Error Loading XL.. Pls Check XL format it should have column 1 and 8 filled up in all rows";
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = "Error Loading XL.." + ex.ToString().Substring(0, 128);
+            }
+        }
+
+    }
+    private List<ExcelUploadMsg> MultiSheetDataUpload(List<ExcelSheetNameMsg> XLSht)
+    {
+        excelUploadMsgListTotal.Clear();
+        // Generate the Excel Local Memory temp data
+        foreach (ExcelSheetNameMsg sht in XLSht)
+        {
+            SheetName = sht.ExeclSheetName;     string XlFileName = sht.ExeclFileName;    // Query = "SELECT * FROM [" + SheetName + "$]";
+             Query = "SELECT * FROM [" + SheetName + "]"; //$$ is Coming in the sht.ExcelSheetName hence removed here   ////List<ExcelUploadMsg> ExlList = XLUpLoad(Query);
+            lblMessage.Visible = true;      lblMessage.Text = " XLUpload Begins for- " + SheetName;       //HttpPostedFile UploadFile = FlUpdExcel.PostedFile;
+            FileInfo Info = new FileInfo(sht.ExeclFileName);
+            string WExtension = Info.Extension.ToString();
+            if (WExtension.ToUpper() == ".XLS")
+            {  //ConnectionString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XLfilepath + filename + ";Extended Properties='Excel 8.0;HDR=YES;IMEX=1'";
+               // ConnectionString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XLfilepath + filename + ";Extended Properties='Excel 8.0;HDR=NO;IMEX=1'";
+                ConnectionString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XlFileName + ";Extended Properties='Excel 8.0;HDR=NO;IMEX=1'";
+            }
+            else
+            {  //ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 12.0;HDR=Yes;IMEX=1'"; //HDR =Yes measns data is having column heading
+               // ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 12.0;HDR=NO;IMEX=1'"; //HDR =Yes measns data is having column heading
+                ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XlFileName + ";Extended Properties='Excel 12.0;HDR=NO;IMEX=1'"; //HDR =Yes measns data is having column heading
+            }
+            OleDbConnection conne = new OleDbConnection(@ConnectionString);
+            OleDbCommand command = new OleDbCommand(Query, conne);
+            OleDbDataReader dbdr;
+            try
+            {
+                lblMessage.Text = " XLUpload Execute reader to start -" + SheetName; //scs 251215
+                OraFlag = "U";
+                conne.Open();
+                dbdr = command.ExecuteReader(CommandBehavior.CloseConnection);
+                DataTable excelData = new DataTable("ExcelData");
+                excelData.Load(dbdr); //09122012
+                TranType = "ProjINP";
+                //if (SheetName.ToUpper().Contains("(H)")) //DSRH
+                //{
+                //    TranType = "DSRH";
+                //}
+                //else if (SheetName.ToUpper().Contains("(I)")) //DSRI
+                //{
+                //    TranType = "DSRI";
+                //}
+                //else if (SheetName.ToUpper().Contains("DAR")) //Basic Rate
+                //{
+                //    TranType = "DAR";
+                //}
+                //else if (SheetName.ToUpper().Contains("BASIC"))
+                //{
+                //    TranType = "BASIC";
+                //}
+                //else
+                //{
+                //}
+                //txtSheetName.Text = sht.ExeclSheetName;
+                txtSheetName.Text = sht.DispSheetName;
+                //if (sht.OnlyAmount == true)
+                //{
+                //    txtOnlyAmount.Text = "Y";
+                //}
+                //else
+                //{
+                //    txtOnlyAmount.Text = "N";
+                //}
+                txtOnlyAmount.Text = "N";
+                excelUploadMsgList = IOWRateUpload(excelData, TranType);
+                excelUploadMsgListTotal = excelUploadMsgListTotal.Concat(excelUploadMsgList).ToList();
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = lblMessage.Text + ex.Message.ToString();
+                lblMessage.Visible = true;
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + ex.ToString() + "');", true);
+            }
+            finally
+            {
+                if (conne != null)
+                {
+                    ConnectionString = "";
+                    command.Dispose();
+                    conne.Close();
+                }
+            }
+        }
+        return excelUploadMsgListTotal;
+    }
+
+    private void XLUpload()
+    {
+        // scs 201008 Sheet Name is selected in the page load itself
+        Query = "SELECT * FROM [" + SheetName + "$]";
+        List<ExcelUploadMsg> ExlList = XLUpLoad(Query);
+        excelUploadMsgListTotal = null;
+        int ErrorCount = 0; //string ErrorMesg = ""; 
+        excelUploadMsgListTotal = ExlList.ToList();
+        // in Sheet2 store Corporate MDA   //SheetName = ConfigurationManager.AppSettings["ExcelFileSheetName1"].ToString();  //Query = "SELECT * FROM [" + SheetName + "$]";
+        //List<ExcelUploadMsg> ExlListCorp = XLUpLoad(Query);  // excelUploadMsgListTotal = excelUploadMsgListTotal.Concat(ExlListCorp).ToList();
+        if (excelUploadMsgListTotal.Count > 0)
+        {
+            ErrorCount = CheckForProperDataInFile();
+            if (ErrorCount == 0)
+            {
+                CheckandUploadData(excelUploadMsgListTotal);
+            }
+        }
+        else
+        {
+            lblMessage.Text = lblMessage.Text + " Sheet Name not proper or Excel data not proper hence returned with out any Data.. Check data ";
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + "');", true);
+        }
+    }
+    private List<ExcelUploadMsg> XLUpLoad(string Querya)
+    {
+        lblMessage.Visible = true;
+        lblMessage.Text = " XLUpload Begins for- "+SheetName;
+        //List<ExcelUploadMsg> excelUploadMsgList = new List<ExcelUploadMsg>(); // scs 190802 moved to declaration
+        HttpPostedFile UploadFile = FlUpdExcel.PostedFile;
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+
+        dateinfo.ShortDatePattern = "dd/MM/yyyy";
+        DataTable excelData = new DataTable("ExcelData");
+       // Querya = "SELECT * FROM [" + ConfigurationManager.AppSettings["ExcelFileSheetName"].ToString() + "$]";
+        FileInfo Info = new FileInfo(filename);
+        string WExtension = Info.Extension.ToString();
+        if (WExtension.ToUpper() == ".XLS")
+            // if (ConfigurationManager.AppSettings["ExcelExtension"].ToString() == ".xls")
+        {
+            //ConnectionString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XLfilepath + filename + ";Extended Properties='Excel 8.0;HDR=YES;IMEX=1'";
+            ConnectionString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XLfilepath + filename + ";Extended Properties='Excel 8.0;HDR=NO;IMEX=1'";
+        }
+        else
+        {
+            //ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 12.0;HDR=Yes;IMEX=1'"; //HDR =Yes measns data is having column heading
+            ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 12.0;HDR=NO;IMEX=1'"; //HDR =Yes measns data is having column heading
+        }
+
+            OleDbConnection conne = new OleDbConnection(@ConnectionString);
+            OleDbCommand command = new OleDbCommand(Querya, conne);
+        OleDbDataReader dbdr;
+        #region XLtoMemory
+        try
+        {
+            lblMessage.Text = " XLUpload Execute reader to start -"; //scs 251215
+            OraFlag = "U";
+            conne.Open();
+            dbdr = command.ExecuteReader(CommandBehavior.CloseConnection);
+            //int a = dbdr.VisibleFieldCount; //scs to get number of columns in xl
+            excelData.Load(dbdr); //09122012
+            TranType = "ProjINP";
+            excelUploadMsgList = IOWRateUpload(excelData, TranType);
+        
+        }
+        catch (Exception ex)
+        {
+            lblMessage.Text = lblMessage.Text+ ex.Message.ToString();
+            lblMessage.Visible = true;
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + ex.ToString() + "');", true);
+        }
+        finally
+        {
+            if (conne != null)
+            {
+                ConnectionString = "";
+                command.Dispose();
+                conne.Close();
+            }
+        }
+        #endregion
+        return excelUploadMsgList; //scs 190802
+
+    }
+    private int CheckForProperDataInFile()
+    {
+        int ErrorKount = 0;
+        
+        return ErrorKount;
+    }
+    private void CheckandUploadData(List<ExcelUploadMsg> excelUploadMsgList)
+    {
+        #region TempInsert
+         UploadResultMsg UpMsg = new UploadResultMsg();
+         try
+         {
+              lblMessage.Text = lblMessage.Text + " chk xl data begin-"; //scs 251215
+                 ChkResult = 0; // set to OK condition
+                 TranType = "ProjINP";
+                  List<DepotSalesMsg> ChkData = CheckData(excelUploadMsgList, TranType);
+                     ChkResult = 0; // currently not checking excel data scs 221015
+                     if (excelUploadMsgList.Count > 0)
+                     {
+                         if (ChkResult == 0) //Data fine 
+                         {
+                             lblMessage.Text = " Proj INP For Items -- Temp insert begin-"; //scs 251215
+                             //UpMsg = Bus.NewExcelUploadTempForTender(excelUploadMsgList, TranType);
+                             UpMsg = Bus.A_ExcelUploadDSRTemp(excelUploadMsgList, TranType);
+                             lblMessage.Text = " Tempinsert Over-"; //scs 251215
+                         }
+                         else
+                         {
+                             LoadGrdUpLoadNotOK(ChkData);
+                         }
+                     }
+                     else
+                     {
+                         lblMessage.Text = " No data read .. may Column1,2 are empty while Reading the excel file to List" ; //scs 251215
+                         ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Error while Reading the excel file to List  "  + "');", true);
+                     }
+                 
+         }
+         catch (Exception ex)
+         {
+             lblMessage.Text =  ex.Message.ToString(); //scs 251215
+             ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Excel Data not Read properly from File- " + ex.ToString() + "');", true);
+         }
+         finally
+         {
+         }
+
+     #endregion
+        #region AfterTempInsert
+        UploadResultMsg Uploadinsert = new UploadResultMsg();
+        List<DepotSalesMsg> UpLoadList = new List<DepotSalesMsg>();
+        Int64 WParameterId = UpMsg.WParameterId;
+        //try
+        //{
+            if (ChkResult == 0)
+            {
+                Filetype = ""; //reinitialise
+                if (UpMsg.Result.Substring(0, 1) == "0")
+                {
+                    lblMessage.Text = "Inserting to Project Input  started";
+                    Uploadinsert = Bus.A_ExcelTempToTableInsert(WParameterId);
+                   // Uploadinsert.Result = "0"; //scs comment this to allow abv 
+                    if (Uploadinsert.Result.Substring(0, 1) == "9") //scs 210313 added check for month close
+                    {
+                        ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1) + "');", true);
+                        lblMessage.Text = Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1); //scs 251215
+                        pnlSheetName.Visible = false;
+                    }
+                    else
+                    {
+                        if (Uploadinsert.Result != "0")
+                        {
+                            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" +  Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1) + "');", true);
+                            lblMessage.Text =  Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1); //scs 251215
+                            pnlSheetName.Visible = false;
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Succesfully Uploaded" + "');", true);
+                            lblMessage.Text = "";
+                            pnlSheetName.Visible = false;
+                        }
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + " NewExcelImportTempInsert Failed while inserting Table" + UpMsg.Result.Substring(1, UpMsg.Result.Length - 1) + "');", true);
+                    lblMessage.Text =  UpMsg.Result.Substring(1, UpMsg.Result.Length - 1); //scs 251215
+                    pnlSheetName.Visible = false;
+                }
+            }
+ 
+        #endregion
+    }
+ 
+    public List<ExcelUploadMsg> IOWRateUpload(DataTable dtCoup,string TranType)
+    {
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+        dateinfo.ShortDatePattern = "MM-dd-yyyy";
+       // dateinfo.ShortDatePattern = "dd-MM-yyyy";
+        lblMessage.Text = TranType+ " UpLoad Method Running";
+        List<ExcelUploadMsg> excelUploadList = new List<ExcelUploadMsg>();
+        int linecount = 1; // if in excel connection string HDR is Yes the Hdr is taken care hence 1 else 0
+        foreach (DataRow dr in dtCoup.Rows)
+        {
+            string CompId = ddlCompany.SelectedValue;
+            string RemovedCharColumn = "";
+            string AmountType = "0"; // Assumed default supply & installation amount os quoted as it will have 6 columns only
+           // string WDate = ""; string sDate = ""; //string WChar = "";
+            int err = 1; // set for error condition reset only if valid data below scs vj 200923
+            if (linecount > 1) // Upload as is else if header is specified then make >=1
+            {
+                ExcelUploadMsg excelUpload = new ExcelUploadMsg();
+                #region ProjINP
+                        if ((dr[0].ToString() != string.Empty && dr[6].ToString() != string.Empty //changed dr[7] to dr[6] scs251217 as per tender erp request 3 document item6
+                            && TranType.ToUpper() == "PROJINP")) //season,Auctiondate,INvnumber,Dealprice
+                        {
+                            excelUpload.Column1 = linecount.ToString(); // xl row number
+                            excelUpload.Column2 = (dr[0].ToString() == null || dr[0].ToString() == string.Empty) ? string.Empty : dr[0].ToString(); // ITcode
+                            RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column2);
+                            excelUpload.Column2 = RemovedCharColumn;
+                            excelUpload.Column3 = (dr[1].ToString() == null || dr[1].ToString() == string.Empty) ? string.Empty : dr[1].ToString(); // Itname
+                            RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column3);
+                            excelUpload.Column3 = RemovedCharColumn;
+                            excelUpload.Column4 = (dr[2].ToString() == null || dr[2].ToString() == string.Empty) ? string.Empty : dr[2].ToString(); //Make
+                            RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column4);
+                            excelUpload.Column4 = RemovedCharColumn;
+                            excelUpload.Column5 = (dr[3].ToString() == null || dr[3].ToString() == string.Empty) ? string.Empty : dr[3].ToString(); // Region
+                            RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column5);
+                            excelUpload.Column5 = RemovedCharColumn;
+                            excelUpload.Column6 = (dr[4].ToString() == null || dr[4].ToString() == string.Empty) ? string.Empty : dr[4].ToString(); // UOM
+                            RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column6);
+                            excelUpload.Column6 = RemovedCharColumn;
+                            try
+                            {
+                                excelUpload.Column7 = (dr[5].ToString() == null || dr[5].ToString() == string.Empty) ? string.Empty : dr[5].ToString(); //RATE
+                                RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column7); 
+                                excelUpload.Column7 = RemovedCharColumn;
+                            }
+                            catch
+                            {
+                                excelUpload.Column7 = "0";
+                            }
+                            try
+                            {
+                                excelUpload.Column8 = (dr[6].ToString() == null || dr[6].ToString() == string.Empty) ? string.Empty : dr[6].ToString(); // Yearmonth
+                                RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column8);
+                                excelUpload.Column8 = RemovedCharColumn;
+                            }
+                            catch
+                            {
+                                excelUpload.Column8 = "0";
+                            }
+                            try
+                            {
+                                excelUpload.Column9 = (dr[7].ToString() == null || dr[7].ToString() == string.Empty) ? string.Empty : dr[7].ToString(); // Yearmonth
+                                RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column9);
+                                excelUpload.Column9 = RemovedCharColumn;
+                            }
+                            catch
+                            {
+                                excelUpload.Column9 = "0";
+                            }
+
+                           
+                            excelUpload.Column10 = ddlClient.SelectedValue;
+                            excelUpload.Column11 = ddlProject.SelectedValue;
+                            excelUpload.Column12 = txtFileName.Text;
+                            excelUpload.Column13 = BaseMsg.EmployeeCode;
+                            #region Unwanted
+                           
+                            //try
+                            //{
+                            //    excelUpload.Column10 = (dr[8].ToString() == null || dr[8].ToString() == string.Empty) ? " " : dr[8].ToString(); //Remarks
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column10);
+                            //    excelUpload.Column10 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column10 = "";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column11 = (dr[9].ToString() == null || dr[9].ToString() == string.Empty) ? "" : dr[9].ToString(); //LSP_SP
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column11);
+                            //    excelUpload.Column11 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column11 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column12 = (dr[10].ToString() == null || dr[19].ToString() == string.Empty) ? "" : dr[10].ToString(); //LSP_SP
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column12);
+                            //    excelUpload.Column12 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column12 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column13 = (dr[11].ToString() == null || dr[11].ToString() == string.Empty) ? "" : dr[11].ToString(); //Buyer
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column13);
+                            //    excelUpload.Column13 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column13 ="0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column14 = (dr[12].ToString() == null || dr[12].ToString() == string.Empty) ? "" : dr[12].ToString(); //  Auctioneer Name
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column14);
+                            //    excelUpload.Column14 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column14 ="0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column15 = (dr[13].ToString() == null || dr[13].ToString() == string.Empty) ? "" : dr[13].ToString(); // TeaType
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column15);
+                            //    excelUpload.Column15 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column15 ="0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column16 = (dr[14].ToString() == null || dr[14].ToString() == string.Empty) ? "" : dr[14].ToString(); // CAtegory
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column16);
+                            //    excelUpload.Column16 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column16 ="0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column17 = (dr[15].ToString() == null || dr[15].ToString() == string.Empty) ? "" : dr[15].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column17);
+                            //    excelUpload.Column17 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column17 = "0";
+                            //}
+
+                            //try
+                            //{
+                            //    excelUpload.Column18 = (dr[16].ToString() == null || dr[16].ToString() == string.Empty) ? "" : dr[16].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column18);
+                            //    excelUpload.Column18 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column18 = "0";
+                            //}
+
+                            //try
+                            //{
+                            //    excelUpload.Column19 = (dr[17].ToString() == null || dr[17].ToString() == string.Empty) ? "" : dr[17].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column18);
+                            //    excelUpload.Column19 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column19 = "0";
+                            //}
+
+                            //try
+                            //{
+                            //    excelUpload.Column20 = (dr[18].ToString() == null || dr[18].ToString() == string.Empty) ? "" : dr[18].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column17);
+                            //    excelUpload.Column20 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column20 = "0";
+                            //}
+
+                            //try
+                            //{
+                            //    excelUpload.Column21 = (dr[19].ToString() == null || dr[19].ToString() == string.Empty) ? "" : dr[19].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column21);
+                            //    excelUpload.Column21 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column21 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column22 = (dr[20].ToString() == null || dr[20].ToString() == string.Empty) ? "" : dr[20].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column22);
+                            //    excelUpload.Column22 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column22 = "0";
+                            //}
+
+                            //try
+                            //{
+                            //    excelUpload.Column23 = (dr[21].ToString() == null || dr[21].ToString() == string.Empty) ? "" : dr[21].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column23);
+                            //    excelUpload.Column23 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column23 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column24 = (dr[22].ToString() == null || dr[22].ToString() == string.Empty) ? "" : dr[22].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column24);
+                            //    excelUpload.Column24 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column24 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column25 = (dr[23].ToString() == null || dr[23].ToString() == string.Empty) ? "" : dr[23].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column25);
+                            //    excelUpload.Column25 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column25 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column26 = (dr[24].ToString() == null || dr[24].ToString() == string.Empty) ? "" : dr[24].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column26);
+                            //    excelUpload.Column26 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column26 = "0";
+                            //}
+                            //try
+                            //{
+                            //    excelUpload.Column27 = (dr[25].ToString() == null || dr[25].ToString() == string.Empty) ? "" : dr[25].ToString(); // Origion
+                            //    RemovedCharColumn = RemoveUnWantedCharacter(excelUpload.Column27);
+                            //    excelUpload.Column27 = RemovedCharColumn;
+                            //}
+                            //catch
+                            //{
+                            //    excelUpload.Column27 = "0";
+                            //}
+
+                           
+
+                       
+                            //excelUpload.Column18 = (dr[17].ToString() == null || dr[17].ToString() == string.Empty) ? "0" : dr[17].ToString(); //NoofPAck
+                            //excelUpload.Column19 = (dr[18].ToString() == null || dr[18].ToString() == string.Empty) ? "0" : dr[18].ToString(); //grosswt
+                            //excelUpload.Column20 = (dr[19].ToString() == null || dr[19].ToString() == string.Empty) ? "0" : dr[19].ToString(); //NetWt
+
+                            //excelUpload.Column21 = (dr[20].ToString() == null || dr[20].ToString() == string.Empty) ? "0" : dr[20].ToString(); // invwt
+                            //excelUpload.Column22 = (dr[21].ToString() == null || dr[21].ToString() == string.Empty) ? "0" : dr[21].ToString(); //sampleqty
+                            //excelUpload.Column23 = (dr[22].ToString() == null || dr[22].ToString() == string.Empty) ? "0" : dr[22].ToString(); // BAsepeice
+                            //excelUpload.Column24 = (dr[23].ToString() == null || dr[23].ToString() == string.Empty) ? "0" : dr[23].ToString(); // //GPNO
+                            //excelUpload.Column25 = (dr[24].ToString() == null || dr[24].ToString() == string.Empty) ? "0" : dr[24].ToString(); // GPDate
+                            ////WDate = excelUpload.Column25.Replace("/", "-");
+                            ////sDate = (Convert.ToDateTime(WDate, dateinfo)).ToString("yyyy-MM-dd");
+                            ////excelUpload.Column25 = sDate;
+                            //excelUpload.Column26 = (dr[25].ToString() == null || dr[25].ToString() == string.Empty) ? "" : dr[25].ToString(); //   PACKType
+                            //excelUpload.Column27 = (dr[26].ToString() == null || dr[26].ToString() == string.Empty) ? "" : dr[26].ToString(); // PAckNO
+                            //excelUpload.Column28 = (dr[27].ToString() == null || dr[27].ToString() == string.Empty) ? "" : dr[27].ToString(); // Lotstatus
+                            #endregion
+                            err = 0;
+                        }
+                        #endregion
+
+                if (err == 0) // skip records if data contains invalid or blank values on key fields RevNo
+                {
+                   // excelUpload.Column46 = AmountType; // when 0 with txtOnlyAmount = 1 then installamount else it is supply amount only
+                    //excelUpload.Column47 = txtOnlyAmount.Text;
+                    //excelUpload.Column48 = txtFileName.Text;
+                    //excelUpload.Column49 = txtSheetName.Text;
+                    ////excelUpload.Column50 = RevNo; 
+                    excelUpload.Column20 = TranType;
+                    excelUpload.Column51 = CompId; 
+                    //excelUpload.Column52 = ddlClient.SelectedValue;
+                    //excelUpload.Column53 = ddlProject.SelectedValue; //projctId
+                    //excelUpload.Column54 = ddlProject.SelectedValue; //ProjectCode;//future use
+                    excelUpload.Column55 = BaseMsg.EmployeeCode;
+                    excelUpload.UploadType = ExFormat; //used for upload file type
+                    excelUploadList.Add(excelUpload);
+                }
+                
+              }
+            linecount++;
+        }
+        return excelUploadList;
+    }
+    private List<DepotSalesMsg> CheckData(List<ExcelUploadMsg> ExData, string TranType)
+    {
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+        //dateinfo.ShortDatePattern = "MM-dd-yyyy";
+        dateinfo.ShortDatePattern = "dd-MM-yyyy";
+
+        lblMessage.Text = "CheckData Method Running";
+        List<DepotSalesMsg> DataErr = new List<DepotSalesMsg>();
+       
+            int RCount = 0; //Since XL has column Heading, the rownumber to start from 2
+            ChkResult = 0; // set OK
+            DepotSalesMsg dtMsg = new DepotSalesMsg();
+            int ChkResult1 = 0;
+
+            
+                ChkResult = 0;
+                ChkResult1 = 0; //reset 
+                dtMsg.Result = "OK";
+                DataErr.Add(dtMsg);
+            
+        
+        return DataErr;
+    }
+    private bool IsNumeric(string WText)
+    {
+        decimal number3 = 0;
+        bool canConvert = decimal.TryParse(WText, out number3);
+        return canConvert;
+    }
+    private string ConvDateFormat(string WDate)
+    {
+        //char SpaceChar = ' '; //to identify the date and time portion
+        string Error = "";
+        string WDOB = "";
+        char SepChar = '.';
+        if (WDate.IndexOf('.', 1) > 0)
+        {
+            SepChar = '.';
+        }
+        else if (WDate.IndexOf('/', 1) > 0)
+        {
+            SepChar = '/';
+        }
+        else if (WDate.IndexOf('-', 1) > 0)
+        {
+            SepChar = '-';
+        }
+        else
+        {
+            Error = Error + "* Not Valid Date Separator";
+        }
+
+        string[] split = WDate.Split(new char[] { SepChar });
+
+        // int lenDate = Convert.ToInt16(WDate.Substring(WDate.IndexOf(SpaceChar, 1)));
+
+        string dd = split[0];
+        string WMMYYYY = WDate.Substring(WDate.IndexOf(SepChar, 1)); // get last digits after the 2nd date separator -yyyy ---getting /YYYY
+        string DD = WDate.Substring(0, WDate.Length - WMMYYYY.Length);
+        string WYYYY = WMMYYYY.Substring(WMMYYYY.IndexOf(SepChar, 1)); // we get the first dd/mm character after excluding last / in WDate getting 9/9
+        string MM = WMMYYYY.Substring(1, WMMYYYY.Length - WYYYY.Length - 1); //get last digits after the 1st date separator --MM /9
+
+        string YYYY = WYYYY.Substring(1, 4);
+
+
+        // string MMYYYY = WDate.Substring((dd.Length + 1), (WDate.Length - split[0].ToString().Length - 1));
+        try
+        {
+            if (Convert.ToInt32(dd) > 0)
+                if (dd.Length == 1)
+                {
+                    dd = "0" + dd;
+                }
+                else if (dd.Length == 2)
+                {
+
+                }
+                else
+                {
+                    Error = Error + "* Error in Format to be DD";
+
+                }
+            else
+            {
+                Error = Error + "* Error in Date DD Format";
+            }
+
+            if (Convert.ToInt32(MM) > 0)
+                if (MM.Length == 1)
+                {
+
+                    MM = "0" + MM;
+                }
+                else if (MM.Length == 2)
+                {
+
+                }
+                else
+                {
+
+                    Error = Error + "* Error in Month Format to be MM";
+                }
+            else
+            {
+                Error = Error + "* Error in Date MM Format";
+            }
+
+            if (Convert.ToInt32(YYYY) > 0)
+            {
+                if (YYYY.Length > 3)
+                {
+                    YYYY = YYYY.Substring(0, 4);
+                }
+                else
+                {
+                    Error = Error + "* Error in Year Format to be YYYY";
+                }
+
+            }
+            else
+            {
+                Error = Error + "* Error in Date YYYY Format";
+            }
+            if ((Convert.ToInt32(MM) == 1 || Convert.ToInt32(MM) == 3 || Convert.ToInt32(MM) == 5 || Convert.ToInt32(MM) == 7 || Convert.ToInt32(MM) == 8 || Convert.ToInt32(MM) == 10
+          || Convert.ToInt32(MM) == 12) && Convert.ToInt32(DD) > 31)
+            {
+                Error = Error + "* Error in Date Format";
+            }
+            if ((Convert.ToInt32(MM) == 4 || Convert.ToInt32(MM) == 6 || Convert.ToInt32(MM) == 9 || Convert.ToInt32(MM) == 11) && Convert.ToInt32(DD) > 30)
+            {
+                Error = Error + "* Error in Date Format";
+            }
+            if (Convert.ToInt32(MM) == 2)
+            {
+                int lpyr = Convert.ToInt32(YYYY) % 4;
+                if (((lpyr == 0) && Convert.ToInt32(DD) > 29) || ((lpyr > 0) && Convert.ToInt32(DD) > 28))
+                {
+                    Error = Error + "* Error in Date Format";
+                }
+            }
+            if (Error.Length > 0)
+            {
+                WDOB = Error;
+            }
+            else
+            {
+                //WDOB = dd + "." + MM + "." + YYYY;
+                WDOB = MM + "/" + dd + "/" + YYYY;
+            }
+
+        }
+        catch
+        {
+            Error = Error + "* Error in Date Format only Numbers allowed";
+            WDOB = Error;
+        }
+
+        return WDOB;
+    }
+    private string RemoveUnWantedCharacter(string WString)
+    {
+        string WParticulars = "";
+
+        WParticulars = WString.Replace("\n", ""); //remove New line Quotes
+        WParticulars = WParticulars.Replace("\r", ""); //remove New line Quotes
+        WParticulars = WParticulars.Replace("\t", ""); //remove termin
+        WParticulars = WParticulars.Replace("\"", ""); //remove Double Quotes
+        WParticulars = WParticulars.Replace("'", ""); //remove Double Quotes
+        WParticulars = WParticulars.Trim();
+        string output = new string(WParticulars.Where(c => !char.IsControl(c)).ToArray()); // remove all control characters from your input string 
+
+        return WParticulars;
+    }
+ 
+
+    #endregion
+
+    private int IsValidUpload()
+    {
+        int Error = 0;
+        string DisplayError = "";
+        if (ddlCompany.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Company Is Mandatory pls Select .... ";
+            Error = 1;
+        }
+
+        if (ddlClient.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Client Is Mandatory pls Select .... ";
+            Error = 1;
+        }
+        if (ddlProject.SelectedIndex == 0)
+        {
+            DisplayError = DisplayError + "--" + " Project Is Mandatory pls Select .... ";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+
+}

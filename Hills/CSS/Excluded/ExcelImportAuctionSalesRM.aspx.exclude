@@ -1,0 +1,512 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage3.master" AutoEventWireup="true" CodeFile="ExcelImportAuctionSalesRM.aspx.cs" Inherits="ExcelImportAuctionSalesRM" %>
+ 
+<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+    <%--<asp:Label ID="Label1" runat="server" Align= "center" Text=" "  width="785px"  style="text-align: center" Height="22px"></asp:Label>--%>
+<%--<table></table>--%>
+
+<asp:Label ID="lblPgmHdr" runat="server" Align= "center" Text="" 
+        Font ="Arial" width="889px" Font-Size ="12pt" Font-Bold="True" 
+        Font-Names="Arial" style="text-align: center" Height="20px"></asp:Label>
+        <asp:Label ID="Label1" runat="server" CssClass="txtbox" Font-Bold="True" 
+         Text = "Excel File Format to be xlsx and the Sheet Name allowed are Subtitle, Attendance, Donation"
+            Width="1074px" ForeColor="BlueViolet" Height="20px"></asp:Label>
+    
+    <div style="height: 59px; width: 1242px;">
+    <table id="tblFileType" runat="server" style="width: 1181px; height: 37px;">
+        <tr>
+ 
+            <td class="style28" style="width: 70px">
+                <asp:Label ID="lblCompany" runat="server" Text="Client" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="ClientName" DataValueField="ClientCode"
+                    Style="font-size: X-Small" Width="100px" AutoPostBack="true" OnSelectedIndexChanged="ddlClientChanged" >
+                     <%--<asp:ListItem Value="0">--Select Please--</asp:ListItem>
+                        <asp:ListItem Value="1">SubTitle Master</asp:ListItem>
+                        <asp:ListItem Value="2">Attendance</asp:ListItem>
+                        <asp:ListItem Value="3">Donations</asp:ListItem>--%>
+                 </asp:DropDownList>
+            </td>
+         <td class="style23" style="width: 114px">
+                <asp:Label ID="lblProjectName" runat="server" Text="Project Name" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlProjectName"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="ProjectName" DataValueField="AuctionFormat"
+                    Style="font-size: X-Small" Width="100px"  >
+                     <asp:ListItem Value="0">--Select Please--</asp:ListItem>
+                        <asp:ListItem Value="CHN">Cochin</asp:ListItem>
+                        <asp:ListItem Value="CBE">Coimbatore</asp:ListItem>
+                        <asp:ListItem Value="CON">Connoor</asp:ListItem>
+                        <asp:ListItem Value="CMN">Common</asp:ListItem>
+                 </asp:DropDownList>
+            </td>
+
+          <td class="style21" style="width: 110px">
+                <asp:Label ID="lblTransType" runat="server" Text="Auction Center" Visible="true"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlAuctionLocation"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="LocationName" DataValueField="LocationCode"
+                    Style="font-size: X-Small" Width="100px"  >
+                     <%--<asp:ListItem Value="0">--Select Please--</asp:ListItem>
+                        <asp:ListItem Value="1">SubTitle Master</asp:ListItem>
+                        <asp:ListItem Value="2">Attendance</asp:ListItem>
+                        <asp:ListItem Value="3">Donations</asp:ListItem>--%>
+                 </asp:DropDownList>
+            </td>
+
+             <td class="style21" style="width: 110px">
+                <asp:Label ID="lblBank" runat="server" Text="Bank Name" Visible="True"
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+           </td>
+             <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlBank"  runat="server"  Visible="true"
+                    Font-Names="Arial" DataTextField="BankName" DataValueField="BankName"
+                    Style="font-size: X-Small" Width="100px"  >
+                     <asp:ListItem Value="0">--Select Bank--</asp:ListItem>
+                        <asp:ListItem Value="1">SCB</asp:ListItem>
+                        <asp:ListItem Value="2">UBI</asp:ListItem>
+                       <%-- <asp:ListItem Value="3">Donations</asp:ListItem>--%>
+                 </asp:DropDownList>
+            </td>
+
+
+            <td style="height: 25px; width: 90px;" class="style21">
+                <asp:Label ID="lblFileUpload" runat="server" Text="File Path: " 
+                  Font-Bold="true"  Font-Names="Arial" Font-Size="Small" ></asp:Label>
+            </td>
+            <td style="height: 25px; width: 258px;">
+                <asp:FileUpload ID="FlUpdExcel" runat="server" Width="227px" Height="21px" 
+                    Font-Names="Arial" Font-Size="X-Small"/>
+            </td>
+            <td style="height: 25px">
+                <asp:Button ID="btnUpload" runat="server" Font-Names="Arial" Font-Size="Small" 
+              ForeColor="Black" OnClick="btnUpload_Click" Text="Upload" Width="61px" 
+              TabIndex="16" />
+            </td>
+           <%-- <td style="height: 25px">
+                <asp:Button ID="btnSave" runat="server" Font-Names="Arial" Font-Size="Small" 
+              ForeColor="Black" OnClick="btnSave_Click" Text="Save" Width="61px" 
+              TabIndex="17" />
+            </td>--%>
+            <td style="width: 25px">
+                    <asp:TextBox ID="txtWParameterId" runat="server" Font-Names="Arial" 
+                        height="15px" Visible="false"
+                        Font-Size="X-Small" Width="15px"></asp:TextBox>
+                </td>
+             <td style="text-align: left; font-family: Arial; font-size:Small; width: 10px;" 
+                align="right">
+                <asp:Label ID="lblOperationGroupName" runat="server" Text="Upload File Type" CssClass="txtbox" Font-Bold="True" Visible="false"></asp:Label>
+            </td>
+           <%-- <td style="width: 100px" class="style21">
+                <asp:DropDownList ID="ddlOperationGroupName"  runat="server" AutoPostBack="True"
+                    Font-Names="Arial" DataTextField="OperationGroupName"
+                   DataValueField="OperationGroupId" CssClass="ddl" 
+                    Style="font-size: X-Small" Width="100px" 
+                    onselectedindexchanged="ddlOperationGroupName_SelectedIndexChanged" >
+                 </asp:DropDownList>
+            </td>--%>
+            <td >
+                <asp:radiobuttonlist id="rbtExcelType"  Visible="false" Enabled="false"
+                                    RepeatDirection="Horizontal" runat="server" Height="16px" 
+                    Width="70px" Font-Names="Arial" Font-Size="Small">
+	                                <asp:listitem Text="Excel" Selected="True" Value="1"  />
+	                               <%-- <asp:listitem Text="CSV"  Value="2"/>--%>
+                </asp:radiobuttonlist>
+           </td>
+ 
+        </tr>
+    </table>
+
+    <table style="width: 987px; height: 24px">
+    <tr>
+    <td>
+     <asp:Label ID="lblMessage" runat="server" CssClass="txtbox" Font-Size ="XX-Small"
+            Width="993px" ForeColor="#FF3300" Height="19px"></asp:Label>
+
+    </td>
+    </tr>
+    </table>
+   
+           
+
+</div>
+   <asp:panel ID="PnlNotOKDeptSales" runat="server" Height="297px" Width="1153px" >
+    <table><tr>
+    <td> 
+    <asp:Label ID="lblGrdNotOK" runat="server" Text ="Grid Showing Data Status ... If in Red Some Rows Status not be OK "
+        Font-Bold="True"  ForeColor="Red"></asp:Label> </td></tr></table>
+     <div style="overflow:auto; height:259px; width:1145px" 
+           title = "OK Data in UpLoad">
+       <asp:GridView ID="GrdWtNotOKDeptSales" runat="server" CellPadding="3"  Font-Size="X-Small" ForeColor="Red"
+            Width="1092px" Font-Names="Arial"  AutoGenerateColumns="False" Height="37px" 
+             GridLines="Vertical" BackColor="White" BorderColor="#999999"      BorderStyle="None" BorderWidth="1px" >
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />     <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" /> <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White"      HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+
+                <asp:TemplateField HeaderText="#" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblRowNumber" runat="server" Text='<%# Eval("RKount") %>' Width="20px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="20px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="Invoice Number" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblEventName" runat="server" Text='<%# Eval("InvoiceNumber") %>' Width="80px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="InvoiceDate" >
+            <ItemTemplate>
+            <asp:Label ID="lblInvoiceDate" runat="server" Text='<%# Eval("InvoiceDate","{0: dd-MM-yyyy}") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+      
+            <asp:TemplateField HeaderText="PromptDate" >
+            <ItemTemplate>
+            <asp:Label ID="lblPromptDate" runat="server" Text='<%# Eval("PromptDate","{0: dd-MM-yyyy}") %>' ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+
+                 <asp:TemplateField HeaderText="BuyerName" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBuyerName" runat="server" Text='<%# Eval("BuyerName") %>' Width="150px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="150px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Grade" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblGrade" runat="server" Text='<%# Eval("Grade") %>' Width="120px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="120px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Status" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblResult" runat="server" Text='<%# Eval("Result") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="350px" /> <ItemStyle Width="350px" />
+            </asp:TemplateField>
+
+
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+    </div>
+    </asp:panel>
+   <asp:panel ID="PnlDepotSalesStatus" runat="server" Height="364px" Width="947px">
+        <div style="overflow:auto; height:352px; width:936px">
+        <table><tr><td> <b style ="color: #33CC33"> Grid Showing all Rows in Uploaded Status</b></td></tr></table>
+           <asp:GridView ID="GrdDepotSalesStatus" runat="server" CellPadding="3" Font-Size="X-Small" 
+                Width="921px" Font-Names="Arial"  AutoGenerateColumns="False" 
+            Height="37px" GridLines="Vertical" BackColor="White" BorderColor="#999999"  
+                BorderStyle="None" BorderWidth="1px" >
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />     <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" /> <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White"      HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+
+                 <asp:TemplateField HeaderText="#" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblRowNumber" runat="server" Text='<%# Eval("RKount") %>' Width="20px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="20px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="Invoice Number" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblEventName" runat="server" Text='<%# Eval("InvoiceNumber") %>' Width="80px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="InvoiceDate" >
+            <ItemTemplate>
+            <asp:Label ID="lblInvoiceDate" runat="server" Text='<%# Eval("InvoiceDate","{0: dd-MM-yyyy}") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+      
+            <asp:TemplateField HeaderText="PromptDate" >
+            <ItemTemplate>
+            <asp:Label ID="lblPromptDate" runat="server" Text='<%# Eval("PromptDate","{0: dd-MM-yyyy}") %>' ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+
+                 <asp:TemplateField HeaderText="BuyerName" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBuyerName" runat="server" Text='<%# Eval("BuyerName") %>' Width="150px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="150px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Grade" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblGrade" runat="server" Text='<%# Eval("Grade") %>' Width="120px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="120px" />
+            </asp:TemplateField>
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+
+    </div>
+    </asp:panel>
+
+    <asp:panel ID="pnlNotOKTeaBoard" runat="server" Height="297px" Width="1153px" >
+    <table><tr>
+    <td> 
+    <asp:Label ID="Label2" runat="server" Text ="Grid Showing Data Status ... If in Red Some Rows Status may not be OK "
+        Font-Bold="True"  ForeColor="Red"></asp:Label> </td></tr></table>
+
+     <div style="overflow:auto; height:259px; width:1145px"  title = "OK Data in UpLoad">
+       <asp:GridView ID="grdNotOKTeaBoard" runat="server" CellPadding="3"      
+             Font-Size="X-Small" ForeColor="Red"
+            Width="934px" Font-Names="Arial"  AutoGenerateColumns="False" Height="37px" 
+             GridLines="Vertical" BackColor="White" BorderColor="#999999"    
+             BorderStyle="None" BorderWidth="1px" >
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />     <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" /> <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White"      HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+
+                <asp:TemplateField HeaderText="Deal Identification Id" Visible="true" >
+            <ItemTemplate> 
+            <asp:Label ID="lblDealIdentificationId" runat="server" Text='<%# Eval("DealIdentificationId") %>' Width="90px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="90px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="Bank UTR" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBankUTR" runat="server" Text='<%# Eval("BankUTR") %>' Width="80px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="Bank Date" >
+            <ItemTemplate>
+            <asp:Label ID="lblBankDate" runat="server" Text='<%# Eval("BankDate","{0: dd-MM-yyyy}") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="90px" /> <ItemStyle Width="90px" />
+            </asp:TemplateField>
+      
+             <asp:TemplateField HeaderText="Buyer Entity Code" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBuyerEntityCode" runat="server" Text='<%# Eval("BuyerEntityCode") %>' Width="150px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="150px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Amount " Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblAmountPaid" runat="server" Text='<%# Eval("AmountPaid") %>' Width="120px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="120px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Status" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblResult" runat="server" Text='<%# Eval("Result") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="250px" /> <ItemStyle Width="250px" />
+            </asp:TemplateField>
+
+
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+    </div>
+    </asp:panel>
+   <asp:panel ID="PnlTeaBoardStatus" runat="server" Height="364px" Width="947px">
+        <div style="overflow:auto; height:352px; width:936px">
+        <table><tr><td> <b style ="color: #33CC33"> Grid Showing all Rows in Uploaded Status</b></td></tr></table>
+           <asp:GridView ID="grdTeaBoardStatus" runat="server" CellPadding="3" Font-Size="X-Small" 
+                Width="921px" Font-Names="Arial"  AutoGenerateColumns="False" 
+            Height="37px" GridLines="Vertical" BackColor="White" BorderColor="#999999"  
+                BorderStyle="None" BorderWidth="1px" >
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />     <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" /> <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White"      HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+
+                 <asp:TemplateField HeaderText="#" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblRowNumber" runat="server" Text='<%# Eval("RKount") %>' Width="20px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="20px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="Invoice Number" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblEventName" runat="server" Text='<%# Eval("InvoiceNumber") %>' Width="80px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" />
+            </asp:TemplateField>
+           <asp:TemplateField HeaderText="Bank Date" >
+            <ItemTemplate>
+            <asp:Label ID="lblBankDate" runat="server" Text='<%# Eval("Bank Date","{0: dd-MM-yyyy}") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+      
+             <asp:TemplateField HeaderText="BuyerName" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBuyerName" runat="server" Text='<%# Eval("BuyerName") %>' Width="150px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="150px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Amount Paid" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblAmountPaid" runat="server" Text='<%# Eval("AmountPaid") %>' Width="120px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="120px" />
+            </asp:TemplateField>
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+
+    </div>
+    </asp:panel>
+
+     <asp:panel ID="pnlNotOkBankReceipt" runat="server" Height="297px" Width="1153px" >
+    <table><tr>
+    <td> 
+    <asp:Label ID="Label3" runat="server" Text ="Grid Showing Data Status ... If in Red Some Rows Status may not be OK "
+        Font-Bold="True"  ForeColor="Red"></asp:Label> </td></tr></table>
+
+     <div style="overflow:auto; height:259px; width:1145px" 
+           title = "OK Data in UpLoad">
+       <asp:GridView ID="grdNotOkBankReceipt" runat="server" CellPadding="3" 
+             Font-Size="X-Small" ForeColor="Red"
+            Width="1092px" Font-Names="Arial"  AutoGenerateColumns="False" Height="37px" 
+             GridLines="Vertical" BackColor="White" BorderColor="#999999"  
+                BorderStyle="None" BorderWidth="1px" >
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />     <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" /> <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White"      HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+
+                <asp:TemplateField HeaderText="#" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblRowNumber" runat="server" Text='<%# Eval("RKount") %>' Width="20px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="20px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="Company Name" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblCompanyName" runat="server" Text='<%# Eval("CompanyName") %>' Width="80px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Bank Code" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBankCode" runat="server" Text='<%# Eval("BankCode") %>' Width="50px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="50px" />
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="AccountNumber" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblAccountNumber" runat="server" Text='<%# Eval("AccountNumber") %>' Width="50px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="50px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Currency" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblCurrency" runat="server" Text='<%# Eval("Currency") %>' Width="50px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="50px" />
+            </asp:TemplateField>
+
+
+           <asp:TemplateField HeaderText="Transaction Date" >
+            <ItemTemplate>
+            <asp:Label ID="lblTransactionDate" runat="server" Text='<%# Eval("TransactionDate","{0: dd-MM-yyyy}") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="TransactionAmount" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblTransactionAmount" runat="server" Text='<%# Eval("TransactionAmount") %>' Width="120px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="120px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Status" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblResult" runat="server" Text='<%# Eval("Result") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="350px" /> <ItemStyle Width="350px" />
+            </asp:TemplateField>
+
+
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+    </div>
+    </asp:panel>
+   <asp:panel ID="pnlBankReceiptStatus" runat="server" Height="364px" Width="947px">
+        <div style="overflow:auto; height:352px; width:936px">
+        <table><tr><td> <b style ="color: #33CC33"> Grid Showing all Rows in Uploaded Status</b></td></tr></table>
+           <asp:GridView ID="grdBankReceiptStatus" runat="server" CellPadding="3" Font-Size="X-Small" 
+                Width="904px" Font-Names="Arial"  AutoGenerateColumns="False" 
+            Height="37px" GridLines="Vertical" BackColor="White" BorderColor="#999999"  
+                BorderStyle="None" BorderWidth="1px" >
+        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />     <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
+        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" /> <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
+        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White"      HorizontalAlign="Left" />
+        <AlternatingRowStyle BackColor="#DCDCDC" />
+        <Columns>
+
+                 <asp:TemplateField HeaderText="#" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblRowNumber" runat="server" Text='<%# Eval("RKount") %>' Width="20px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="20px" />
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="Company Name" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblCompanyName" runat="server" Text='<%# Eval("CompanyName") %>' Width="80px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" />
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Bank Code" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblBankCode" runat="server" Text='<%# Eval("BankCode") %>' Width="50px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="50px" />
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="AccountNumber" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblAccountNumber" runat="server" Text='<%# Eval("AccountNumber") %>' Width="50px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="50px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="Currency" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblCurrency" runat="server" Text='<%# Eval("Currency") %>' Width="50px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="50px" />
+            </asp:TemplateField>
+
+
+           <asp:TemplateField HeaderText="Transaction Date" >
+            <ItemTemplate>
+            <asp:Label ID="lblTransactionDate" runat="server" Text='<%# Eval("TransactionDate","{0: dd-MM-yyyy}") %>'></asp:Label></ItemTemplate>
+            <HeaderStyle Width="80px" /> <ItemStyle Width="80px" />
+            </asp:TemplateField>
+
+             <asp:TemplateField HeaderText="TransactionAmount" Visible="true" >
+            <ItemTemplate>
+            <asp:Label ID="lblTransactionAmount" runat="server" Text='<%# Eval("TransactionAmount") %>' Width="120px" ></asp:Label></ItemTemplate>
+            <HeaderStyle Width="120px" />
+            </asp:TemplateField>
+
+        </Columns>
+        <sortedascendingcellstyle backcolor="#F1F1F1" />
+        <sortedascendingheaderstyle backcolor="#0000A9" />
+        <sorteddescendingcellstyle backcolor="#CAC9C9" />
+        <sorteddescendingheaderstyle backcolor="#000065" />
+    </asp:GridView>
+
+    </div>
+    </asp:panel>
+
+</asp:Content>
+

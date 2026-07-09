@@ -1,0 +1,216 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Resources;
+
+public partial class CRAMPackageMaster : System.Web.UI.Page
+{ 
+    #region Declaration
+    ProcessBus Bus = new ProcessBus();
+    List<PackageMasterMsg> PackageList = new List<PackageMasterMsg>();
+    public static int DeleteIndex = 0;
+    public static int UpdateIndex = 0;
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    BaseClass BaseMsg = new BaseClass();
+    #endregion
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+        if (!Page.IsPostBack)
+        {
+            LoadGrdPackageMaster();
+            if (PackageList.Count == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.MsgForGrdnotLoad + "');", true);
+                Pnlgv.Visible = false;
+                pnlAdd.Visible = true;
+
+            }
+        }        
+       
+    }
+    protected void btnSave_Click(object sender, EventArgs e)
+    {
+        if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.CreatePermissionRestricted + "');", true);
+        }
+        else
+        {
+            if (IsValidSave() == 0)
+            {
+                PackageSave();
+            }
+        }
+    }
+    #endregion
+    #region Methods
+    private void LoadGrdPackageMaster()
+    {
+        PackageMasterMsg Package = new PackageMasterMsg();
+        Package.Flag = "R";
+        PackageList = Bus.MasCRAMPackageInsertandUpdate(Package);
+        GrdPackageMaster.DataSource = "";
+        GrdPackageMaster.DataSource = PackageList;
+        GrdPackageMaster.DataBind();
+        if (!user.HasPermission(ProgramName, UserPermission.CanEdit.ToString()))
+        {
+            GrdPackageMaster.Columns[GrdPackageMaster.Columns.Count - 2].Visible = false;
+        }
+        if (!user.HasPermission(ProgramName, UserPermission.CanDelete.ToString()))
+        {
+            GrdPackageMaster.Columns[GrdPackageMaster.Columns.Count - 1].Visible = false;
+        }
+        Pnlgv.Visible = true;
+    }
+
+    private void PackageSave()
+    {
+        PackageMasterMsg Package = new PackageMasterMsg();
+        Package.Flag = "I";
+
+        Package.PackageName = txtPackageName.Text.Trim();
+        Package.PackageCode = txtPackagecode.Text.Trim();
+        //Package.CreatedBy = BaseMsg.EmployeeCode;
+        PackageList = Bus.MasCRAMPackageInsertandUpdate(Package);
+        //Output Dispay
+        foreach (PackageMasterMsg PackageSave in PackageList)
+        {
+            if (PackageSave.PackageResult == "0")
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.SuccessFullySaved + "');", true);
+                AllClear();
+                break;
+
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + PackageSave.PackageResult + "');", true);
+                break;
+            }
+        }
+    }
+    public void PackageUpdate()
+    {
+        GridViewRow row = GrdPackageMaster.Rows[UpdateIndex];
+        PackageMasterMsg Package = new PackageMasterMsg();
+        Package.Flag = "U";
+
+        string txtPackageCode = ((Label)row.FindControl("lblPackageCode")).Text;
+        TextBox txtPackagename = (TextBox)row.FindControl("txtPackageName");
+        
+       // CheckBox chkActive = (CheckBox)row.FindControl("chkIsActive");
+
+        Package.PackageCode = (txtPackageCode.Trim());
+        Package.PackageName = txtPackagename.Text.Trim();       
+        PackageList = Bus.MasCRAMPackageInsertandUpdate(Package);
+        GrdPackageMaster.EditIndex = -1;
+
+        foreach (PackageMasterMsg PackageUpdate in PackageList)
+        {
+            if (PackageUpdate.PackageResult == "0")
+            {
+                //ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + StackResource.PackageUpdatedSuccessfully + "');", true);
+
+                AllClear();
+                break;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + PackageUpdate.PackageResult + "');", true);
+                break;
+            }
+        }
+    }
+  
+    #endregion
+    #region Clear
+    public void AllClear()
+    {
+
+        txtPackageName.Text = "";
+        txtPackagecode.Text = "";
+        LoadGrdPackageMaster();
+
+    }
+    #endregion
+    #region Validation
+    private int IsValidSave()
+    {
+
+        int Error = 0;
+         string DisplayError = "";
+         if ((txtPackageName.Text.Trim() == "" || txtPackageName.Text.Trim().Length.ToString() == "0"))
+        {
+            DisplayError=DisplayError+"Package Name";
+            Error = 1;
+        }
+         if (txtPackagecode.Text.Trim() == "" || txtPackagecode.Text.Trim().Length.ToString() == "0")
+        {
+            DisplayError = DisplayError + "--" + "PAckage Code";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+
+    private int IsValidGridSave(string PackageName,string PackageCode)
+    {
+
+        int Error = 0;
+        string DisplayError = "";
+        if ((PackageName.Trim() == "" || PackageName.Trim().Length.ToString() == "0"))
+        {
+            DisplayError = DisplayError + "Package Name Mandatory.. ";
+            Error = 1;
+        }
+        if (PackageCode.Trim() == "" || PackageCode.Trim().Length.ToString() == "0")
+        {
+            DisplayError = DisplayError + "--" + "Package Code Is Mandatory";
+            Error = 1;
+        }
+        if (Error == 1)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + DisplayError + "');", true);
+        }
+        return Error;
+    }
+    #endregion
+    #region GrdEdit
+
+    protected void GrdPackageMaster_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        UpdateIndex = e.RowIndex;
+        GridViewRow row = GrdPackageMaster.Rows[UpdateIndex];
+        TextBox txtPackagename = (TextBox)row.FindControl("txtPackageName");
+        string PackageCode = ((Label)row.FindControl("lblPackageCode")).Text;
+        if (IsValidGridSave(txtPackagename.Text.Trim(), PackageCode.Trim()) == 0)
+        {
+            PackageUpdate();
+        }
+    }
+    
+    protected void GrdPackageMaster_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        GrdPackageMaster.EditIndex = -1;
+        LoadGrdPackageMaster();
+    }
+    protected void GrdPackageMaster_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        GrdPackageMaster.EditIndex = e.NewEditIndex;
+        LoadGrdPackageMaster();
+        GridViewRow row = GrdPackageMaster.Rows[GrdPackageMaster.EditIndex];
+        TextBox Packagename = (TextBox)row.FindControl("txtPackageName");
+        Packagename.Focus();
+    }
+
+    #endregion
+}

@@ -1,0 +1,1492 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI; 
+using System.Web.UI.WebControls;
+using System.Configuration;
+using System.IO;
+using Ganini.Lib;
+using System.Data.OleDb;
+using System.Data;
+using Resources;
+using System.Security.Cryptography;
+using System.Text;
+using Ganini.Security;
+using Microsoft.Reporting.WebForms; //required for creating local report scs 231213
+
+
+
+public partial class ExcelImportAuctionSalesRM : System.Web.UI.Page
+{
+    #region Declaration
+    #region XL
+    List<ExcelUploadMsg> excelUploadMsgList = new List<ExcelUploadMsg>();
+    List<ExcelUploadMsg> excelUploadMsgListTotal = new List<ExcelUploadMsg>();
+    ExcelUploadMsg exceUploadMsg = new ExcelUploadMsg();
+    string XLfilepath = "";
+    string filename = "";
+    string Validmsg = "";
+    private static string SheetName = "";
+    string ConnectionString = "";
+    string Query = "";
+    string Filetype = "";
+    int ExFormat = 0;
+    string OraFlag = "U";
+    int ChkResult = 0;
+    public static string UploadError = "";
+    private static string TranType = "";
+    public static string CreatePermission = "";
+    private static string DepotName = "";
+    private static string BankName = "";
+    #endregion
+    #region general
+    ProcessBus Bus = new ProcessBus();
+    BaseClass BaseMsg = new BaseClass();
+    UserAccess user = new UserAccess();
+    public static string ProgramName = string.Empty;
+    public static List<DepotMsg> DepList = new List<DepotMsg>();
+    public static int OperationCount;
+    private static List<CompanyMsg> CmpList = new List<CompanyMsg>();
+    //int DBError = 0;
+
+    #endregion
+
+    #endregion Declaration
+    #region Events
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        ProgramName = System.IO.Path.GetFileName(Request.PhysicalPath);
+       
+        if (!Page.IsPostBack)
+        {
+            lblMessage.Text = "";
+            lblMessage.Visible = false;
+            LoadClient();
+            ddlAuctionLocation.Enabled = false; // Depot selection based on ClientCode scs 210201
+            //try
+            //{
+                //CreatePermission = "";
+                //string val = Request.QueryString["TranType"]; //"Auction Sales" ; //
+                //CreatePermission = Request.QueryString["CreatePermission"]; //"Y";// 
+                //TranType = val.ToUpper();
+                //LoadDepot();
+                lblBank.Visible = false;
+                ddlBank.Visible = false;
+                //if (val.ToUpper() == "AUCTION SALES")
+                //{
+                    //DepotName = ddlAuctionLocation.SelectedItem.ToString();
+                    SheetName = ConfigurationManager.AppSettings["DepotSale"].ToString();
+                    lblPgmHdr.Text = "AUCTION SALES";
+               // }
+                //else if (val == "Tea Board Receipt")
+                //{
+                //    ddlAuctionLocation.Visible = true;
+                //    lblTransType.Visible = true;
+                //    lblPgmHdr.Text = "Tea Board Receipt Upload";
+                //    SheetName = ConfigurationManager.AppSettings["TeaBoard"].ToString();
+                //}
+                //else
+                //{
+                //    ddlAuctionLocation.Visible = true;
+                //    lblTransType.Visible = true;
+                //    lblBank.Visible = true;
+                //    ddlBank.Visible = true;
+                //    ddlBank.SelectedIndex = 1;
+                //    ddlBank.Enabled = false;
+                //    lblPgmHdr.Text = "Bank Receipt Upload";
+                //    SheetName = ConfigurationManager.AppSettings["BankReceipt"].ToString();
+                //}
+            //}
+            //catch
+            //{
+            //    Response.Redirect("Login.aspx");
+            //}
+        }
+        lblMessage.Visible = false;
+        btnUpload.Enabled = true;
+        DisablePanel();
+    }
+    protected void btnUpload_Click(object sender, EventArgs e)
+    {
+        lblMessage.Text = "Upload Click. ";
+        lblMessage.Visible = true;
+        UploadError = ""; // scs 201008
+       
+       // if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
+        //if (CreatePermission !="Y")
+        //{
+        //    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "You Need Permission to Create Data" + "');", true);
+        //}
+        //else
+        //{
+            if (ddlProjectName.SelectedIndex == 0 || ddlCompany.SelectedIndex == 0 || ddlAuctionLocation.SelectedIndex == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Client / Auction Format are Mandatory .. Ensure they are selected" + "');", true);
+            }
+            else
+            {
+                DepotName = ddlAuctionLocation.SelectedItem.ToString(); // scs 210201 depot selected after the Client select
+                UploadClick();
+            }
+            #region delete this
+            //if (TranType == "AUCTION SALES" && ddlAuctionLocation.SelectedIndex == 0)
+            //{
+            //    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Select Depot and File to be uploaded" + "');", true);
+            //}
+            //else
+            //{
+            //    filename = Path.GetFileName(FlUpdExcel.FileName);
+            //    lblMessage.Text =  "FileName Read"; //scs180310
+            //    string ValidMsg = ValidateUploadedFile();
+            //    if (ValidMsg == "")
+            //    {
+            //        uploadFile();    //if (lblMessage.Text.Length == 0) //error while uploading
+            //        if (UploadError.Length > 0) //(lblMessage.Text.Length > 0) //error while uploading scs 180310
+            //        {
+            //           // UpLoadType(); // SCS 201008 commented as we upload only excel files and hence below two lines
+            //            ExFormat = 1;
+            //            Filetype = "Excel"; 
+            //            XLUpload();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        lblMessage.Text = ValidMsg;
+            //        lblMessage.Visible = true;
+            //    }
+            //}
+            #endregion
+        //}
+    }
+    protected void ddlClientChanged(object sender, EventArgs e)
+    {
+        LoadDepot();
+    }
+    //protected void btnSave_Click(object sender, EventArgs e)
+    //{
+
+    //}
+    #endregion Events
+
+    #region Excelupl
+    //public void DeleteuploadedFile()
+    //{
+    //    HttpPostedFile UploadFile = FlUpdExcel.PostedFile;
+
+    //    //XLfilepath = ConfigurationManager.AppSettings["FolderPath"].ToString(); // scs 0703
+    //    //if (File.Exists(@XLfilepath + filename))
+    //    //{
+    //    //    File.Delete(@XLfilepath + filename);
+    //    //}
+    //    //FlUpdExcel.SaveAs(XLfilepath + filename);
+    //}
+    private void UploadClick()
+    {
+        if (TranType == "AUCTION SALES" && ddlAuctionLocation.SelectedIndex == 0)
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Select Auction Center and File to be uploaded" + "');", true);
+        }
+        else
+        {
+            if (TranType == "BANK RECEIPT" && ddlAuctionLocation.SelectedIndex == 0)
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Select Bank Name and File to be uploaded" + "');", true);
+            }
+            else
+            {
+                BankName = ddlBank.SelectedItem.Text;
+                filename = Path.GetFileName(FlUpdExcel.FileName);
+                lblMessage.Text = "FileName Read"; //scs180310
+                string ValidMsg = ValidateUploadedFile();
+                if (ValidMsg == "")
+                {
+                    uploadFile();    //if (lblMessage.Text.Length == 0) //error while uploading
+                    if (UploadError.Length > 0) //(lblMessage.Text.Length > 0) //error while uploading scs 180310
+                    {
+                        // UpLoadType(); // SCS 201008 commented as we upload only excel files and hence below two lines
+                        ExFormat = 1;
+                        Filetype = "Excel";
+                        XLUpload();
+                    }
+                }
+                else
+                {
+                    lblMessage.Text = ValidMsg;
+                    lblMessage.Visible = true;
+                }
+            }
+        }
+    }
+    public string ValidateUploadedFile()
+    {
+        Validmsg = "";
+        HttpPostedFile UploadFile = FlUpdExcel.PostedFile;
+        lblMessage.Text = lblMessage.Text + " Validate File begins. ";
+        if (FlUpdExcel.FileName == "")
+        {
+            Validmsg = Validmsg + " Please select File. ";
+        }
+        else
+        {
+            filename = Path.GetFileName(FlUpdExcel.FileName);
+            if (UploadFile.FileName == null)
+            {
+                Validmsg = Validmsg + " FileName Not valid and Uploaded. ";
+            }
+            else if (UploadFile.ContentLength > 0)
+            {
+                Validmsg = "";
+            }
+            else
+            {
+                Validmsg = Validmsg + " Data not found Please check the data. ";
+            }
+        } // Validate for File extension,data count scs 280613
+        return Validmsg;
+    }
+ 
+
+    public void uploadFile()
+    {
+        try
+        {
+            //scs 210416 to keep filename unique added dateand time to file name
+            FileInfo Info = new FileInfo(filename);
+            string Wtime = System.DateTime.UtcNow.AddMinutes(330).ToString("yyyyMMddHHmmss");
+           
+            string wextn = Info.Extension.ToString();
+            string fname = filename.Substring(0, filename.IndexOf(wextn));
+            filename = fname + Wtime+wextn;
+            // scs 210416 ends
+            UploadError = "";
+            string filePath = System.IO.Path.GetDirectoryName(FlUpdExcel.PostedFile.FileName);
+            XLfilepath = ConfigurationManager.AppSettings["FolderPath"].ToString(); // scs 0703
+            lblMessage.Text =  " UpLoad File begins at " + XLfilepath;
+            if (File.Exists(@XLfilepath + filename))
+            {
+                lblMessage.Text = lblMessage.Text + ".... XLFILE with same Name Delete ";
+                File.Delete(@XLfilepath + filename);
+            }
+            lblMessage.Text =  ".. Save New XLFILE";
+            FlUpdExcel.SaveAs(XLfilepath + filename);
+            UploadError = "OK";
+        }
+        catch (Exception ex)
+        {
+            lblMessage.Text =  " Check if File is being Used or you have Permission " + ex.ToString();
+            lblMessage.Visible = true;
+        }
+    }
+    //public void UpLoadType()
+    //{//Though we could have the method as in below. this is kept to generalize UploadPortalFile on a latter date scs 300613
+    //    Validmsg = "";
+    //    ExFormat = Convert.ToInt32(rbtExcelType.SelectedValue);
+    //    if (rbtExcelType.SelectedValue == "2")
+    //    {
+    //        //ExFormat = 2;
+    //        //Filetype = "Part";
+    //       // NormalCSVUpload();
+    //    }
+    //    else
+    //    {
+    //        ExFormat = 1;
+    //        Filetype = "Excel"; // "CreditDays";
+    //        //XLUpload();
+    //    }
+    //}
+    private  void XLUpload()
+    {
+     // scs 201008 Sheet Name is selected in the page load itself
+        Query = "SELECT * FROM [" + SheetName + "$]";
+        List<ExcelUploadMsg> ExlList = XLUpLoad(Query);
+        excelUploadMsgListTotal = null;
+        int ErrorCount = 0; //string ErrorMesg = ""; 
+        excelUploadMsgListTotal = ExlList.ToList();
+            // in Sheet2 store Corporate MDA
+            //SheetName = ConfigurationManager.AppSettings["ExcelFileSheetName1"].ToString();
+            //Query = "SELECT * FROM [" + SheetName + "$]";
+            //List<ExcelUploadMsg> ExlListCorp = XLUpLoad(Query);
+           // excelUploadMsgListTotal = excelUploadMsgListTotal.Concat(ExlListCorp).ToList();
+        if (excelUploadMsgListTotal.Count > 0)
+        {
+            ErrorCount = CheckForProperDataInFile();
+            if (ErrorCount == 0)
+            {
+                CheckandUploadData(excelUploadMsgListTotal);
+            }
+         }
+        else
+        {
+            lblMessage.Text = lblMessage.Text + " Sheet Name not proper or Excel data not proper hence returned with out any Data.. Check data ";
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + "');", true);
+        }
+    }
+    private List<ExcelUploadMsg> XLUpLoad(string Querya)
+    {
+        lblMessage.Visible = true;
+        lblMessage.Text = " XLUpload Begins for- "+SheetName;
+        //List<ExcelUploadMsg> excelUploadMsgList = new List<ExcelUploadMsg>(); // scs 190802 moved to declaration
+        HttpPostedFile UploadFile = FlUpdExcel.PostedFile;
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+
+        dateinfo.ShortDatePattern = "dd/MM/yyyy";
+        DataTable excelData = new DataTable("ExcelData");
+       // Querya = "SELECT * FROM [" + ConfigurationManager.AppSettings["ExcelFileSheetName"].ToString() + "$]";
+        FileInfo Info = new FileInfo(filename);
+        string WExtension = Info.Extension.ToString();
+        if (WExtension.ToUpper() == ".XLS")
+            // if (ConfigurationManager.AppSettings["ExcelExtension"].ToString() == ".xls")
+        {
+            ConnectionString = "Provider=Microsoft.Jet.OleDb.4.0;Data Source=" + @XLfilepath + filename + ";Extended Properties='Excel 8.0;HDR=YES;IMEX=1'";
+        }
+        else
+        {
+            ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + @XLfilepath + @filename + ";Extended Properties='Excel 12.0;HDR=Yes;IMEX=1'"; //HDR =Yes measns data is having column heading
+        }
+            OleDbConnection conne = new OleDbConnection(@ConnectionString);
+            OleDbCommand command = new OleDbCommand(Querya, conne);
+        OleDbDataReader dbdr;
+        #region XLtoMemory
+        try
+        {
+            lblMessage.Text = " XLUpload Execute reader to start -"; //scs 251215
+            OraFlag = "U";
+            conne.Open();
+            dbdr = command.ExecuteReader(CommandBehavior.CloseConnection);
+            //int a = dbdr.VisibleFieldCount; //scs to get number of columns in xl
+            excelData.Load(dbdr); //09122012
+            //DepotName = ddlAuctionLocation.SelectedValue.ToString();
+            //if (ddlProjectName.SelectedValue == "CHN")
+            //{
+            //    excelUploadMsgList = SalesRelatedUpLoad(excelData, TranType);
+            //}
+            //else if (ddlProjectName.SelectedValue == "CBE")
+            //{
+            //    excelUploadMsgList = SalesRelatedUpLoad(excelData, TranType);
+            //}
+            //else 
+            //{
+                excelUploadMsgList = SalesRelatedUpLoad(excelData, TranType);
+            //}
+        }
+        catch (Exception ex)
+        {
+            lblMessage.Text = lblMessage.Text+ ex.Message.ToString();
+            lblMessage.Visible = true;
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + ex.ToString() + "');", true);
+        }
+        finally
+        {
+            if (conne != null)
+            {
+                ConnectionString = "";
+                command.Dispose();
+                conne.Close();
+            }
+        }
+        #endregion
+        return excelUploadMsgList; //scs 190802
+
+    }
+    private int CheckForProperDataInFile()
+    {
+        int ErrorKount = 0;
+        
+        //if (TranType == "DEPOT SALES")
+        //{
+        //    DepotName = ddlAuctionLocation.SelectedItem.ToString(); // check if Location is same as set in ddlAuctionLocation // already selected in begining
+        //    var Location = (from ex in excelUploadMsgListTotal where ex.Column8 != DepotName select ex).ToList();
+        //    if (Location.Count > 0)
+        //    {
+        //        ErrorKount = 1;
+        //        lblMessage.Text = "Depot Selected Is Not same as What is In the File";
+        //        ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text + "');", true);
+        //    }
+        //}
+        //else if (TranType == "TEA BOARD RECEIPT")
+        //{
+
+        //}
+        //else
+        //{
+        //}
+        return ErrorKount;
+    }
+    private void CheckandUploadData(List<ExcelUploadMsg> excelUploadMsgList)
+    {
+        #region TempInsert
+         UploadResultMsg UpMsg = new UploadResultMsg();
+         try
+         {
+             //if (excelUploadMsgList != null && excelUploadMsgList.Count > 0)
+             //{
+                 lblMessage.Text = lblMessage.Text + " chk xl data begin-"; //scs 251215
+                 ChkResult = 0; // set to OK condition
+                 // string FType = ddlAuctionLocation.SelectedItem.ToString();
+                 string FType = ddlAuctionLocation.SelectedValue.ToString();
+                 //if (TranType =="AUCTION SALES")
+                 //{
+                     List<RMSalesMsg> ChkData = CheckData(excelUploadMsgList, FType);
+                     if (ChkResult == 0) //Data fine
+                     {
+
+                         lblMessage.Text =  " Depot sales Tempinsert begin-"; //scs 251215
+                         UpMsg = Bus.NewExcelUploadTempForDepotSales(excelUploadMsgList, FType);
+                         lblMessage.Text = " Tempinsert Over-"; //scs 251215
+                     }
+                     else
+                     {
+                         LoadGrdUpLoadNotOK(ChkData);
+                     }
+                 //}
+                 //else if (TranType == "TEA BOARD RECEIPT")
+                 //{
+                 //    List<TeaBoardReceiptMsg> ChkTeaBoardData = CheckTeaBoardData(excelUploadMsgList, FType);
+                 //    if (ChkResult == 0) //Data fine
+                 //    {
+
+                 //        lblMessage.Text = " Tea Board receipt Temp begin-"; //scs 251215
+                 //        UpMsg = Bus.NewExcelUploadTempForDepotSales(excelUploadMsgList, FType);
+                 //        lblMessage.Text = " Tempinsert Over-"; //scs 251215
+                 //    }
+                 //    else
+                 //    {
+                 //        LoadGrdTeaBoardNotOK(ChkTeaBoardData);
+                 //    }
+                 //}
+                 //else
+                 //{
+                 //    List<BankReceiptMsg> ChkBankReceiptData = CheckBankReceiptData(excelUploadMsgList, FType);
+                 //    if (ChkResult == 0) //Data fine
+                 //    {
+
+                 //        lblMessage.Text = " Bank Receipt Tempinsert begin-"; //scs 251215
+                 //        UpMsg = Bus.NewExcelUploadTempForDepotSales(excelUploadMsgList, FType);
+                 //        lblMessage.Text = " Tempinsert Over-"; //scs 251215
+                 //    }
+                 //    else
+                 //    {
+                 //        LoadGrdBankReceiptNotOK(ChkBankReceiptData);
+                 //    }
+                 //}
+                 
+             //}
+             //else
+             //{
+             //    lblMessage.Text = lblMessage.Text + " Xl data Not as per  format or it does not contain Mandatory fields -"; //scs 251215
+             //    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + lblMessage.Text  + "');", true);
+             //}
+         }
+         catch (Exception ex)
+         {
+             lblMessage.Text = lblMessage.Text + ex.Message.ToString(); //scs 251215
+             ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "UpLoad Failed On Temp Table Insert- " + ex.ToString() + "');", true);
+         }
+         finally
+         {
+         }
+
+     #endregion
+        #region AfterTempInsert
+        UploadResultMsg Uploadinsert = new UploadResultMsg();
+        List<DepotSalesMsg> UpLoadList = new List<DepotSalesMsg>();
+        Int64 WParameterId = UpMsg.WParameterId;
+        //try
+        //{
+            if (ChkResult == 0)
+            {
+                Filetype = ""; //reinitialise
+                if (UpMsg.Result.Substring(0, 1) == "0")
+                {
+                    lblMessage.Text = "Inserting to tblSales started";
+                    Uploadinsert = Bus.NewExcelImportAuctionSalesInsert(WParameterId);
+                    if (Uploadinsert.Result.Substring(0, 1) == "9") //scs 210313 added check for month close
+                    {
+                        ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1) + "');", true);
+                        lblMessage.Text = Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1); //scs 251215
+                    }
+                    else
+                    {
+                        if (Uploadinsert.Result != "0")
+                        {
+                            if (TranType == "TEA BOARD RECEIPT")
+                            {
+                                List<TeaBoardReceiptMsg> exllst = new List<TeaBoardReceiptMsg>();
+                                try
+                                {
+                                   // exllst = Bus.NewUnmatchedExcelTeaBoardData(WParameterId);
+                                   // LoadGrdTeaBoardNotOK(exllst);
+                                }
+                                catch (Exception ex)
+                                {
+                                    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + ex.ToString() + "');", true);
+                                    lblMessage.Text = "";
+                                }
+                            }
+                            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + " NewExcelImportDepotSalesInsert Failed while inserting Table...   " + Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1) + "');", true);
+                            lblMessage.Text = " NewExcelImportDepotSalesInsert Failed while inserting Table...   " + Uploadinsert.Result.Substring(1, Uploadinsert.Result.Length - 1); //scs 251215
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Succesfully Uploaded" + "');", true);
+                            lblMessage.Text = "";
+                        }
+                    }
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + " NewExcelImportDepotSalesInsert Failed while inserting Table" + UpMsg.Result.Substring(1, UpMsg.Result.Length - 1) + "');", true);
+                    lblMessage.Text = lblMessage.Text + " - " + UpMsg.Result.Substring(1, UpMsg.Result.Length - 1); //scs 251215
+                   
+                }
+            }
+            ////}
+            ////catch (Exception e)
+            ////{
+            ////    ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "UpLoad Failed On Temp Table Insert " + e.ToString() + "');", true);
+            ////    lblMessage.Text = lblMessage.Text + " - " + "UpLoad Failed On Temp Table Insert " + e.ToString(); //scs 251215
+            ////}
+            ////finally
+            ////{
+            ////}
+            ///////////
+            //if (ChkResult == 0)
+            //{
+            //    try
+            //    {
+            //        if (Uploadinsert.Result.Substring(0, 1) == "0")
+            //        {
+            //            //UpLoadList = Bus.NewExcelImportSubTitleSelect(WParameterId);
+            //            //LoadGrdUpLoadStatus(UpLoadList);
+            //            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Succesfully Uploaded" + "');", true);
+            //            lblMessage.Text = "";
+            //        }
+            //        else
+            //        {
+            //            //ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + Uploadinsert.Result + "');", true);
+            //            lblMessage.Text = lblMessage.Text + " - " + Uploadinsert.Result ; //scs 251215
+            //        }
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "UpLoad Failed On ExcelIMportSelect " + e.ToString() + "');", true);
+            //        lblMessage.Text = lblMessage.Text + " - " + "UpLoad Failed On FASExcelIMportSelect  " + e.ToString(); ; //scs 251215
+            //    }
+            //    finally
+            //    {
+            //    }
+        //}
+
+        #endregion
+    }
+ 
+    public List<ExcelUploadMsg> SalesRelatedUpLoad(DataTable dtCoup,string TranType)
+    {
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+        dateinfo.ShortDatePattern = "MM-dd-yyyy";
+        lblMessage.Text = TranType+ " UpLoad Method Running";
+        List<ExcelUploadMsg> excelUploadList = new List<ExcelUploadMsg>();
+        int linecount = 1; // if in excel connection string HDR is Yes the Hdr is taken care hence 1 else 0
+        foreach (DataRow dr in dtCoup.Rows)
+        {
+            string CompCode = ddlCompany.SelectedValue;
+            string LocationCode = ddlAuctionLocation.SelectedValue;
+           // string WDate = "";             string WChar = ""; string sDate = "";
+            int err = 1; // set for error condition reset only if valid data below scs vj 200923
+            if (linecount >= 1) // first row contains heading in xl
+            {
+                 ExcelUploadMsg excelUpload = new ExcelUploadMsg();
+                 #region RM AUCTIOnFormat
+                 if ((dr[22].ToString() != string.Empty && dr[4].ToString() != string.Empty && dr[5].ToString() != string.Empty))
+                 //GSTIN InvNo,InvDate and date and qty should not be empty hence neglect that row
+                 {
+                     excelUpload.Column1 = dr[0].ToString() == null ? string.Empty : dr[0].ToString(); // Season                    
+                     //WDate = excelUpload.Column1.Replace("/", "-"); // taking it as date as Integer
+                     //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                     //excelUpload.Column1 = sDate;
+                     excelUpload.Column2 = dr[1].ToString() == null ? string.Empty : dr[1].ToString(); // SaleNO
+                     //WDate = excelUpload.Column2.Replace("/", "-");
+                     //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                     //excelUpload.Column2 = sDate;
+                     excelUpload.Column3 = dr[2].ToString() == null ? string.Empty : dr[2].ToString(); //saledate
+                     excelUpload.Column4 = dr[3].ToString() == null ? string.Empty : dr[3].ToString(); //DOCType
+                     excelUpload.Column5 = dr[4].ToString() == null ? string.Empty : dr[4].ToString(); //INVNO
+                     excelUpload.Column6 = dr[5].ToString() == null ? string.Empty : dr[5].ToString(); //INVdt
+                     excelUpload.Column7 = dr[6].ToString() == null ? string.Empty : dr[6].ToString(); // inv seller         
+                     excelUpload.Column8 = dr[7].ToString() == null ? string.Empty : dr[7].ToString(); //supp add
+                     excelUpload.Column9 = dr[8].ToString() == null ? string.Empty : dr[8].ToString(); //city
+                     excelUpload.Column10 = dr[9].ToString() == null ? string.Empty : dr[9].ToString(); //statecode
+
+                     excelUpload.Column11 = dr[10].ToString() == null ? string.Empty : dr[10].ToString(); //pincode
+                     excelUpload.Column12 = (dr[11].ToString() == null || dr[11].ToString() == string.Empty) ? "" : dr[11].ToString(); //SoldPsellerphrice
+                     excelUpload.Column13 = (dr[12].ToString() == null || dr[12].ToString() == string.Empty) ? "" : dr[12].ToString(); //selleremail
+                     excelUpload.Column14 = dr[13].ToString() == null ? "" : dr[13].ToString(); // sellerGSTIN
+                     excelUpload.Column15 = dr[14].ToString() == null ? "" : dr[14].ToString(); // buyername
+                     excelUpload.Column16 = dr[15].ToString() == null ? "" : dr[15].ToString(); // buyeradd1
+                     excelUpload.Column17 = (dr[16].ToString() == null) ? "" : dr[16].ToString(); // buyeradd2
+                     excelUpload.Column18 = dr[17].ToString() == null ? string.Empty : dr[17].ToString(); //salebuyerciy1
+                     excelUpload.Column19 = (dr[18].ToString() == null) ? "" : dr[18].ToString(); //statecode
+                     excelUpload.Column20 = (dr[19].ToString() == null || dr[19].ToString() == string.Empty) ? "" : dr[19].ToString(); //pin1
+
+                     excelUpload.Column21 = (dr[20].ToString() == null || dr[20].ToString() == string.Empty) ? "0" : dr[20].ToString(); // phone1
+                     excelUpload.Column22 = (dr[21].ToString() == null || dr[21].ToString() == string.Empty) ? "" : dr[21].ToString(); //buyeremail
+                     excelUpload.Column23 = (dr[22].ToString() == null) ? "" : dr[22].ToString(); // //burgstin
+                     excelUpload.Column24 = (dr[23].ToString() == null) ? "0" : dr[23].ToString(); // //pos
+                     excelUpload.Column25 = (dr[24].ToString() == null || dr[24].ToString() == string.Empty) ? "0" : dr[24].ToString(); //slno
+                     excelUpload.Column26 = (dr[25].ToString() == null || dr[25].ToString() == string.Empty) ? "" : dr[25].ToString(); //  lotno
+                     excelUpload.Column27 = (dr[26].ToString() == null || dr[26].ToString() == string.Empty) ? "" : dr[26].ToString(); // goods
+                     excelUpload.Column28 = (dr[27].ToString() == null || dr[27].ToString() == string.Empty) ? "" : dr[27].ToString(); // hsncode
+                     excelUpload.Column29 = (dr[28].ToString() == null || dr[28].ToString() == string.Empty) ? "0" : dr[28].ToString(); // totnetkgs
+                     excelUpload.Column30 = (dr[29].ToString() == null || dr[29].ToString() == string.Empty) ? "0" : dr[29].ToString(); //dealprice
+
+                     excelUpload.Column31 = (dr[30].ToString() == null || dr[30].ToString() == string.Empty) ? "0" : dr[30].ToString(); // grossamt
+                     excelUpload.Column32 = (dr[31].ToString() == null) ? "0" : dr[31].ToString(); //Netamt
+                     excelUpload.Column33 = (dr[32].ToString() == null) ? "0" : dr[32].ToString(); //gstrate
+                     excelUpload.Column34 = (dr[33].ToString() == null || dr[33].ToString() == string.Empty) ? "0" : dr[33].ToString(); // IGSTamt
+                     excelUpload.Column35 = (dr[34].ToString() == null) ? "0" : dr[34].ToString(); //cgstamt
+                     excelUpload.Column36 = (dr[35].ToString() == null || dr[35].ToString() == string.Empty) ? "0" : dr[35].ToString(); // sgstamt
+                     excelUpload.Column37 = dr[36].ToString() == null ? "0" : dr[36].ToString(); //  itemtotamt
+                     excelUpload.Column38 = dr[37].ToString() == null ? "0" : dr[37].ToString(); //    tottaableamt
+                     excelUpload.Column39 = (dr[38].ToString() == null || dr[38].ToString() == string.Empty) ? "0" : dr[38].ToString(); // totsgstval
+                     excelUpload.Column40 = (dr[39].ToString() == null || dr[39].ToString() == string.Empty) ? "0" : dr[39].ToString(); // totcgstval
+
+                     excelUpload.Column41 = (dr[40].ToString() == null || dr[40].ToString() == string.Empty) ? "0" : dr[40].ToString(); // totgstval
+                     excelUpload.Column42 = (dr[41].ToString() == null || dr[41].ToString() == string.Empty) ? "0" : dr[41].ToString(); //totalinvoice
+                     excelUpload.Column43 = (dr[42].ToString() == null || dr[42].ToString() == string.Empty) ? "" : dr[42].ToString(); // signedirn
+                     //Columns added Glendale 201102
+                     excelUpload.Column44 = (dr[43].ToString() == null || dr[43].ToString() == string.Empty) ? "" : dr[43].ToString(); // ackno
+                     //WDate = excelUpload.Column44.Replace("/", "-");
+                     //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                     //excelUpload.Column44 = sDate;
+                     excelUpload.Column45 = (dr[44].ToString() == null || dr[44].ToString() == string.Empty) ? "" : dr[44].ToString(); //ACKdt
+                     //WDate = excelUpload.Column44.Replace("/", "-");
+                     //sDate = (Convert.ToDateTime(WDate, dateinfo)).ToString("MM-dd-yyyy");
+                     //excelUpload.Column45 = sDate;
+
+                     excelUpload.Column46 = (dr[45].ToString() == null || dr[45].ToString() == string.Empty) ? "0" : dr[45].ToString(); // status
+                     // WChar = RemoveUnWantedCharacter(excelUpload.Column27.Trim());
+                     err = 0;
+                 }
+                 #endregion
+                 #region del
+                 //if (TranType =="AUCTION SALES")
+                //{
+
+                //    if (ddlProjectName.SelectedValue != "CMN") // Not a common Format scs 210512
+                //    {
+                //        #region depSale
+                //        if ((dr[23].ToString() != string.Empty && dr[2].ToString() != string.Empty && dr[17].ToString() != string.Empty)) //Inv number and date and qty should not be empty hence neglect that row
+                //        {
+                //            excelUpload.Column1 = dr[2].ToString() == null ? string.Empty : dr[2].ToString(); // Invoicedate
+                //            WDate = excelUpload.Column1.Replace("/", "-");
+                //            sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            excelUpload.Column1 = sDate;
+                //            excelUpload.Column2 = dr[3].ToString() == null ? string.Empty : dr[3].ToString(); // PromptDate
+                //            WDate = excelUpload.Column2.Replace("/", "-");
+                //            sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            excelUpload.Column2 = sDate;
+                //            excelUpload.Column3 = dr[5].ToString() == null ? string.Empty : dr[5].ToString(); //AuctionerEntityCode
+                //            excelUpload.Column4 = dr[6].ToString() == null ? string.Empty : dr[6].ToString(); //AuctioneerName
+                //            excelUpload.Column5 = dr[9].ToString() == null ? string.Empty : dr[9].ToString(); //MarkNAme
+                //            excelUpload.Column6 = dr[10].ToString() == null ? string.Empty : dr[10].ToString(); //MarkEntityCode
+                //            excelUpload.Column7 = dr[11].ToString() == null ? string.Empty : dr[11].ToString(); // BuyerName
+                //            excelUpload.Column8 = dr[12].ToString() == null ? string.Empty : dr[12].ToString(); //BuyerEntityCode
+                //            excelUpload.Column9 = dr[13].ToString() == null ? string.Empty : dr[13].ToString(); //LotNo
+                //            excelUpload.Column10 = dr[14].ToString() == null ? string.Empty : dr[14].ToString(); //GardenInvoice
+
+                //            excelUpload.Column11 = (dr[15].ToString() == null || dr[15].ToString() == string.Empty) ? "0" : dr[15].ToString(); //PAckage
+                //            excelUpload.Column12 = (dr[16].ToString() == null || dr[16].ToString() == string.Empty) ? "0" : dr[16].ToString(); //SoldPrice
+                //            excelUpload.Column13 = (dr[17].ToString() == null || dr[17].ToString() == string.Empty) ? "0" : dr[17].ToString(); //QtyPurchased
+                //            excelUpload.Column14 = dr[18].ToString() == null ? "0" : dr[18].ToString(); // DealerIdentification
+                //            excelUpload.Column15 = dr[21].ToString() == null ? "0" : dr[21].ToString(); // ContractRefeNo
+                //            excelUpload.Column16 = dr[22].ToString() == null ? "0" : dr[22].ToString(); // BuyerInvDate
+                //            WDate = excelUpload.Column16.Replace("/", "-");
+                //            sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            excelUpload.Column16 = sDate;
+                //            excelUpload.Column17 = (dr[23].ToString() == null) ? "" : dr[23].ToString(); // Tea Inv ValueNO
+                //            excelUpload.Column18 = dr[27].ToString() == null ? string.Empty : dr[27].ToString(); //saletype
+                //            excelUpload.Column19 = (dr[30].ToString() == null) ? "0" : dr[30].ToString(); //Inv Value
+                //            excelUpload.Column20 = (dr[31].ToString() == null || dr[31].ToString() == string.Empty) ? "0" : dr[31].ToString(); //SGST
+
+                //            excelUpload.Column21 = (dr[32].ToString() == null || dr[32].ToString() == string.Empty) ? "0" : dr[32].ToString(); // CGST
+                //            excelUpload.Column22 = (dr[33].ToString() == null || dr[33].ToString() == string.Empty) ? "0" : dr[33].ToString(); //IGST
+                //            excelUpload.Column23 = (dr[50].ToString() == null || dr[50].ToString() == string.Empty) ? "0" : dr[50].ToString(); // TeaBoardInvNoToAuctioneer
+                //            excelUpload.Column24 = (dr[58].ToString() == null) ? "0" : dr[58].ToString(); // //Autioneer invno to seller
+                //            excelUpload.Column25 = (dr[62].ToString() == null || dr[62].ToString() == string.Empty) ? "0" : dr[62].ToString(); // Seller Brokerage
+                //            excelUpload.Column26 = (dr[63].ToString() == null || dr[63].ToString() == string.Empty) ? "0" : dr[63].ToString(); //  sellerLotMoney 
+                //            excelUpload.Column27 = (dr[64].ToString() == null || dr[64].ToString() == string.Empty) ? "0" : dr[64].ToString(); // Seller Serv.Charges
+                //            excelUpload.Column28 = (dr[67].ToString() == null || dr[67].ToString() == string.Empty) ? "0" : dr[67].ToString(); // SGST on Auctioneerservices
+                //            excelUpload.Column29 = (dr[68].ToString() == null || dr[68].ToString() == string.Empty) ? "0" : dr[68].ToString(); // CGST on Auctioneerservices
+                //            excelUpload.Column30 = (dr[69].ToString() == null || dr[69].ToString() == string.Empty) ? "0" : dr[69].ToString(); // IGST on Auctioneerservices
+
+                //            excelUpload.Column31 = (dr[71].ToString() == null || dr[71].ToString() == string.Empty) ? "0" : dr[71].ToString(); // seller TB Charges
+                //            excelUpload.Column32 = (dr[72].ToString() == null || dr[72].ToString() == string.Empty) ? "0" : dr[72].ToString(); //SGST on Seller TB Charges
+                //            excelUpload.Column33 = (dr[73].ToString() == null || dr[73].ToString() == string.Empty) ? "0" : dr[73].ToString(); // CGST on Seller TB Charges
+                //            excelUpload.Column34 = (dr[74].ToString() == null || dr[74].ToString() == string.Empty) ? "0" : dr[74].ToString(); // IGST on Seller TB Charges
+                //            excelUpload.Column35 = (dr[81].ToString() == null || dr[81].ToString() == string.Empty) ? "0" : dr[81].ToString(); // WareHouse Charges
+                //            excelUpload.Column36 = (dr[82].ToString() == null || dr[82].ToString() == string.Empty) ? "0" : dr[82].ToString(); //  TeaBoardWHSCharge
+                //            excelUpload.Column37 = dr[83].ToString() == null ? "0" : dr[83].ToString(); //  TCSAmountOF Seller
+                //            excelUpload.Column38 = dr[84].ToString() == null ? "0" : dr[84].ToString(); //    SellerNetValue
+                //            excelUpload.Column39 = (dr[85].ToString() == null || dr[85].ToString() == string.Empty) ? "0" : dr[85].ToString(); // NetAmountPayableToWareHouse
+                //            excelUpload.Column40 = (dr[87].ToString() == null || dr[87].ToString() == string.Empty) ? "0" : dr[87].ToString(); // tdsAmountofSeller
+                //            excelUpload.Column41 = (dr[89].ToString() == null || dr[89].ToString() == string.Empty) ? "0" : dr[89].ToString(); // TcsAmount of Buyer
+                //            excelUpload.Column42 = (dr[94].ToString() == null || dr[94].ToString() == string.Empty) ? "" : dr[94].ToString(); //Tea type
+                //            excelUpload.Column43 = (dr[95].ToString() == null || dr[95].ToString() == string.Empty) ? "" : dr[95].ToString(); // Grade
+                //            //Columns added Glendale 201102
+                //            excelUpload.Column44 = (dr[51].ToString() == null || dr[51].ToString() == string.Empty) ? "" : dr[51].ToString(); // Auctioneer inv Date
+                //            WDate = excelUpload.Column44.Replace("/", "-");
+                //            sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            excelUpload.Column44 = sDate;
+                //            excelUpload.Column45 = (dr[57].ToString() == null || dr[57].ToString() == string.Empty) ? "" : dr[57].ToString(); // seller inv Date
+                //            WDate = excelUpload.Column44.Replace("/", "-");
+                //            sDate = (Convert.ToDateTime(WDate, dateinfo)).ToString("MM-dd-yyyy");
+                //            excelUpload.Column45 = sDate;
+
+                //            excelUpload.Column46 = (dr[70].ToString() == null || dr[70].ToString() == string.Empty) ? "0" : dr[70].ToString(); // Teaboard inv no to seller
+                //            // WChar = RemoveUnWantedCharacter(excelUpload.Column27.Trim());
+
+
+                //            err = 0;
+                //        }
+                //        #endregion
+                //    }
+                //    else
+                //    {
+                //        #region depSaleNew Common Format
+                //        if ((dr[34].ToString() != string.Empty && dr[0].ToString() != string.Empty && dr[9].ToString() != string.Empty)) 
+                //            //Deal Identification no and date and qty should not be empty hence neglect that row
+                //        {
+                //            excelUpload.Column1 = dr[0].ToString() == null ? string.Empty : dr[0].ToString(); // Invoicedate
+                //            //WDate = excelUpload.Column1.Replace("/", "-"); // taking it as date as Integer
+                //            //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            //excelUpload.Column1 = sDate;
+                //            excelUpload.Column2 = dr[1].ToString() == null ? string.Empty : dr[1].ToString(); // PromptDate
+                //            //WDate = excelUpload.Column2.Replace("/", "-");
+                //            //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            //excelUpload.Column2 = sDate;
+                //            excelUpload.Column3 = dr[2].ToString() == null ? string.Empty : dr[2].ToString(); //AuctionerEntityCode
+                //            excelUpload.Column4 = dr[3].ToString() == null ? string.Empty : dr[3].ToString(); //AuctioneerName
+                //            excelUpload.Column5 = dr[4].ToString() == null ? string.Empty : dr[4].ToString(); //MarkNAme
+                //            excelUpload.Column6 = ""; //MarkEntityCode dropped in common
+                //            excelUpload.Column7 = dr[5].ToString() == null ? string.Empty : dr[5].ToString(); // BuyerName
+                //            excelUpload.Column8 = dr[35].ToString() == null ? string.Empty : dr[35].ToString(); //BuyerEntityCode
+                //            excelUpload.Column9 = dr[6].ToString() == null ? string.Empty : dr[6].ToString(); //LotNo
+                //            excelUpload.Column10 = dr[7].ToString() == null ? string.Empty : dr[7].ToString(); //GardenInvoice
+
+                //            excelUpload.Column11 = "0"; //PAckage
+                //            excelUpload.Column12 = (dr[8].ToString() == null || dr[8].ToString() == string.Empty) ? "0" : dr[8].ToString(); //SoldPrice
+                //            excelUpload.Column13 = (dr[9].ToString() == null || dr[9].ToString() == string.Empty) ? "0" : dr[9].ToString(); //QtyPurchased
+                //            excelUpload.Column14 = dr[34].ToString() == null ? "0" : dr[34].ToString(); // DealerIdentification
+                //            excelUpload.Column15 = ""; // ContractRefeNo
+                //            excelUpload.Column16 = dr[10].ToString() == null ? "0" : dr[10].ToString(); // BuyerInvDate
+                //            //WDate = excelUpload.Column16.Replace("/", "-");
+                //            //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            //excelUpload.Column16 = sDate;
+                //            excelUpload.Column17 = (dr[11].ToString() == null) ? "" : dr[11].ToString(); // Tea Inv ValueNO
+                //            excelUpload.Column18 = dr[12].ToString() == null ? string.Empty : dr[12].ToString(); //saletype
+                //            excelUpload.Column19 = (dr[13].ToString() == null) ? "0" : dr[13].ToString(); //Inv Value
+                //            excelUpload.Column20 = (dr[14].ToString() == null || dr[14].ToString() == string.Empty) ? "0" : dr[14].ToString(); //SGST
+
+                //            excelUpload.Column21 = (dr[15].ToString() == null || dr[15].ToString() == string.Empty) ? "0" : dr[15].ToString(); // CGST
+                //            excelUpload.Column22 = (dr[16].ToString() == null || dr[16].ToString() == string.Empty) ? "0" : dr[16].ToString(); //IGST
+                //            excelUpload.Column23 = ""; // TeaBoardInvNoToAuctioneer dropped
+                //            excelUpload.Column24 = (dr[17].ToString() == null) ? "0" : dr[17].ToString(); // //Autioneer invno to seller
+                //            excelUpload.Column25 = (dr[18].ToString() == null || dr[18].ToString() == string.Empty) ? "0" : dr[18].ToString(); // Seller Brokerage
+                //            excelUpload.Column26 = (dr[19].ToString() == null || dr[19].ToString() == string.Empty) ? "0" : dr[19].ToString(); //  sellerLotMoney 
+                //            excelUpload.Column27 = (dr[20].ToString() == null || dr[20].ToString() == string.Empty) ? "0" : dr[20].ToString(); // Seller Serv.Charges
+                //            excelUpload.Column28 = (dr[21].ToString() == null || dr[21].ToString() == string.Empty) ? "0" : dr[21].ToString(); // SGST on Auctioneerservices
+                //            excelUpload.Column29 = (dr[22].ToString() == null || dr[22].ToString() == string.Empty) ? "0" : dr[22].ToString(); // CGST on Auctioneerservices
+                //            excelUpload.Column30 = "0"; // IGST on Auctioneerservices
+
+                //            excelUpload.Column31 = (dr[24].ToString() == null || dr[24].ToString() == string.Empty) ? "0" : dr[24].ToString(); // seller TB Charges
+                //            excelUpload.Column32 = "0"; //SGST on Seller TB Charges
+                //            excelUpload.Column33 = "0"; // CGST on Seller TB Charges
+                //            excelUpload.Column34 = (dr[25].ToString() == null || dr[25].ToString() == string.Empty) ? "0" : dr[25].ToString(); // IGST on Seller TB Charges
+                //            excelUpload.Column35 = "0"; // WareHouse Charges
+                //            excelUpload.Column36 = (dr[26].ToString() == null || dr[26].ToString() == string.Empty) ? "0" : dr[26].ToString(); //  TeaBoardWHSCharge
+                //            excelUpload.Column37 = dr[27].ToString() == null ? "0" : dr[27].ToString(); //  TCSAmountOF Seller
+                //            excelUpload.Column38 = dr[28].ToString() == null ? "0" : dr[28].ToString(); //    SellerNetValue
+                //            excelUpload.Column39 = (dr[29].ToString() == null || dr[29].ToString() == string.Empty) ? "0" : dr[29].ToString(); // NetAmountPayableToWareHouse
+                //            excelUpload.Column40 = (dr[30].ToString() == null || dr[30].ToString() == string.Empty) ? "0" : dr[30].ToString(); // tdsAmountofSeller
+                //            excelUpload.Column41 = (dr[31].ToString() == null || dr[31].ToString() == string.Empty) ? "0" : dr[31].ToString(); // TcsAmount of Buyer
+                //            excelUpload.Column42 = (dr[32].ToString() == null || dr[32].ToString() == string.Empty) ? "" : dr[32].ToString(); //Tea type
+                //            excelUpload.Column43 = (dr[33].ToString() == null || dr[33].ToString() == string.Empty) ? "" : dr[33].ToString(); // Grade
+                //            //Columns added Glendale 201102
+                //            excelUpload.Column44 = (dr[0].ToString() == null || dr[0].ToString() == string.Empty) ? "" : dr[0].ToString(); // Auctioneer inv Date -- defaulted as invoice date and not used scs 210512
+                //            //WDate = excelUpload.Column44.Replace("/", "-");
+                //            //sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            //excelUpload.Column44 = sDate;
+                //            excelUpload.Column45 = (dr[0].ToString() == null || dr[0].ToString() == string.Empty) ? "" : dr[0].ToString(); // seller inv Date defaulted to xl column1 and in integer scs 210512
+                //            //WDate = excelUpload.Column44.Replace("/", "-");
+                //            //sDate = (Convert.ToDateTime(WDate, dateinfo)).ToString("MM-dd-yyyy");
+                //            //excelUpload.Column45 = sDate;
+
+                //            excelUpload.Column46 = (dr[23].ToString() == null || dr[23].ToString() == string.Empty) ? "0" : dr[23].ToString(); // Teaboard inv no to seller
+                //            // WChar = RemoveUnWantedCharacter(excelUpload.Column27.Trim());
+
+
+                //            err = 0;
+                //        }
+                //        #endregion
+                //    }
+                //}
+                //else if (TranType == "TEA BOARD RECEIPT")
+                //{
+                //    #region TeaBoardRcpt New
+                //    if (((dr[9].ToString() != string.Empty || dr[7].ToString() != "0")
+                //          && dr[14].ToString() != string.Empty && dr[23].ToString() != string.Empty && dr[13].ToString() != string.Empty))
+                //    //DealIdno and Amt cannot be blank and BankUTR bank date with Teainv value to be there else skip
+                //    {
+                //        excelUpload.Column1 = dr[9].ToString() == null ? string.Empty : dr[9].ToString(); //DealIdentificationID
+                //        excelUpload.Column2 = dr[14].ToString() == null ? string.Empty : dr[14].ToString(); //BankUTR
+
+                //        excelUpload.Column3 = dr[13].ToString() == null ? string.Empty : dr[13].ToString(); // BankDate
+                //        WDate = excelUpload.Column3.Replace("/", "-");
+
+                //        WDate = excelUpload.Column3.Replace("/", "-");
+                //        WDate = ConvDateFormat(WDate); // Convert.ToDateTime(WDate);
+                //        sDate = Convert.ToDateTime(WDate).ToString("MM-dd-yyyy");
+                //        excelUpload.Column3 = sDate;
+
+                //        //try
+                //        //{
+                //        //    sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //        //}
+                //        //catch
+                //        //{
+                //        //    sDate = Convert.ToDateTime(WDate,dateinfo).ToString("MM-dd-yyyy");
+                //        //}
+                //        excelUpload.Column3 = sDate;
+
+                       
+                        
+                //        excelUpload.Column4 = dr[7].ToString() == null ? "0" : dr[7].ToString(); //Amt
+                //        excelUpload.Column5 = dr[23] == null ? string.Empty : dr[23].ToString(); //TeaValueInv
+                //        excelUpload.Column6 = dr[20] == null ? string.Empty : dr[20].ToString(); //Buyer Entity code
+                //        excelUpload.Column7 = dr[21] == null ? string.Empty : dr[21].ToString(); //BuyerName
+                //        err = 0;
+                //    }
+                //    #endregion
+                //    #region TeaBoardRcptold
+                //    //if (((dr[0].ToString() != string.Empty || dr[0].ToString() != "0") 
+                //    //      && dr[1].ToString() != string.Empty && dr[2].ToString() != string.Empty && dr[3].ToString() != string.Empty)) 
+                //    //    //Amt Paid, BankDate, Buyer and Invoice number  should not be empty hence neglect that row
+                //    //{
+                //    //    excelUpload.Column1 = dr[0].ToString() == null ? string.Empty : dr[0].ToString(); //AmtPaid
+                //    //    excelUpload.Column2 = dr[1].ToString() == null ? string.Empty : dr[1].ToString(); // BankDate
+                //    //        WDate = excelUpload.Column2.Replace("/", "-");
+                //    //        WDate = ConvDateFormat(WDate); // Convert.ToDateTime(WDate);
+                //    //        sDate = Convert.ToDateTime(WDate).ToString("MM-dd-yyyy");
+                //    //        excelUpload.Column2 = sDate;
+                //    //    //if (excelUpload.Column2.Contains("/"))
+                //    //    //{
+                //    //    //    WDate = excelUpload.Column2.Replace("/", "-");
+                //    //    //    excelUpload.Column2 = WDate;
+                //    //    //}
+                //    //    excelUpload.Column3 = dr[2].ToString() == null ? string.Empty : dr[2].ToString(); //Buyer
+                //    //    excelUpload.Column4 = dr[3] == null ? string.Empty : dr[3].ToString(); //Inv
+                //    //    err = 0;
+                //    //}
+                //    #endregion
+                //}
+                //else
+                //{
+                //    #region Bankreceipt
+                //    if (BankName == "SCB")
+                //    {
+                //        if ((dr[13].ToString() != string.Empty && dr[15].ToString() != string.Empty && dr[20].ToString() != string.Empty))
+                //        //Transactiondate,TranAmount and transdetails should not be empty hence neglect that row
+                //        {
+                //            excelUpload.Column1 = dr[0] == null ? string.Empty : dr[0].ToString(); //ClientName
+                //            excelUpload.Column2 = dr[1] == null ? string.Empty : dr[1].ToString(); // Bankcode
+                //            excelUpload.Column3 = dr[2] == null ? string.Empty : dr[2].ToString(); //acnumber
+                //            excelUpload.Column4 = dr[3] == null ? string.Empty : dr[3].ToString(); //Currency
+                //            excelUpload.Column5 = dr[4] == null ? string.Empty : dr[4].ToString(); //AcType
+                //            excelUpload.Column6 = dr[5] == null ? string.Empty : dr[5].ToString(); //OpledgBal
+                //            excelUpload.Column7 = dr[6] == null ? string.Empty : dr[6].ToString(); // ClLedgbal
+                //            excelUpload.Column8 = (dr[7].ToString() == null || dr[7].ToString() == string.Empty) ? "0" : dr[7].ToString(); //OpAvabbal
+                //            excelUpload.Column9 = (dr[8].ToString() == null || dr[8].ToString() == string.Empty) ? "0" : dr[8].ToString(); //ClAvblBal
+                //            //excelUpload.Column10 = (dr[9].ToString() == null || dr[9].ToString() == string.Empty) ? "0" : dr[9].ToString(); //TranDate
+                //            excelUpload.Column10 = (dr[13].ToString() == null || dr[13].ToString() == string.Empty) ? "0" : dr[13].ToString(); //TranDate
+                //            WDate = excelUpload.Column10.Replace("/", "-");
+                //            sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //            excelUpload.Column10 = sDate;
+                //            //if (excelUpload.Column10.Contains("/"))
+                //            //{
+                //            //    WDate = excelUpload.Column10.Replace("/", "-");
+                //            //    excelUpload.Column10 = WDate;
+                //            //}
+                //            excelUpload.Column11 = (dr[15].ToString() == null || dr[15].ToString() == string.Empty) ? "0" : dr[15].ToString(); //tranamt
+                //            excelUpload.Column12 = (dr[18].ToString() == null || dr[18].ToString() == string.Empty) ? "0" : dr[18].ToString(); // Transrefer
+                //            excelUpload.Column13 = (dr[20].ToString() == null || dr[20].ToString() == string.Empty) ? "0" : dr[20].ToString(); // transdetail
+                //            excelUpload.Column14 = (dr[22].ToString() == null || dr[22].ToString() == string.Empty) ? "0" : dr[22].ToString(); //TranType
+                //            err = 0;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if ((dr[0].ToString() != string.Empty && dr[4].ToString() != string.Empty && dr[3].ToString() != string.Empty && dr[2].ToString().Contains("Tea Board")))
+                //        //Transactiondate,TranAmount and transdetails should not be empty hence neglect that row
+                //        {
+                //            excelUpload.Column1 = dr[0] == null ? string.Empty : dr[0].ToString(); //TransactionDate
+                //                WDate = excelUpload.Column1.Replace("/", "-");
+                //                sDate = (Convert.ToDateTime(WDate)).ToString("MM-dd-yyyy");
+                //                excelUpload.Column1 = sDate;
+                //            excelUpload.Column2 = dr[1] == null ? string.Empty : dr[1].ToString(); // TransactionId
+                //            excelUpload.Column3 = dr[2] == null ? string.Empty : dr[2].ToString(); //Remarks
+                //            excelUpload.Column4 = dr[3] == null ? string.Empty : dr[3].ToString(); //UTR Number--Transdetail
+                //            excelUpload.Column5 = dr[4] == null ? string.Empty : dr[4].ToString(); //tran Amt
+                //            excelUpload.Column6 = BankName; //Bank Name from dropdown
+                //        }
+                //    }
+                //    
+                 //}
+                 #endregion
+                 if (err == 0) // skip records if data contains invalid or blank values on key fields
+                {
+                    excelUpload.Column51 = CompCode; //SCS added ClientCode 201022
+                    excelUpload.Column52 = LocationCode;
+                    excelUpload.Column53 = TranType;
+                    excelUpload.Column54 = ddlProjectName.SelectedValue; // scs 210512 included when common format was introduced
+                    excelUpload.Column55 = BaseMsg.EmployeeCode;
+                    excelUpload.UploadType = ExFormat; //used for upload file type
+                    excelUploadList.Add(excelUpload);
+                }
+                
+              }
+            linecount++;
+        }
+        return excelUploadList;
+    }
+    private List<RMSalesMsg> CheckData(List<ExcelUploadMsg> ExData, string TranType)
+    {
+        System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+        dateinfo.ShortDatePattern = "dd/MM/yyyy";
+
+        lblMessage.Text = "CheckData Method Running";
+        List<RMSalesMsg> DataErr = new List<RMSalesMsg>();
+       
+            int RCount = 0; //Since XL has column Heading, the rownumber to start from 2
+            ChkResult = 0; // set OK
+            foreach (ExcelUploadMsg ExMsg in ExData)
+            {
+                RMSalesMsg dtMsg = new RMSalesMsg();
+                int ChkResult1 = 0;
+                try
+                {
+                    RCount = RCount + 1;
+                    string RKount = Convert.ToString(RCount);
+                    dtMsg.RKount = RKount;
+                    #region DepSale
+                    //if (TranType == "AUCTION SALES" && ddlAuctionLocation.SelectedIndex == 0)
+                    //{
+                   
+                        try
+                        {
+                            DateTime SaleDate = Convert.ToDateTime(ExMsg.Column3, dateinfo);
+                            DateTime InvDate = Convert.ToDateTime(ExMsg.Column6, dateinfo);
+                        }
+                        catch
+                        {
+                            dtMsg.Result = dtMsg.Result + " - Invoice Date or Sale Date format not proper  ";
+                            ChkResult1 = 1;
+                        }
+                   
+                    dtMsg.SaleDate = ExMsg.Column3;
+                    dtMsg.DocType = ExMsg.Column4;
+                    dtMsg.InvoiceNo = (ExMsg.Column5);
+                    dtMsg.InvoiceDate = (ExMsg.Column6);
+                    dtMsg.INVIssuer = (ExMsg.Column7);
+                    dtMsg.SuppAdd1 = (ExMsg.Column8);
+                    dtMsg.SuppCity = (ExMsg.Column9);
+
+                    dtMsg.SuppStCode = ExMsg.Column10;
+
+                    try
+                    {
+                        Int64 Pin = Convert.ToInt64(ExMsg.Column11);
+                        dtMsg.SuppPinCode = (ExMsg.Column11);
+                    }
+                    catch
+                    {
+                        dtMsg.Result = dtMsg.Result + " - Pincode to be numeric ";
+                        ChkResult1 = 1;
+                   
+                    }
+                    dtMsg.SuppPhone = (ExMsg.Column12);
+                    dtMsg.SuppEmail = (ExMsg.Column13);
+                    dtMsg.SuppGSTNo = (ExMsg.Column14);
+
+                    
+                    dtMsg.BuyerName = (ExMsg.Column15);
+                    dtMsg.BuyerAdd1 = (ExMsg.Column16);
+                        dtMsg.BuyerAdd2 = (ExMsg.Column17); // 
+                        dtMsg.BuyerCity = (ExMsg.Column18);
+                        dtMsg.BuyerStCode =(ExMsg.Column19); //
+                        dtMsg.BuyerPincode = (ExMsg.Column20); //
+                        dtMsg.BuyerPhone = (ExMsg.Column21); //
+                        dtMsg.BuyerEmail = (ExMsg.Column22); //
+                        if (ExMsg.Column20 == "")
+                        {
+                            dtMsg.Result = dtMsg.Result + " - Buyer GSTIN Mandatory ";
+                            ChkResult1 = 1;
+                        }
+                        dtMsg.BuyerGSTIN = (ExMsg.Column23); //
+                        dtMsg.POS = (ExMsg.Column24); //
+                        dtMsg.SrlNo = Convert.ToInt32(ExMsg.Column25);
+                        dtMsg.LotNo = (ExMsg.Column26); //
+                        dtMsg.Goods = (ExMsg.Column27); //
+                        dtMsg.HSNCode = (ExMsg.Column28); //
+                        if (ExMsg.Column29 == "0")
+                        {
+                            dtMsg.Result = dtMsg.Result + " - NetKGs cannot be 0 ";
+                            ChkResult1 = 1;
+                        }
+                        else
+                        {
+                            dtMsg.NetKgs = Convert.ToDouble(ExMsg.Column29);
+                        }
+
+                        dtMsg.DealPrice = Convert.ToDouble(ExMsg.Column30);
+                        dtMsg.GrossAmt = Convert.ToDouble(ExMsg.Column31);
+                        dtMsg.NetAmt = Convert.ToDouble(ExMsg.Column32);
+                        dtMsg.GSTRate = Convert.ToDouble(ExMsg.Column33);
+                        dtMsg.IGSTAmt = Convert.ToDouble(ExMsg.Column34);
+                        dtMsg.CGSTAmt = Convert.ToDouble(ExMsg.Column35);
+                        dtMsg.SGSTAmt = Convert.ToDouble(ExMsg.Column36);
+                        dtMsg.ItemTotAmt = Convert.ToDouble(ExMsg.Column37);
+                        dtMsg.TotalTaxableAmt = Convert.ToDouble(ExMsg.Column38);
+                        dtMsg.TotSGSTVal = Convert.ToDouble(ExMsg.Column39);
+                        dtMsg.TotCGSTVal = Convert.ToDouble(ExMsg.Column40);
+                        dtMsg.TotIGSTVal = Convert.ToDouble(ExMsg.Column41);
+                    //
+                        dtMsg.TotInvAmt = Convert.ToDouble(ExMsg.Column42);
+                        dtMsg.SignedIRN = (ExMsg.Column43);
+                        dtMsg.AckNo = (ExMsg.Column44);
+                        dtMsg.AckDt = (ExMsg.Column45);
+                        dtMsg.Status = (ExMsg.Column46);
+                    
+                    // }
+                #endregion
+
+                    if (ChkResult1 != 1)
+                    {
+                        dtMsg.Result = "OK";
+                    }
+                }
+                catch //(Exception ex)
+                {
+                    ChkResult1 = 1;
+                    dtMsg.Result = "Invalid character or Spaces in fields having numeric value";
+                }
+                ChkResult = ChkResult + ChkResult1;
+                ChkResult1 = 0; //reset 
+                DataErr.Add(dtMsg);
+            }
+        
+        
+        return DataErr;
+    }
+    //private List<TeaBoardReceiptMsg> CheckTeaBoardData(List<ExcelUploadMsg> ExData, string TranType)
+    //{
+    //    System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+    //    dateinfo.ShortDatePattern = "MM-dd-yyyy";
+
+    //    lblMessage.Text = "CheckData Method Running";
+    //    List<TeaBoardReceiptMsg> DataErr = new List<TeaBoardReceiptMsg>();
+
+    //    int RCount = 0; //Since XL has column Heading, the rownumber to start from 2
+    //    ChkResult = 0; // set OK
+    //    foreach (ExcelUploadMsg ExMsg in ExData)
+    //    {
+    //        TeaBoardReceiptMsg dtMsg = new TeaBoardReceiptMsg();
+    //        int ChkResult1 = 0;
+    //        RCount = RCount + 1;
+    //        string RKount = Convert.ToString(RCount);
+    //        dtMsg.RKount = RKount;
+    //        #region DepSale
+    //        dtMsg.DealIdentificationId = ExMsg.Column1;
+    //        dtMsg.BankUTR = ExMsg.Column2;
+    //        try
+    //        {
+    //            dtMsg.AmountPaid = Convert.ToDouble(ExMsg.Column4);
+    //            dtMsg.BankDate = Convert.ToDateTime(ExMsg.Column3);
+    //        }
+    //        catch
+    //        {
+    //            dtMsg.Result = dtMsg.Result + " - Bank Date  format not proper or Amount Paid is not a Decimal or integer value ";
+    //            ChkResult1 = 1;
+    //        }
+    //        //try
+    //        //{
+    //        //    dtMsg.AmountPaid = Convert.ToDouble(ExMsg.Column1);
+    //        //    dtMsg.BankDate = Convert.ToDateTime(ExMsg.Column2);
+    //        //}
+    //        //catch
+    //        //{
+    //        //    dtMsg.Result = dtMsg.Result + " - Bank Date  format not proper or Amount Paid is not a Decimal or integer value ";
+    //        //    ChkResult1 = 1;
+    //        //}
+    //        //dtMsg.BuyerName = (ExMsg.Column3);
+    //        //dtMsg.InvoiceNumber = (ExMsg.Column4);
+ 
+    //        #endregion
+
+
+    //        if (ChkResult1 != 1)
+    //        {
+    //            dtMsg.Result = "OK";
+    //        }
+    //        ChkResult = ChkResult + ChkResult1;
+    //        ChkResult1 = 0; //reset 
+    //        DataErr.Add(dtMsg);
+    //    }
+
+    //    return DataErr;
+    //}
+    //private List<BankReceiptMsg> CheckBankReceiptData(List<ExcelUploadMsg> ExData, string TranType)
+    //{
+    //    System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();
+    //    dateinfo.ShortDatePattern = "MM-dd-yyyy";
+
+    //    lblMessage.Text = "CheckData Method Running for BankReceipt";
+    //    List<BankReceiptMsg> DataErr = new List<BankReceiptMsg>();
+
+    //    int RCount = 0; //Since XL has column Heading, the rownumber to start from 2
+    //    ChkResult = 0; // set OK
+    //    foreach (ExcelUploadMsg ExMsg in ExData)
+    //    {
+    //        BankReceiptMsg dtMsg = new BankReceiptMsg();
+    //        int ChkResult1 = 0;
+    //        RCount = RCount + 1;
+    //        string RKount = Convert.ToString(RCount);
+    //        dtMsg.RKount = RKount;
+    //        #region bankrecept
+ 
+    //        dtMsg.ClientName = (ExMsg.Column1).ToUpper();
+    //        dtMsg.BankCode = ExMsg.Column2.ToUpper();
+    //        dtMsg.AccountNumber = (ExMsg.Column3);
+    //        dtMsg.Currency = (ExMsg.Column4);
+    //        dtMsg.AccountType = (ExMsg.Column5);
+    //        dtMsg.OpLedgerBalance = Convert.ToDouble(ExMsg.Column6);
+    //        dtMsg.ClLedgerBalance = Convert.ToDouble(ExMsg.Column7);
+    //        dtMsg.OpLedgerBalance = Convert.ToDouble(ExMsg.Column8);
+    //        dtMsg.OpAvailableBalance = Convert.ToDouble(ExMsg.Column9);
+    //        try
+    //        {
+    //            dtMsg.TransactionDate = Convert.ToDateTime(ExMsg.Column10);
+    //            dtMsg.TransactionAmount = Convert.ToDouble(ExMsg.Column11);
+    //        }
+    //        catch
+    //        {
+    //            dtMsg.Result = dtMsg.Result + " - Transaction Date  format not proper or Transaction Amt is not a Decimal or integer value ";
+    //            ChkResult1 = 1;
+    //        }
+            
+           
+    //        #endregion
+
+
+    //        if (ChkResult1 != 1)
+    //        {
+    //            dtMsg.Result = "OK";
+    //        }
+    //        ChkResult = ChkResult + ChkResult1;
+    //        ChkResult1 = 0; //reset 
+    //        DataErr.Add(dtMsg);
+    //    }
+
+    //    return DataErr;
+    //}
+    private bool IsNumeric(string WText)
+    {
+        decimal number3 = 0;
+        bool canConvert = decimal.TryParse(WText,out number3);
+        return canConvert;
+    }
+    private string ConvDateFormat(string WDate)
+    {
+        //char SpaceChar = ' '; //to identify the date and time portion
+        string Error = "";
+        string WDOB = "";
+        char SepChar = '.';
+        if (WDate.IndexOf('.', 1) > 0)
+        {
+            SepChar = '.';
+        }
+        else if (WDate.IndexOf('/', 1) > 0)
+        {
+            SepChar = '/';
+        }
+        else if (WDate.IndexOf('-', 1) > 0)
+        {
+            SepChar = '-';
+        }
+        else
+        {
+            Error = Error + "* Not Valid Date Separator";
+        }
+
+        string[] split = WDate.Split(new char[] { SepChar });
+
+       // int lenDate = Convert.ToInt16(WDate.Substring(WDate.IndexOf(SpaceChar, 1)));
+
+        string dd = split[0];
+        string WMMYYYY = WDate.Substring(WDate.IndexOf(SepChar, 1)); // get last digits after the 2nd date separator -yyyy ---getting /YYYY
+        string DD = WDate.Substring(0, WDate.Length - WMMYYYY.Length);
+        string WYYYY = WMMYYYY.Substring(WMMYYYY.IndexOf(SepChar, 1)); // we get the first dd/mm character after excluding last / in WDate getting 9/9
+        string MM = WMMYYYY.Substring(1, WMMYYYY.Length - WYYYY.Length - 1); //get last digits after the 1st date separator --MM /9
+
+        string YYYY = WYYYY.Substring(1, 4);
+
+
+        // string MMYYYY = WDate.Substring((dd.Length + 1), (WDate.Length - split[0].ToString().Length - 1));
+        try
+        {
+            if (Convert.ToInt32(dd) > 0)
+                if (dd.Length == 1)
+                {
+                    dd = "0" + dd;
+                }
+                else if (dd.Length == 2)
+                {
+
+                }
+                else
+                {
+                    Error = Error + "* Error in Format to be DD";
+
+                }
+            else
+            {
+                Error = Error + "* Error in Date DD Format";
+            }
+
+            if (Convert.ToInt32(MM) > 0)
+                if (MM.Length == 1)
+                {
+
+                    MM = "0" + MM;
+                }
+                else if (MM.Length == 2)
+                {
+
+                }
+                else
+                {
+
+                    Error = Error + "* Error in Month Format to be MM";
+                }
+            else
+            {
+                Error = Error + "* Error in Date MM Format";
+            }
+
+            if (Convert.ToInt32(YYYY) > 0)
+            {
+                if (YYYY.Length > 3 )
+                {
+                    YYYY = YYYY.Substring(0, 4);
+                }
+                else
+                {
+                    Error = Error + "* Error in Year Format to be YYYY";
+                }
+
+            }
+            else
+            {
+                Error = Error + "* Error in Date YYYY Format";
+            }
+            if ((Convert.ToInt32(MM) == 1 || Convert.ToInt32(MM) == 3 || Convert.ToInt32(MM) == 5 || Convert.ToInt32(MM) == 7 || Convert.ToInt32(MM) == 8 || Convert.ToInt32(MM) == 10
+          || Convert.ToInt32(MM) == 12) && Convert.ToInt32(DD) > 31)
+            {
+                Error = Error + "* Error in Date Format";
+            }
+            if ((Convert.ToInt32(MM) == 4 || Convert.ToInt32(MM) == 6 || Convert.ToInt32(MM) == 9 || Convert.ToInt32(MM) == 11) && Convert.ToInt32(DD) > 30)
+            {
+                Error = Error + "* Error in Date Format";
+            }
+            if (Convert.ToInt32(MM) == 2)
+            {
+                int lpyr = Convert.ToInt32(YYYY) % 4;
+                if (((lpyr == 0) && Convert.ToInt32(DD) > 29) || ((lpyr > 0) && Convert.ToInt32(DD) > 28))
+                {
+                    Error = Error + "* Error in Date Format";
+                }
+            }
+            if (Error.Length > 0)
+            {
+                WDOB = Error;
+            }
+            else
+            {
+                //WDOB = dd + "." + MM + "." + YYYY;
+                WDOB = MM + "/" + dd + "/" + YYYY;
+            }
+        }
+        catch
+        {
+            Error = Error + "* Error in Date Format only Numbers allowed";
+            WDOB = Error;
+        }
+
+        return WDOB;
+    }
+    private string RemoveUnWantedCharacter(string WString)
+    {
+        string WParticulars = "";
+
+        WParticulars = WString.Replace("\n", ""); //remove New line Quotes
+        WParticulars = WParticulars.Replace("\r", ""); //remove New line Quotes
+        WParticulars = WParticulars.Replace("\t", ""); //remove termin
+        WParticulars = WParticulars.Replace("\"", ""); //remove Double Quotes
+        WParticulars = WParticulars.Replace("'", ""); //remove Double Quotes
+        WParticulars = WParticulars.Trim();
+        string output = new string(WParticulars.Where(c => !char.IsControl(c)).ToArray()); // remove all control characters from your input string 
+
+        return WParticulars;
+    }
+    private void LoadGrdUpLoadNotOK(List<RMSalesMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+        List<RMSalesMsg> upllst = new List<RMSalesMsg>();
+        upllst = (from upl in UploadList where upl.Result.ToUpper() != "OK" select upl).ToList(); //select only not OK data VJ mail 200922
+        GrdWtNotOKDeptSales.DataSource = "";     
+        DisablePanel();
+
+        GrdWtNotOKDeptSales.DataSource = "";
+        GrdWtNotOKDeptSales.DataSource = upllst;
+        GrdWtNotOKDeptSales.DataBind();
+        PnlNotOKDeptSales.Visible = true;
+        foreach (GridViewRow gvr in GrdWtNotOKDeptSales.Rows)
+            {
+                gvr.ForeColor = System.Drawing.Color.Red;
+            }       
+    }
+    private void LoadGrdUpLoadStatus(List<DepotSalesMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+
+        GrdDepotSalesStatus.DataSource = "";
+        DisablePanel();
+        GrdDepotSalesStatus.DataSource = UploadList;
+        GrdDepotSalesStatus.DataBind();
+        PnlDepotSalesStatus.Visible = true;
+    }
+
+    private void LoadGrdTeaBoardNotOK(List<TeaBoardReceiptMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+        List<TeaBoardReceiptMsg> upllst = new List<TeaBoardReceiptMsg>();
+        //upllst = (from upl in UploadList where upl.Result.ToUpper() != "OK" select upl).ToList(); //select only not OK data VJ mail 200922
+        grdNotOKTeaBoard.DataSource = "";
+        DisablePanel();
+
+        grdNotOKTeaBoard.DataSource = "";
+        //grdNotOKTeaBoard.DataSource = upllst;
+        grdNotOKTeaBoard.DataSource = UploadList;
+        grdNotOKTeaBoard.DataBind();
+        pnlNotOKTeaBoard.Visible = true;
+        foreach (GridViewRow gvr in grdNotOKTeaBoard.Rows)
+        {
+            if (((Label)gvr.FindControl("lblResult")).Text != "OK")
+            {
+                gvr.ForeColor = System.Drawing.Color.Red;
+            }
+         
+        }
+    }
+    private void LoadGrdTeaBoardStatus(List<TeaBoardReceiptMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+
+        grdTeaBoardStatus.DataSource = "";
+        DisablePanel();
+            grdTeaBoardStatus.DataSource = UploadList;
+            grdTeaBoardStatus.DataBind();
+            PnlTeaBoardStatus.Visible = true;
+    }
+    private void LoadGrdBankReceiptNotOK(List<BankReceiptMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+        List<BankReceiptMsg> upllst = new List<BankReceiptMsg>();
+        upllst = (from upl in UploadList where upl.Result.ToUpper() != "OK" select upl).ToList(); //select only not OK data VJ mail 200922
+        grdNotOkBankReceipt.DataSource = "";
+        DisablePanel();
+
+        grdNotOkBankReceipt.DataSource = "";
+        grdNotOkBankReceipt.DataSource = upllst;
+        grdNotOkBankReceipt.DataBind();
+        pnlNotOkBankReceipt.Visible = true;
+        foreach (GridViewRow gvr in grdNotOkBankReceipt.Rows)
+        {
+            gvr.ForeColor = System.Drawing.Color.Red;
+
+        }
+    }
+    private void LoadGrdBankReceiptStatus(List<TeaBoardReceiptMsg> UploadList)
+    {//GrdWtNotOKSubTitle
+
+        grdBankReceiptStatus.DataSource = "";
+        DisablePanel();
+        grdBankReceiptStatus.DataSource = UploadList;
+        grdBankReceiptStatus.DataBind();
+        pnlBankReceiptStatus.Visible = true;
+    }
+ 
+#endregion
+
+    #region Method
+    private void LoadDepot()
+    {
+        string CompCode = ddlCompany.SelectedValue;
+        string EmpCode = BaseMsg.EmployeeCode;
+        //DepList = Bus.NewDepotMasterSelect(EmpCode);
+        //DepList = (from dp in DepList where dp.LocationType == "A" select dp).ToList(); //scs 201020 scs changed  picking it from tblLocations
+        DepList = (from dp in DepList where (dp.LocationType == "A" && dp.CompanyCode == CompCode) select dp).ToList(); //scs 201020 scs changed  picking it from tblLocations
+        if (DepList != null && DepList.Count > 0)
+        {
+            ddlAuctionLocation.DataSource = DepList;
+            ddlAuctionLocation.DataBind();
+            ddlAuctionLocation.Items.Insert(0, "--Select Please--");
+            ddlAuctionLocation.SelectedIndex = 0;
+            ddlAuctionLocation.Enabled = true;
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + AgilerMail.ErrCenterData + "');", true);
+            ddlAuctionLocation.Items.Insert(0, "--Select Please--");
+        }
+    }
+    private void LoadClient()
+    {
+        CmpList = Bus.CompanyMasterSelect();
+
+        if (CmpList != null && CmpList.Count > 0)
+        {
+            ddlCompany.DataSource = CmpList;
+            ddlCompany.DataBind();
+            ddlCompany.Items.Insert(0, "--Select Please--");
+            ddlCompany.SelectedIndex = 0;
+        }
+        else
+        {
+            ScriptManager.RegisterStartupScript(this, typeof(string), "Alert", "alert('" + "Client Data not Found" + "');", true);
+           // ddlCompany.Items.Insert(0, "--Select Please--");
+        }
+    }
+    private void LoadCheckForRegisteredUsers(DataTable dt)
+    {
+        DisablePanel();      
+    }
+    private void DisablePanel()
+    {
+        PnlDepotSalesStatus.Visible = false;
+        PnlNotOKDeptSales.Visible = false;
+        pnlNotOKTeaBoard.Visible = false;
+        PnlTeaBoardStatus.Visible = false;
+        pnlNotOkBankReceipt.Visible = false;
+        pnlBankReceiptStatus.Visible = false;
+        //pnlExList.Visible = false;
+    }
+    #endregion
+
+
+}
