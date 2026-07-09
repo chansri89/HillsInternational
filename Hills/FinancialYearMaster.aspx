@@ -4,14 +4,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>
 <asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>
-<asp:Label ID="lblFinancialYearmas" runat="server" Align= "center" Text="Financial Year Master" 
-        Font ="Verdana" width="787px"
-        Font-Size ="12pt" Font-Bold="True" Font-Names="Verdana" 
-        style="text-align: center"></asp:Label>
-<div style="overflow:auto; height: 849px; ">
+<h1 class="tis-page-title">
+    <asp:Label ID="lblFinancialYearmas" runat="server" Text="Financial Year Master" />
+</h1>
+<div class="tis-card">
 <asp:Label ID = "lblSeparator2" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>
-    <asp:panel ID="Pnlgv" runat="server" Height="377px" Width="975px">
-        <div style="overflow:auto; height:357px; width:534px">
+    <asp:panel ID="Pnlgv" runat="server">
+        <div class="tis-table-wrap">
         
     <asp:GridView ID="GrdFinancialYearMaster" runat="server" CellPadding="3" 
             Font-Size="XX-Small" Width="405px" Font-Names="Verdana" AutoGenerateColumns="False" 

@@ -2,14 +2,14 @@
  
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-<asp:Label ID="lblPgmHdr" runat="server" CssClass="XSmall"
-         width="509px" Font-Size ="12pt" Font-Bold="True" 
-         style="text-align: center" Height="30px"></asp:Label>
-        <asp:Label ID="Label1" runat="server" CssClass="XSmall" Font-Bold="True" 
+<h1 class="tis-page-title">
+    <asp:Label ID="lblPgmHdr" runat="server" />
+</h1>
+<asp:Label ID="Label1" runat="server" CssClass="XSmall" Font-Bold="True"
          Text = "Load BasicRate, DSRH, DSRI, DAR in that order one sheet at a Time...... For Item alone Only BasicRate to be Uploaded.... DAR Upload May take more than 5 Mts.. Pls wait"
-            Width="584px" ForeColor="BlueViolet" Height="33px"></asp:Label>
+            ForeColor="BlueViolet"></asp:Label>
 
-    <div style="height: 95px; width: 1108px;" class="XSmall">
+    <div class="tis-card XSmall">
     <table id="tblFileType" runat="server" style="width: 993px; height: 47px;" >
         <tr>
  

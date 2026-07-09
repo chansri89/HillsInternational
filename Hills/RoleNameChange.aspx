@@ -1,14 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="RoleNameChange.aspx.cs" Inherits="RoleNameChange" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<asp:Label ID="lblrolenamechange" runat="server" Align= "center" Text="Role Name Change" CssClass="XSmall"
-        width="787px"   Font-Size ="12pt" Font-Bold="True" 
-        style="text-align: center"></asp:Label>
+<div class="tis-card">
+<h1 class="tis-page-title">
+    <asp:Label ID="lblrolenamechange" runat="server" Text="Role Name Change" />
+</h1>
 
-<div style="overflow:auto; height: 664px; width: 814px;">
-   
-    <asp:panel ID="Pnlgv" runat="server" Height="377px" Width="811px" CssClass="XSmall">
-        <div style="overflow:auto; height:357px; width:349px">
+    <asp:panel ID="Pnlgv" runat="server" CssClass="XSmall">
+        <div class="tis-table-wrap">
     <asp:GridView ID="GrdRole" runat="server" CellPadding="3" 
             Width="267px" AutoGenerateColumns="False" Height="16px" GridLines="Vertical" BackColor="White" BorderColor="#999999" 
                 BorderStyle="None" BorderWidth="1px" 

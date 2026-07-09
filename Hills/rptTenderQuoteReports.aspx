@@ -4,9 +4,9 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <%--<asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
-    <asp:Label ID="lblExceptionList" runat="server"  CssClass="XXSmall"
-         width="815px"  Font-Size ="12pt" Font-Bold="True" 
-        style="text-align: center" Height="29px"></asp:Label>
+    <h1 class="tis-page-title">
+        <asp:Label ID="lblExceptionList" runat="server" />
+    </h1>
        
         <%--<asp:Label ID = "lblStkOpDate" runat = "server" align = "center" Height="15px" Width = "901px" Text = "" ></asp:Label>--%>
 
@@ -44,76 +44,38 @@
 <asp:modalpopupextender ID="modalPopup" runat="server" TargetControlID="UpdateProgress"
 PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
 
- <asp:Panel ID="pnlPendind" runat="server" Height="35px" Width="1107px" 
-        CssClass="XSmall">
-        <table style="height: 22px; width: 1093px;">
-            <tr>
-                <td  style="width: 70px">
-                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
-                  Font-Bold="true"   ></asp:Label>
-           </td>
-             <td style="width: 100px" >
-                <asp:DropDownList ID="ddlCompany"  runat="server"  AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlCompanyChanged"
-                    DataTextField="CompanyName" DataValueField="CompanyId" Font-Size="X-Small"
-                   Width="158px"    Height="16px"  >
-                 </asp:DropDownList>
-            </td>
-              <td class="style28" style="width: 70px">
-                <asp:Label ID="lblClients" runat="server" Text="Clients" Visible="true"
-                  Font-Bold="true"   ></asp:Label>
-           </td>
-             <td style="width: 100px" class="style21">
-                <asp:DropDownList ID="ddlClient"  runat="server"  Visible="true" AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlClientChanged" Font-Size="X-Small"
-                     DataTextField="ClientName" DataValueField="ClientCode"
-                     Width="121px"  Height="22px"  >
-                 </asp:DropDownList>
-            </td>
-          <td>
-                <asp:Label ID="lblProject" runat="server" Text="Project" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlProject"  runat="server" 
-                   DataTextField="ProjectName" DataValueField="ProjectCode" Font-Size="X-Small"
-                    
-                    Width="119px" height="22px"  >
-                 </asp:DropDownList>
-            </td>
-            
-            <td style="text-align: left;"  >
-                   <asp:radiobuttonlist id="rbtType"  Visible="true" Enabled="true"
-                                    RepeatDirection="Horizontal" runat="server" Height="18px" 
-                    Width="153px"    Font-Bold="true">
-                        <asp:listitem Text="Cost Only" Selected="false" Value="1" />
-	                    <asp:listitem Text="Detail" Selected="True" Value="2"  />
-	                                
-                                    
-                </asp:radiobuttonlist>              
-                 </td>
-
-                <td class="style41" >
-                         <asp:Button ID="btnView" runat="server"  Height="21px" onclick="btnView_Click" 
-                               Text="View" Width="43px" />
-                 </td>        
-                  <td >
-                           
-                           <asp:Button ID="btnClear" runat="server"
-                               Height="21px" onclick="btnClear_Click"  Text="Clear" Width="43px" />
-                       </td>  
-          <td class="style43">
-                <asp:Label ID="Label1" runat="server" Text="Detail-- Display as in Package while cost will be on Budget Upload" Font-Size="XX-Small"
-                  ForeColor="DarkBlue"  ></asp:Label>
-           </td> 
-          <td>
-                   <asp:Textbox ID="txtItem" runat="server" Visible="false"  Text = ""
-                                Height="17px" Width="10px" MaxLength = "8"></asp:Textbox> <%--ontextchanged="txtEmpCode_TextChanged" --%>
-          </td>
-                             
-            </tr>
-               
-        </table>
+ <asp:Panel ID="pnlPendind" runat="server" CssClass="tis-card">
+        <div class="tis-form-grid">
+            <div class="tis-field">
+                <asp:Label ID="lblCompany" runat="server" Text="Company" AssociatedControlID="ddlCompany" CssClass="tis-label" />
+                <asp:DropDownList ID="ddlCompany" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged"
+                    DataTextField="CompanyName" DataValueField="CompanyId" />
+            </div>
+            <div class="tis-field">
+                <asp:Label ID="lblClients" runat="server" Text="Clients" AssociatedControlID="ddlClient" CssClass="tis-label" />
+                <asp:DropDownList ID="ddlClient" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlClientChanged"
+                    DataTextField="ClientName" DataValueField="ClientCode" />
+            </div>
+            <div class="tis-field">
+                <asp:Label ID="lblProject" runat="server" Text="Project" AssociatedControlID="ddlProject" CssClass="tis-label" />
+                <asp:DropDownList ID="ddlProject" runat="server" DataTextField="ProjectName" DataValueField="ProjectCode" />
+            </div>
+            <div class="tis-field">
+                <span class="tis-label">Type</span>
+                <asp:radiobuttonlist id="rbtType" Enabled="true" RepeatDirection="Horizontal" runat="server">
+                    <asp:listitem Text="Cost Only" Selected="false" Value="1" />
+                    <asp:listitem Text="Detail" Selected="True" Value="2" />
+                </asp:radiobuttonlist>
+            </div>
+        </div>
+        <p style="color:var(--tis-text-muted); font-size:var(--tis-fs-sm); margin:var(--tis-space-3) 0 0;">
+            <asp:Label ID="Label1" runat="server" Text="Detail-- Display as in Package while cost will be on Budget Upload" ForeColor="DarkBlue" />
+        </p>
+        <div class="tis-toolbar" style="margin-top:var(--tis-space-4);">
+            <asp:Button ID="btnView" runat="server" onclick="btnView_Click" Text="View" />
+            <asp:Button ID="btnClear" runat="server" onclick="btnClear_Click" Text="Clear" CssClass="tis-btn-secondary" />
+        </div>
+        <asp:Textbox ID="txtItem" runat="server" Visible="false" Text="" MaxLength="8" />
     </asp:Panel>
     <style type="text/css">
         .WordWrap {
@@ -138,10 +100,9 @@ PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
             width: 355px;
         }
     </style>
-<asp:Panel ID="pnlExList" runat="server" Height="459px" style="margin-left: 0px" 
-        Width="1248px">
+<asp:Panel ID="pnlExList" runat="server">
 
-        <div style="width: 1238px; height: 438px;">
+        <div class="tis-table-wrap" style="padding:0;">
     <rsweb:ReportViewer ID="ReportViewer1" runat="server" Font-Names="Verdana" 
         Font-Size="8pt" Height="420px" InteractiveDeviceInfos="(Collection)" 
         WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Width="1216px"

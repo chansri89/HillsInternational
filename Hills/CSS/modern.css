@@ -1,0 +1,617 @@
+/* ============================================================================
+   Hills TIS - Modern UI stylesheet
+   Responsive shell, modern component theming, redefined legacy classes,
+   utility classes and the alert->toast styling.
+   Presentation only - no markup/ID assumptions beyond ASP.NET defaults.
+   ========================================================================== */
+
+/* ------------------------------------------------------------------ Base */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+    margin: 0;
+    font-family: var(--tis-font-sans);
+    font-size: var(--tis-fs-base);
+    line-height: var(--tis-lh);
+    color: var(--tis-text);
+    background: var(--tis-bg);
+}
+
+a { color: var(--tis-link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img { max-width: 100%; height: auto; }
+
+/* Kill the fixed pixel <form> wrapper WebForms emits so pages can be fluid */
+form#form1, form { margin: 0; }
+
+/* ------------------------------------------------- App shell (masters) */
+.tis-appbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: var(--tis-space-3);
+    height: var(--tis-appbar-h);
+    padding: 0 var(--tis-space-4);
+    background: var(--tis-surface);
+    border-bottom: 1px solid var(--tis-border);
+    box-shadow: var(--tis-shadow-sm);
+}
+
+.tis-appbar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--tis-space-2);
+    font-size: var(--tis-fs-lg);
+    font-weight: 700;
+    color: var(--tis-primary);
+    white-space: nowrap;
+}
+.tis-appbar__brand img { height: 32px; width: auto; }
+
+.tis-appbar__spacer { flex: 1 1 auto; }
+
+.tis-appbar__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--tis-space-4);
+    font-size: var(--tis-fs-sm);
+    color: var(--tis-text-muted);
+}
+.tis-appbar__meta a { color: var(--tis-text-muted); font-weight: 600; }
+.tis-appbar__meta a:hover { color: var(--tis-primary); text-decoration: none; }
+
+.tis-menu-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px; height: 40px;
+    border: 1px solid var(--tis-border);
+    border-radius: var(--tis-radius-sm);
+    background: var(--tis-surface);
+    color: var(--tis-text);
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.tis-shell {
+    display: flex;
+    align-items: stretch;
+    min-height: calc(100vh - var(--tis-appbar-h));
+}
+
+.tis-sidebar {
+    flex: 0 0 var(--tis-sidebar-w);
+    width: var(--tis-sidebar-w);
+    background: var(--tis-surface);
+    border-right: 1px solid var(--tis-border);
+    padding: var(--tis-space-3);
+    overflow-y: auto;
+}
+
+.tis-main {
+    flex: 1 1 auto;
+    min-width: 0;                 /* allow inner tables to scroll, not overflow */
+    padding: var(--tis-space-5);
+    background: var(--tis-bg);
+}
+
+/* Sidebar collapsed (desktop toggle via legacy LnkCollapse or menu button) */
+.tis-shell.is-collapsed .tis-sidebar { display: none; }
+
+/* Upload pages accent (formerly MasterPage3 purple content area) */
+.tis-main--upload { background: linear-gradient(180deg, var(--tis-accent-soft) 0%, var(--tis-bg) 240px); }
+
+/* --------------------------------------------- asp:Menu -> modern nav */
+/* asp:Menu with RenderingMode="List" emits nested <ul>/<li>/<a>. */
+.tis-sidebar .ForegroundStyle,
+.tis-sidebar ul.level1 { width: 100% !important; list-style: none; margin: 0; padding: 0; }
+
+.tis-sidebar ul { list-style: none; margin: 0; padding: 0; }
+.tis-sidebar li { position: relative; }
+
+.tis-sidebar a {
+    display: block;
+    padding: var(--tis-space-2) var(--tis-space-3);
+    margin-bottom: 2px;
+    border-radius: var(--tis-radius-sm);
+    color: var(--tis-text) !important;
+    font-size: var(--tis-fs-sm);
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: background var(--tis-transition), color var(--tis-transition);
+    white-space: normal;
+}
+.tis-sidebar a:hover {
+    background: var(--tis-primary-soft);
+    color: var(--tis-primary) !important;
+}
+.tis-sidebar ul ul a { padding-left: var(--tis-space-5); font-weight: 400; }
+.tis-sidebar ul ul ul a { padding-left: var(--tis-space-6); }
+
+/* --------------------------------------------------- Cards & containers */
+.tis-container { max-width: 1400px; margin: 0 auto; }
+
+.tis-card {
+    background: var(--tis-surface);
+    border: 1px solid var(--tis-border);
+    border-radius: var(--tis-radius);
+    box-shadow: var(--tis-shadow-sm);
+    padding: var(--tis-space-5);
+    margin-bottom: var(--tis-space-5);
+}
+
+.tis-page-title {
+    font-size: var(--tis-fs-xl);
+    font-weight: 700;
+    color: var(--tis-text);
+    margin: 0 0 var(--tis-space-4);
+}
+
+.tis-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--tis-space-3);
+    margin-bottom: var(--tis-space-4);
+}
+
+/* Responsive label/field form grid */
+.tis-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--tis-space-4);
+    align-items: end;
+}
+.tis-field { display: flex; flex-direction: column; gap: var(--tis-space-1); min-width: 0; }
+.tis-field > label,
+.tis-field > .tis-label { font-size: var(--tis-fs-sm); font-weight: 600; color: var(--tis-text-muted); }
+
+/* ------------------------------------------------------- Form controls */
+/* Global theming of WebForms-generated inputs (TextBox/DropDownList/etc.) */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="date"],
+input[type="tel"],
+select,
+textarea {
+    font-family: var(--tis-font-sans);
+    font-size: var(--tis-fs-base);
+    color: var(--tis-text);
+    background: var(--tis-surface);
+    border: 1px solid var(--tis-border-strong);
+    border-radius: var(--tis-radius-sm);
+    padding: 0.45rem 0.6rem;
+    min-height: 38px;
+    max-width: 100%;
+    transition: border-color var(--tis-transition), box-shadow var(--tis-transition);
+}
+textarea { min-height: 80px; }
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--tis-primary);
+    box-shadow: var(--tis-focus-ring);
+}
+
+input[type="file"] {
+    font-family: var(--tis-font-sans);
+    font-size: var(--tis-fs-sm);
+    padding: 0.35rem;
+    border: 1px dashed var(--tis-border-strong);
+    border-radius: var(--tis-radius-sm);
+    background: var(--tis-surface-alt);
+    max-width: 100%;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    width: 16px; height: 16px;
+    accent-color: var(--tis-primary);
+    vertical-align: middle;
+}
+
+/* ------------------------------------------------------------ Buttons */
+/* WebForms Button -> <input type=submit|button>; LinkButton -> <a>. */
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+button,
+.tis-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--tis-space-2);
+    font-family: var(--tis-font-sans);
+    font-size: var(--tis-fs-base);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--tis-text-inverse);
+    background: var(--tis-primary);
+    border: 1px solid transparent;
+    border-radius: var(--tis-radius-sm);
+    padding: 0.55rem 1rem;
+    min-height: 38px;
+    cursor: pointer;
+    box-shadow: var(--tis-shadow-xs);
+    transition: background var(--tis-transition), box-shadow var(--tis-transition), transform var(--tis-transition);
+    text-decoration: none;
+}
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+button:hover,
+.tis-btn:hover {
+    background: var(--tis-primary-hover);
+    color: var(--tis-text-inverse);
+    text-decoration: none;
+    box-shadow: var(--tis-shadow-sm);
+}
+input[type="submit"]:active,
+button:active,
+.tis-btn:active { transform: translateY(1px); }
+
+input[type="submit"]:focus-visible,
+input[type="button"]:focus-visible,
+button:focus-visible,
+.tis-btn:focus-visible { outline: none; box-shadow: var(--tis-focus-ring); }
+
+input:disabled, button:disabled, .tis-btn:disabled,
+input[type="submit"][disabled] {
+    opacity: 0.6; cursor: not-allowed; box-shadow: none;
+}
+
+/* Button variants (opt-in via CssClass) */
+.tis-btn-secondary,
+input.tis-btn-secondary {
+    background: var(--tis-surface);
+    color: var(--tis-text);
+    border-color: var(--tis-border-strong);
+}
+.tis-btn-secondary:hover,
+input.tis-btn-secondary:hover {
+    background: var(--tis-surface-alt);
+    color: var(--tis-text);
+}
+.tis-btn-success, input.tis-btn-success { background: var(--tis-success); }
+.tis-btn-success:hover, input.tis-btn-success:hover { background: #15803d; }
+.tis-btn-danger, input.tis-btn-danger { background: var(--tis-danger); }
+.tis-btn-danger:hover, input.tis-btn-danger:hover { background: #b91c1c; }
+
+/* --------------------------------------------------------- Data tables */
+/* WebForms GridView/DataGrid render as <table>. Wrap in .tis-table-wrap. */
+.tis-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--tis-border);
+    border-radius: var(--tis-radius);
+    box-shadow: var(--tis-shadow-xs);
+    background: var(--tis-surface);
+    -webkit-overflow-scrolling: touch;
+}
+
+.tis-main table.tis-grid,
+.tis-main .tis-table-wrap > table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--tis-fs-sm);
+    background: var(--tis-surface);
+}
+.tis-main table.tis-grid th,
+.tis-main .tis-table-wrap > table th {
+    position: sticky;
+    top: 0;
+    background: var(--tis-primary);
+    color: var(--tis-text-inverse);
+    font-weight: 600;
+    text-align: left;
+    padding: 0.55rem 0.75rem;
+    white-space: nowrap;
+}
+.tis-main table.tis-grid td,
+.tis-main .tis-table-wrap > table td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--tis-border);
+    vertical-align: middle;
+}
+.tis-main table.tis-grid tr:nth-child(even) td,
+.tis-main .tis-table-wrap > table tr:nth-child(even) td { background: var(--tis-surface-alt); }
+.tis-main table.tis-grid tr:hover td,
+.tis-main .tis-table-wrap > table tr:hover td { background: var(--tis-primary-soft); }
+
+/* ------------------------------------------------- Redefined legacy classes
+   These classes are referenced across ~50 pages. Redefining them modernizes
+   the app globally without editing each control. */
+.XSmall  { font-family: var(--tis-font-sans); font-size: var(--tis-fs-sm); }
+.XXSmall { font-family: var(--tis-font-sans); font-size: var(--tis-fs-xs); }
+.Small   { font-family: var(--tis-font-sans); font-size: var(--tis-fs-base); }
+.Large   { font-family: var(--tis-font-sans); font-size: var(--tis-fs-lg); font-weight: 600; }
+
+.GridHeaderAlign {
+    text-align: center;
+    vertical-align: middle;
+    background: var(--tis-primary);
+    font-weight: 600;
+    color: var(--tis-text-inverse);
+    font-size: var(--tis-fs-sm);
+}
+
+.buttonclass {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 600; color: var(--tis-text-inverse);
+    background: var(--tis-primary);
+    border: 1px solid transparent; border-radius: var(--tis-radius-sm);
+    padding: 0.5rem 0.9rem; min-height: 36px;
+    font-family: var(--tis-font-sans); font-size: var(--tis-fs-sm);
+    cursor: pointer; box-shadow: var(--tis-shadow-xs);
+    transition: background var(--tis-transition);
+}
+.buttonclass:hover {
+    color: var(--tis-text-inverse);
+    background: var(--tis-primary-hover);
+    cursor: pointer; background-image: none;
+}
+
+/* Legacy inline helpers still referenced by masters */
+.grow   { width: 100%; background: transparent; }
+.Shrink { width: auto; background: transparent; }
+.ForegroundStyle { position: static; width: auto; }
+
+/* ------------------------------------------------ Status / message text */
+.tis-message, .lblMessage { font-size: var(--tis-fs-sm); font-weight: 600; }
+
+/* ----------------------------------------------------------- Toasts */
+#tis-toast-host {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: min(420px, calc(100vw - 32px));
+    pointer-events: none;
+}
+.tis-toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--tis-surface);
+    color: var(--tis-text);
+    border: 1px solid var(--tis-border);
+    border-left: 4px solid var(--tis-primary);
+    border-radius: var(--tis-radius-sm);
+    box-shadow: var(--tis-shadow-lg);
+    padding: 12px 14px;
+    font-size: var(--tis-fs-sm);
+    animation: tis-toast-in 180ms ease-out;
+}
+.tis-toast.is-hiding { animation: tis-toast-out 180ms ease-in forwards; }
+.tis-toast__icon { font-size: 1.1rem; line-height: 1.2; }
+.tis-toast__body { flex: 1 1 auto; white-space: pre-line; word-break: break-word; }
+.tis-toast__close {
+    pointer-events: auto; cursor: pointer; border: none; background: none;
+    color: var(--tis-text-muted); font-size: 1.1rem; line-height: 1; padding: 0;
+    min-height: 0; box-shadow: none;
+}
+.tis-toast__close:hover { color: var(--tis-text); background: none; }
+.tis-toast--success { border-left-color: var(--tis-success); }
+.tis-toast--success .tis-toast__icon { color: var(--tis-success); }
+.tis-toast--error   { border-left-color: var(--tis-danger); }
+.tis-toast--error   .tis-toast__icon { color: var(--tis-danger); }
+.tis-toast--warning { border-left-color: var(--tis-warning); }
+.tis-toast--warning .tis-toast__icon { color: var(--tis-warning); }
+.tis-toast--info    .tis-toast__icon { color: var(--tis-primary); }
+
+@keyframes tis-toast-in  { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes tis-toast-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(24px); } }
+
+/* --------------------------------------------------- Loading overlay */
+#tis-loading {
+    position: fixed; inset: 0; z-index: 9998;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(15, 23, 42, 0.35);
+}
+#tis-loading.is-active { display: flex; }
+.tis-spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    animation: tis-spin 0.8s linear infinite;
+}
+@keyframes tis-spin { to { transform: rotate(360deg); } }
+
+/* Accessibility: visible focus for keyboard users on links */
+a:focus-visible { outline: 2px solid var(--tis-primary); outline-offset: 2px; border-radius: 2px; }
+
+/* Skip link */
+.tis-skip-link {
+    position: absolute; left: -999px; top: 0; z-index: 2000;
+    background: var(--tis-primary); color: #fff; padding: 10px 16px;
+    border-radius: 0 0 var(--tis-radius-sm) 0;
+}
+.tis-skip-link:focus { left: 0; }
+
+/* ============================================================== Responsive */
+@media (max-width: 1024px) {
+    .tis-menu-toggle { display: inline-flex; }
+
+    .tis-sidebar {
+        position: fixed;
+        top: var(--tis-appbar-h);
+        left: 0;
+        bottom: 0;
+        z-index: 1200;
+        transform: translateX(-100%);
+        transition: transform 200ms ease;
+        box-shadow: var(--tis-shadow-lg);
+    }
+    body.tis-nav-open .tis-sidebar { transform: translateX(0); }
+
+    .tis-nav-backdrop {
+        display: none;
+        position: fixed; inset: var(--tis-appbar-h) 0 0 0;
+        background: rgba(15,23,42,0.4); z-index: 1100;
+    }
+    body.tis-nav-open .tis-nav-backdrop { display: block; }
+}
+
+@media (max-width: 640px) {
+    .tis-main { padding: var(--tis-space-3); }
+    .tis-card { padding: var(--tis-space-4); }
+    .tis-appbar__meta { gap: var(--tis-space-3); font-size: var(--tis-fs-xs); }
+    .tis-appbar__brand { font-size: var(--tis-fs-base); }
+    .tis-page-title { font-size: var(--tis-fs-lg); }
+    .tis-form-grid { grid-template-columns: 1fr; }
+}
+
+/* Print: hide chrome */
+@media print {
+    .tis-appbar, .tis-sidebar, .tis-menu-toggle, #tis-toast-host { display: none !important; }
+    .tis-main { padding: 0; }
+}
+
+/* ==================================================== Responsive safety net
+   Legacy pages set inline pixel Width/Height on server controls, which render
+   as inline styles that beat normal stylesheet rules. These !important caps
+   make ANY page responsive without editing every control: elements may not
+   exceed their container, wide tables scroll, and fixed heights become minimums.
+   max-width:100% never shrinks controls that already fit, so intended sizing
+   of inputs/buttons is preserved. */
+.tis-main img,
+.tis-main table,
+.tis-main .aspNetHidden + table,
+.tis-main div[style*="width"],
+.tis-main span[style*="width"],
+.tis-main [id$="Panel1"],
+.tis-main [id$="Panel2"],
+.tis-main [id$="Panel3"],
+.tis-main [id$="Panel4"] {
+    max-width: 100% !important;
+}
+
+/* Panels / grid wrappers: let them be fluid and scroll horizontally if needed */
+.tis-main .aspNetDisabled,
+.tis-main > div,
+.tis-main table[style*="width"] {
+    max-width: 100% !important;
+}
+
+/* Tables used for layout/data: never force the page wider than the viewport */
+.tis-main table { border-collapse: collapse; max-width: 100% !important; }
+.tis-main td, .tis-main th { word-break: break-word; }
+
+/* ReportViewer renders its own fixed-layout markup: let it size naturally and
+   scroll inside its wrapper instead of being squashed by the global caps. */
+.tis-main [id*="ReportViewer"],
+.tis-main [id*="ReportViewer"] table,
+.tis-main [id*="ReportViewer"] div { max-width: none !important; }
+
+/* Neutralize fixed pixel heights that clip content on small screens.
+   Scope to layout wrappers and EXCLUDE the ReportViewer subtree, which needs
+   its own explicit height to render the report canvas/iframe. */
+.tis-main div[style*="height"]:not([id*="Report"]):not([id*="report"]),
+.tis-main span[style*="height"],
+.tis-main td[style*="height"],
+.tis-main fieldset[style*="height"] { height: auto !important; min-height: 0; }
+
+/* GridViews (rendered as tables) get the modern data-table look everywhere,
+   even before a page is individually wrapped. */
+.tis-main table[id*="Grd"],
+.tis-main table[id*="grd"],
+.tis-main table[id*="Gv"],
+.tis-main table[id*="gv"],
+.tis-main table[id*="GV"] {
+    width: 100%;
+    background: var(--tis-surface);
+    border: 1px solid var(--tis-border);
+    border-radius: var(--tis-radius-sm);
+    overflow: hidden;
+}
+.tis-main table[id*="Grd"] th,
+.tis-main table[id*="grd"] th,
+.tis-main table[id*="Gv"] th,
+.tis-main table[id*="gv"] th,
+.tis-main table[id*="GV"] th {
+    background: var(--tis-primary);
+    color: var(--tis-text-inverse);
+    padding: 0.5rem 0.7rem;
+    text-align: left;
+}
+.tis-main table[id*="Grd"] td,
+.tis-main table[id*="grd"] td,
+.tis-main table[id*="Gv"] td,
+.tis-main table[id*="gv"] td,
+.tis-main table[id*="GV"] td {
+    padding: 0.45rem 0.7rem;
+    border-bottom: 1px solid var(--tis-border);
+}
+
+/* Make the main content horizontally scrollable as a last resort so nothing
+   is ever clipped off-screen on mobile. */
+.tis-main { overflow-x: auto; }
+
+/* Legacy Label ForeColor reds/greens stay meaningful; just modernize size. */
+.tis-main .XXSmall, .tis-main .XSmall { line-height: 1.5; }
+
+/* -------------------------------------------- Auto-modernize legacy wrappers
+   Most legacy pages use <div style="overflow:auto; height:..; width:..">
+   both as an outer page container and as a grid scroll area. Give them the
+   modern card / scroll treatment automatically so pages that were not
+   individually converted still look modern and stay responsive. */
+.tis-main div[style*="overflow:auto"],
+.tis-main div[style*="overflow: auto"] {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    background: var(--tis-surface);
+    border: 1px solid var(--tis-border);
+    border-radius: var(--tis-radius);
+    box-shadow: var(--tis-shadow-xs);
+    padding: var(--tis-space-3);
+    margin-bottom: var(--tis-space-4);
+    -webkit-overflow-scrolling: touch;
+}
+/* A grid-wrapper div directly containing a GridView: tighten padding. */
+.tis-main div[style*="overflow"]:has(> table[id*="Grd"]),
+.tis-main div[style*="overflow"]:has(> table[id*="grd"]),
+.tis-main div[style*="overflow"]:has(> table[id*="gv"]),
+.tis-main div[style*="overflow"]:has(> table[id*="Gv"]) {
+    padding: 0;
+}
+/* Grouped asp:Panel (GroupingText renders a <fieldset>) as a soft section. */
+.tis-main fieldset {
+    border: 1px solid var(--tis-border);
+    border-radius: var(--tis-radius);
+    padding: var(--tis-space-4);
+    margin-bottom: var(--tis-space-4);
+    min-width: 0;
+}
+.tis-main legend {
+    font-weight: 700; color: var(--tis-primary);
+    padding: 0 var(--tis-space-2); font-size: var(--tis-fs-sm);
+}
+
+/* Give the first bold/12pt-ish page label a heading feel even when a page
+   was not individually converted (best-effort, non-structural). */
+.tis-main > .tis-container > span[id*="lbl"][style*="text-align: center"] {
+    display: block;
+    font-size: var(--tis-fs-xl) !important;
+    font-weight: 700;
+    color: var(--tis-text);
+    margin-bottom: var(--tis-space-4);
+    text-align: left !important;
+}

@@ -107,10 +107,11 @@
     }
 </script>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<asp:Label ID="lblassignprogramtoroles" runat="server" Align= "center" Text="Assign Program To Roles" 
-        width="787px" Font-Size ="12pt" Font-Bold="True"   style="text-align: center"></asp:Label>
+<h1 class="tis-page-title">
+    <asp:Label ID="lblassignprogramtoroles" runat="server" Text="Assign Program To Roles" />
+</h1>
 
-    <div style="overflow:auto;">
+    <div class="tis-card">
     <asp:Panel ID="pnlRoleDetails" runat="server" Height="38px" CssClass="XSmall">
         <table>
             <tr>
@@ -150,8 +151,8 @@
        </table>
     </asp:Panel>
     <br />
-    <asp:panel ID="Pnlgv" runat="server" Width="732px" Height="391px" CssClass="XXSmall">
-        <div style="overflow:auto; height:376px; width:688px">
+    <asp:panel ID="Pnlgv" runat="server" CssClass="XXSmall">
+        <div class="tis-table-wrap">
     <asp:GridView ID="GrdAssignProgam" runat="server" CellPadding="3" 
             Width="599px"  AutoGenerateColumns="False" Height="126px" GridLines="Vertical" 
              onrowcancelingedit="GrdAssignProgam_RowCancelingEdit" 
@@ -275,19 +276,6 @@
                 </tr>
             </table>
         </asp:Panel>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
     </div>
 </asp:Content>
 

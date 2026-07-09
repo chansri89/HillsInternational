@@ -1,18 +1,15 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage1.Master"  AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <table style="width: 642px">
-<tr>
-<td align="center">
-    <asp:Panel ID="Panel4" runat="server" Height="500px" Width="950px" CssClass="XSmall">
-   
-                      <asp:Label ID="lblWelcomeCompany" runat="server" Text="Welcome to Tender Insight System " 
-                          ForeColor="#3333CC"  Width="373px"  Font-Size="Large" style="text-align: center; margin-top: 36px;" Font-Bold="True" 
-                      Height="34px"></asp:Label>
-
-       <%-- <asp:Label ID="lblWelcome" runat="server" Text="Welcome to KDHP "
-        Font-Size="Larger" ForeColor="#3333CC" ></asp:Label>--%>
+    <asp:Panel ID="Panel4" runat="server" CssClass="XSmall">
+        <div class="tis-card" style="text-align:center; padding:var(--tis-space-8) var(--tis-space-5);">
+            <div style="font-size:3rem; color:var(--tis-primary); margin-bottom:var(--tis-space-3); line-height:1;">&#127970;</div>
+            <h1 style="margin:0 0 var(--tis-space-2);">
+                <asp:Label ID="lblWelcomeCompany" runat="server" Text="Welcome to Tender Insight System" ForeColor="#3333CC" />
+            </h1>
+            <p style="color:var(--tis-text-muted); font-size:var(--tis-fs-md); margin:0;">
+                Select an option from the menu to begin working with tenders, masters and reports.
+            </p>
+        </div>
     </asp:Panel>
-</td></tr></table>
-   
 </asp:Content>

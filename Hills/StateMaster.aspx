@@ -2,17 +2,17 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <%--<asp:Panel ID="Panel2" runat="server" Height="16px" Width="870px"> </asp:Panel>--%>
-<asp:Label ID="lblStatMas" runat="server" Align= "center" Text="State Master" 
-        width="450px" Font-Size ="12pt" Font-Bold="True" 
-        style="text-align: center" Height="26px"></asp:Label>
-<div style="overflow:auto; height: 664px;">
+<h1 class="tis-page-title">
+    <asp:Label ID="lblStatMas" runat="server" Text="State Master" />
+</h1>
+<div class="tis-card">
     <%--<asp:Panel ID="Panel1" runat="server" Height="41px">
         <asp:Button ID="btnAdd" runat="server" Text="Add"
             Font-Names="arial" onclick="btnAdd_Click1" />
     </asp:Panel>--%>
-    <asp:panel ID="Pnlgv" runat="server" Height="394px" Width="522px" ToolTip="Click Edit for Updating.."
+    <asp:panel ID="Pnlgv" runat="server" ToolTip="Click Edit for Updating.."
         GroupingText="State Grid" >
-        <div style="overflow:auto; height:373px; width:502px">
+        <div class="tis-table-wrap">
     <asp:GridView ID="GrdStateMaster" runat="server" CellPadding="3" 
             Width="464px"  AutoGenerateColumns="False" Height="102px" GridLines="Vertical" BackColor="White" BorderColor="#999999" 
                 BorderStyle="None" BorderWidth="1px" 
@@ -78,42 +78,20 @@
     </asp:GridView>
     </div>
     </asp:panel>
-    <asp:panel ID="pnlAdd" runat="server" Width="527px" GroupingText="Add State" 
-        Font-Size="X-Small">
-    <table style="width: 100%"  align="left" class="XXSmall">
-            <tr>
-                <td style="width: 59px; text-align: left;">
-                    <asp:Label ID="lblStateName" runat="server" Text="State Name"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 129px">
-                    <asp:TextBox ID="txtStatetName" runat="server" Width="113px"></asp:TextBox>
-                </td>
-            <%--</tr>
-            <tr>--%>
-                <td style="width: 102px; text-align: left;">
-                    <asp:Label ID="lblStateShortName" runat="server" Text="State Short Name"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 100px">
-                    <asp:TextBox ID="txtStateShortName" runat="server" MaxLength="5" 
-                         Width="60px"></asp:TextBox>
-                </td>
-           <%-- </tr>
-            
-            <tr>
-                <td style="width: 59px; text-align: left;">
-                    &nbsp;</td>--%>
-                <td style="width: 80px" >
-                    <asp:Button ID="btnSave" runat="server" Text="Save"    onclick="btnSave_Click"  />
-                </td>
-                </tr>
-                <%--<tr>
-                <td class="style21" style="width: 141px; text-align: left"> <asp:HiddenField ID="HidDeleteCount" Value="0" runat="server" />
-                <asp:HiddenField ID="HidUpdateCount" Value="0" runat="server" />
-                </td>
-            </tr>--%>
-        </table>
+    <asp:panel ID="pnlAdd" runat="server" GroupingText="Add State">
+    <div class="tis-form-grid">
+        <div class="tis-field">
+            <asp:Label ID="lblStateName" runat="server" Text="State Name" AssociatedControlID="txtStatetName" CssClass="tis-label" />
+            <asp:TextBox ID="txtStatetName" runat="server" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="lblStateShortName" runat="server" Text="State Short Name" AssociatedControlID="txtStateShortName" CssClass="tis-label" />
+            <asp:TextBox ID="txtStateShortName" runat="server" MaxLength="5" />
+        </div>
+    </div>
+    <div class="tis-toolbar" style="margin-top:var(--tis-space-4);">
+        <asp:Button ID="btnSave" runat="server" Text="Save" onclick="btnSave_Click" />
+    </div>
     </asp:panel>
     
     </div>

@@ -4,15 +4,13 @@
  <%-- <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" 
         Width = "82px" ></asp:Label>--%>
 
-  <asp:Label ID="lblcompanymaster" runat="server" Align= "center" Text="Location Master" CssClass="XSmall"
-       width="787px"   Font-Size ="12pt" Font-Bold="True"   style="text-align: center" Height="22px"></asp:Label>
-  <%-- <asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
-    <div style="overflow:auto; height: 767px; width: 1171px;">
+  <h1 class="tis-page-title">
+      <asp:Label ID="lblcompanymaster" runat="server" Text="Location Master" />
+  </h1>
+    <div class="tis-card">
 
-    <asp:panel ID="Pnlgv" runat="server" Width="1050px" Height="274px" ToolTip="Click Edit for Updating.."
-            CssClass="XXSmall" >
-        <div id="divCompany" runat="server" 
-            style="overflow:auto; height:274px; width:1038px">
+    <asp:panel ID="Pnlgv" runat="server" ToolTip="Click Edit for Updating.." CssClass="XXSmall" >
+        <div id="divCompany" runat="server" class="tis-table-wrap">
     <asp:GridView ID="GrdCompanyMaster" runat="server" CellPadding="3" 
             Width="1026px"  AutoGenerateColumns="False" 
             Height="16px" GridLines="Vertical" 
@@ -136,94 +134,44 @@
 
     </asp:panel>
     <br />
-    <asp:panel ID="pnlAdd" runat="server" Width="1049px"  CssClass="XSmall"
-            style="margin-top: 0px" Height="107px">
-    <table style="width: 92%; height: 94px;" >
-            <tr>
-                <td  style="width: 122px; text-align: left;">
-                    <asp:Label ID="lblCompanyCode" runat="server" Text="Location Code"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="txtCompanyCode" runat="server"  
-                        ></asp:TextBox>
-                </td>
- 
-                <td  style="width: 110px; " class="style21">
-                    <asp:Label ID="lblCompanyName" runat="server" Text="Location Name"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="txtCompanyName" runat="server" Width="207px"  
-                        ></asp:TextBox>
-                </td>
- 
-                <td  style="width: 164px; text-align: left;">
-                    <asp:Label ID="lblCompanyShortName" runat="server" Text="Location Short Name"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="txtCompanyShortName" runat="server"  MaxLength="8"
-                        ></asp:TextBox>
-                </td>
-            </tr>
-            <tr>
-                <td  style="width: 122px; text-align: left;">
-                    <asp:Label ID="Label1" runat="server" Text="EnterPrise Name"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:DropDownList ID="ddlEnterpriseName" runat="server" DataValueField="EnterPriseId" 
-                        DataTextField="EnterPriseShortName"  
-                         Height="22px" Width="123px">
-                    </asp:DropDownList>
-                </td>
-
-                <td  style="width: 110px; text-align: left;">
-                    <asp:Label ID="lblCompanyType" runat="server" Text="Location Type"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:DropDownList ID="ddlCompanyType" runat="server" DataValueField="CompanyTypeId" 
-                        DataTextField="CompanyTypeName"  
-                         Height="16px" Width="122px">
-                    </asp:DropDownList>
-                </td>
-
-                <td  style="width: 164px; text-align: left;">
-                    <asp:Label ID="lblParentCompanyName" runat="server" Text="Parent Company Name" 
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:DropDownList ID="ddlParentCompanyName" runat="server"  
-                         Height="16px" Width="148px">
-                    </asp:DropDownList>
-                </td>
-            </tr>
-            <tr>
-                <td  style="width: 122px; text-align: left;">
-                    <asp:Label ID="lblStateShortName" runat="server" Text="State Short Name" 
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:DropDownList ID="ddlStateShortName" runat="server" height="22px" Width="84px"  
-                        >
-                    </asp:DropDownList>
-                </td>
- 
-                <td  style="width: 110px" class="style21">
-                    <asp:CheckBox ID="chkIsActive" runat="server"  
-                         Text="IsActive" Visible="False" />
-                </td>
-                <td>
-                    <asp:Button ID="btnSave" runat="server" Text="Save"  
-                        onclick="btnSave_Click"  />
-                </td>
-             
-                <td style="width: 164px"> 
-                </td>
-            </tr>
-        </table>
+    <asp:panel ID="pnlAdd" runat="server" CssClass="XSmall" GroupingText="Add / Edit Location">
+    <div class="tis-form-grid">
+        <div class="tis-field">
+            <asp:Label ID="lblCompanyCode" runat="server" Text="Location Code" AssociatedControlID="txtCompanyCode" CssClass="tis-label" />
+            <asp:TextBox ID="txtCompanyCode" runat="server" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="lblCompanyName" runat="server" Text="Location Name" AssociatedControlID="txtCompanyName" CssClass="tis-label" />
+            <asp:TextBox ID="txtCompanyName" runat="server" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="lblCompanyShortName" runat="server" Text="Location Short Name" AssociatedControlID="txtCompanyShortName" CssClass="tis-label" />
+            <asp:TextBox ID="txtCompanyShortName" runat="server" MaxLength="8" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="Label1" runat="server" Text="EnterPrise Name" AssociatedControlID="ddlEnterpriseName" CssClass="tis-label" />
+            <asp:DropDownList ID="ddlEnterpriseName" runat="server" DataValueField="EnterPriseId" DataTextField="EnterPriseShortName" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="lblCompanyType" runat="server" Text="Location Type" AssociatedControlID="ddlCompanyType" CssClass="tis-label" />
+            <asp:DropDownList ID="ddlCompanyType" runat="server" DataValueField="CompanyTypeId" DataTextField="CompanyTypeName" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="lblParentCompanyName" runat="server" Text="Parent Company Name" AssociatedControlID="ddlParentCompanyName" CssClass="tis-label" />
+            <asp:DropDownList ID="ddlParentCompanyName" runat="server" />
+        </div>
+        <div class="tis-field">
+            <asp:Label ID="lblStateShortName" runat="server" Text="State Short Name" AssociatedControlID="ddlStateShortName" CssClass="tis-label" />
+            <asp:DropDownList ID="ddlStateShortName" runat="server" />
+        </div>
+        <div class="tis-field">
+            <span class="tis-label">&nbsp;</span>
+            <asp:CheckBox ID="chkIsActive" runat="server" Text="IsActive" Visible="False" />
+        </div>
+    </div>
+    <div class="tis-toolbar" style="margin-top:var(--tis-space-4);">
+        <asp:Button ID="btnSave" runat="server" Text="Save" onclick="btnSave_Click" />
+    </div>
     </asp:panel>
  
     </div>
