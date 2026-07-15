@@ -81,7 +81,8 @@ form#form1, form { margin: 0; }
 .tis-shell {
     display: flex;
     align-items: stretch;
-    min-height: calc(100vh - var(--tis-appbar-h));
+    height: calc(100vh - var(--tis-appbar-h));
+    overflow: hidden;
 }
 
 .tis-sidebar {
@@ -96,6 +97,8 @@ form#form1, form { margin: 0; }
 .tis-main {
     flex: 1 1 auto;
     min-width: 0;                 /* allow inner tables to scroll, not overflow */
+    height: 100%;
+    overflow: auto;
     padding: var(--tis-space-5);
     background: var(--tis-bg);
 }
@@ -170,7 +173,13 @@ form#form1, form { margin: 0; }
 }
 
 /* --------------------------------------------------- Cards & containers */
-.tis-container { max-width: 1400px; margin: 0 auto; }
+.tis-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: 100%;
+    overflow: auto;
+    padding-bottom: var(--tis-space-5);
+}
 
 .tis-card {
     background: var(--tis-surface);

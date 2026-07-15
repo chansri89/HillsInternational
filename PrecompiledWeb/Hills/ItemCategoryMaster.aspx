@@ -1,4 +1,4 @@
-﻿<%@ page title="" language="C#" masterpagefile="~/MasterPage1.master" autoeventwireup="true" inherits="ItemCategoryMaster, App_Web_sx5sst5a" %>
+﻿<%@ page title="" language="C#" masterpagefile="~/MasterPage1.master" autoeventwireup="true" inherits="ItemCategoryMaster, App_Web_lkpdlk5o" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <asp:Panel ID="Panel2" runat="server" CssClass="XSmall" Height="16px" Width="870px"> </asp:Panel>

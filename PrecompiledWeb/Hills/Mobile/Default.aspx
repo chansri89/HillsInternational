@@ -1,4 +1,4 @@
-﻿<%@ page title="" language="C#" masterpagefile="~/Mobile/Mobile.master" autoeventwireup="true" inherits="Mobile_Default, App_Web_ictyjbuv" %>
+﻿<%@ page title="" language="C#" masterpagefile="~/Mobile/Mobile.master" autoeventwireup="true" inherits="Mobile_Default, App_Web_dla1izfr" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 </asp:Content>
