@@ -44,10 +44,7 @@
             <div class="tis-nav-backdrop"></div>
             <!-- Sidebar navigation (Panel1 kept for Collapse_Click) -->
             <asp:Panel ID="Panel1" runat="server" CssClass="tis-sidebar" role="navigation">
-                <asp:Menu ID="mnuMainMenu" runat="server" CssClass="ForegroundStyle"
-                    DynamicHorizontalOffset="3" Orientation="Vertical" RenderingMode="List"
-                    StaticSubMenuIndent="5px">
-                </asp:Menu>
+                <asp:Literal ID="litMenu" runat="server"></asp:Literal>
             </asp:Panel>
 
             <!-- Main content -->

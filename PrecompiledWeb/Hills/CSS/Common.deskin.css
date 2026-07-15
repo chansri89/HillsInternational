@@ -1,0 +1,229 @@
+/* Rane Theme */
+
+UL.button{ margin:0px; padding:0px; list-style-type:none;}
+UL.button li{ margin:0px; padding:0px; list-style-type:none; float:left;}
+UL.button li .btnTxt{font:12px/23px verdana; color:#fff; padding:0 8px;  height:25px; background:url(Common/midBt.jpg) repeat-x top left; float:left; text-decoration:none; }
+
+UL.commonUL li UL{margin:0px 0px; padding:0px; float:left;}
+UL.commonUL li UL.button li{ margin:0px; padding:0px; list-style-type:none; float:left;}
+UL.commonUL li UL.button li .btnTxt{font:12px/23px verdana; color:#fff; padding:0 8px;  height:25px; background:url(Common/midBt.jpg) repeat-x top left; float:left; text-decoration:none; }
+
+
+.ltimgBt{background:url(Common/leftBt.png) no-repeat top left; width:5px; height:25px;}
+.rtimgBt{background:url(Common/rightBt.png) no-repeat top left; width:5px; height:25px;}
+
+UL.button_disable{ margin:0px; padding:0px; list-style-type:none;}
+UL.button_disable li{ margin:0px; padding:0px; list-style-type:none; float:left;}
+UL.button_disable li .btnTxt{font:12px/23px verdana; color:#fff; padding:0 8px;  height:25px; background:url(Common/midBt_disable.jpg) repeat-x top left; float:left; text-decoration:none; }
+
+UL.button_disable .ltimgBt{background:url(Common/leftBt_disable.png) no-repeat top left; width:5px; height:25px;}
+UL.button_disable .rtimgBt{background:url(Common/rightBt_disable.png) no-repeat top left; width:5px; height:25px;}
+
+/* Main Strip and Footer color */
+
+.leftTopMenuPart{  background:url(Common/inner_topMenuLeftBg.png) repeat-x 0 97px; }
+.rightTopMenuPart{ background:url(Common/inner_topMenuRightBg.png) repeat-x 0 64px;}
+.Customer_logoBg{ background:url(Common/inner_topLogoBg.jpg) no-repeat 20px 2px;}
+.footer{background:#f5f5f5; border-top:1px solid #1f4283;}
+
+
+/* Home page */
+
+.HomeBody{ width:960px; margin:0 auto; padding:0px; }
+
+.HomeMenuLevel0{ width:300px; float:left; margin:0 10px; padding:0px;}
+.HeaderMenu{ margin:0px 0 10px 0; padding:0px 0 10px 0;}
+.HeaderMenu img{ margin:0px 20px 0 0; padding:0px; float:left;}
+.HeaderMenu span{ margin:0px; padding:0 0 0 10px; font:bold 14pt/65px verdana; color:#373737;}
+UL.SubMenuLevel { margin:0px; padding:20px 0 0 0; list-style-type:none; width:300px; border-top:1px solid #2760a0;} /**************** Here only **********************/
+UL.SubMenuLevel LI{ margin:6px 0 6px 30px; padding:0px; list-style-type:none; float:left;}
+UL.SubMenuLevel LI img{ margin:0px; padding:0px; margin:0 30px 0 0; float:left;}
+UL.SubMenuLevel LI span{ margin:0px; padding:0px; margin:0px; color:#373737; font:normal 11pt/45px verdana;}
+UL.SubMenuLevel LI a{ margin:0px; padding:0 0 0 10px; text-decoration:none; color:#373737; font:normal 11pt/45px verdana;}
+UL.SubMenuLevel LI a:hover{ color:#2940eb; } /************************************************ Here only **********************/
+
+/* Page Top Menu */
+
+UL.ULtopSubMenus{ margin:5px 10px 0 0; padding:0px; list-style-type:none; float:right; font:normal 11px/20px Verdana, Geneva, sans-serif; white-space:nowrap;}
+UL.ULtopSubMenus li{margin:0px; padding:0px 5px; list-style-type:none; float:left; white-space:nowrap; position:relative;}
+UL.ULtopSubMenus li a{color:#333; text-decoration:none;white-space:nowrap;}
+UL.ULtopSubMenus li a:hover{color:#2940eb; text-decoration:none;white-space:nowrap;} /************************ Here only **********************/
+UL.ULtopSubMenus li strong{ white-space:nowrap;}
+
+/* Page Breadcurm */
+
+
+Ul.breadCurm{ margin:0px 0 0 20px; padding:0px; list-style-type:none; text-align:left;}
+Ul.breadCurm li{margin:0px; padding:0px; float:left; line-height:31px;}
+Ul.breadCurm li a{margin:0px; padding:0px; float:left; line-height:31px; text-decoration:none; color:#333;}
+Ul.breadCurm li a:hover{text-decoration:none; color:#2940eb;} /************************************************ Here only **********************/
+Ul.breadCurm li img{margin:11px 10px 0 10px; padding:0px; float:left;}
+
+/* List of Vendor */
+
+.listVendorsClmn{ float:left; width:175px; margin:10px 10px 10px 2px; }
+
+html .listVendorsClmn{_width:180px;}
+
+.vendorDetailsClmn{ position:relative; margin:10px 10px 10px 190px; _display:inline-block;}
+.contBoxForPOH{ border:1px solid #ccc;}
+
+.listVendorsClmn span{ margin:0px; padding:0px; line-height:21px;}
+.listVendorsClmn span span{ text-align:left; white-space:nowrap;}
+.listVendorsClmn span a{ color:#4c7fcb; padding-right:5px;}
+.listVendorsClmn span span a{ color:#333;}
+.rlbTemplate a{ color:#29559b;}
+#ctl00_ContentPlaceHolderForBody_SchdHeaderDetails_RadListBox1_i1_lntButton{color:#4c7fcb;}
+li.rlbItem{ text-align:left;}
+.rlbItem{ text-align:left;}
+
+/* Export to Excel Link */
+
+.Export_to_Excel{ padding:5px 5px; float:right; width:120px; text-align:right;}
+.Export_to_Excel a{ color:#333 !important;}
+.Export_to_Excel a:hover{ color:#2940EB !important; }
+.Export_to_Excel .export_Excel{ background-image:url(Grid/export.gif); background-position:0px 0px; padding:0px 0px 2px 11px; margin:5px; }
+
+/* Menu */
+
+ul.menu .menulink:hover, ul.menu .menuhover {
+	background: url(Common/menu_overImg.jpg) repeat-x left center;
+} 
+
+.subbg {
+	background:#9d2929 url(Common/menu_overImgBottom.jpg) repeat-x top left;
+}
+
+ul.menu ul li:hover {background:#011842;}
+
+.boxPO{ z-index:-1;}
+
+
+
+/************************************************************  LOGIN  ****************************************************************/
+
+body {
+	margin:0px;
+	padding:0px;
+	font: normal 80%/20px Verdana, Geneva, sans-serif;
+	
+}
+*{	margin:0px;
+	padding:0px;}
+img, a {
+	border:0px;
+	outline:none;
+}
+* html input {
+	
+	vertical-align: middle;
+}
+
+.clr{ clear:both;}
+.wrap {
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.HomePage_body {
+	margin:-20px 0 0 0;
+	padding:0px;
+	width:100%;
+}
+.Login_body {
+	margin:0px;
+	padding:0px;
+	width:100%;
+}
+.leftLogin{ width:45%; float:left; background:url(Login/left_bg.jpg) repeat-x 0 0;}
+.rightLogin{width:55%; float:right; background:url(Login/right_bg.jpg) repeat-x 0 0; position:relative;}
+.leftLogin .cont{ width:415px; float:right;}
+.cont h3{ margin:30px 0 0 20px; padding:0px; font:"Arial Black", Gadget, sans-serif; font-size:17px; color:#244b8f;}
+.cont p{margin:15px 0 15px 20px; padding:0px; font-size:12px; text-align:justify;}
+
+.rightLogin .cont{ width:480px; float:left; padding:140px 0 0 0; margin:0px 0 0 50px;}
+
+.boxMid{ background:url(Login/login_midbg.jpg) repeat-y 0 0; width:480px; padding:0px;}
+
+.loginImg{ text-align:center;}
+
+.txtBoxs{ margin:10px 0 0 0; padding:0px; font-size:12px;}
+
+.txtBoxs label{ padding:10px 0; float:left; font-weight:bold; color:#333;}
+.pad10{ padding:5px 30px 15px 30px;}
+.log_input{ padding:0 0 0 5px; float:left; border:1px solid #275196; height:25px; width:418px;}
+.remember{padding:15px 0 0 0px; margin:0px;}
+.remember input{ float:left; margin-right:10px;}
+.remember label{margin:0px; padding:0px; float:left; line-height:12px;}
+.loginBTN{padding:20px 0 0 0px; margin:0px;}
+.loginBTN label{margin:0px; padding:0px 0 0 10px; float:left; line-height:26px;}
+.loginBTN a{ color:#2087b8; text-decoration:none; }
+
+.bottomLine{ padding:25px 0px 0px 0px; border-bottom:1px solid #a90807;}
+.netLink{ margin:15px 0 0 0; padding:0px; text-align:center; font-weight:bold; color:#333;}
+.netLink a{ color:#2087b8; text-decoration:none;}
+
+.agree{ width:100%; font-style:normal;}
+.agree input{ float:left; margin:2px 0px 0 0; padding:0px; }
+.agree label{ padding:0 10px 0 0; margin:0px; font:normal 12px/16px verdana !important;}
+.pb10{ padding-bottom:10px;}
+
+
+.footerH{ text-align:center; font-size:10px; line-height:30px; padding:0px 0 0 0; margin:10px 0 0 0; width:100%;}
+.logo_footer{ width:100%; text-align:center;}
+
+.fl{ float:left;
+    height: 1px;
+}
+
+
+.login_ContForRane{ height:250px; width:98%; overflow:auto; padding-right:10px; margin-top:5px; _padding-right:0px;}
+.login_ContForRane p{ font-size:10px !important; line-height:16px !important; padding:0 8px 0 0; _margin-left:0px; _padding-right:10px !important;}
+
+img{ _behavior: url(Resources/CSS/iepngfix.htc); }
+
+
+.vendorDets .rlbTemplate a {
+    color: #1c7bdc !important;
+}
+
+.vendorDets .rlbTemplate span a{
+    color:#333 !important;
+    padding-left:8px;
+}
+
+
+/*  POPUP */
+.ui-dialog .ui-dialog-buttonpane button  
+{
+    background:url(Common/popup_bg.jpg) repeat-x 0 0;
+    border:1px solid #112263;
+}
+
+/* Component containers
+----------------------------------*/
+.ui-widget { font-family: Arial,sans-serif; font-size: 1.1em; }
+.ui-widget .ui-widget { font-size: 1em; }
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Arial,sans-serif; font-size: 1em; }
+.ui-widget-content { border: 1px solid #112263; background: #ffffff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x; color: #333333; }
+.ui-widget-content a { color: #333333; }
+.ui-widget-header a { color: #ffffff; }
+.ui-widget-header {background: #cc0000 url(Common/popup_bg.jpg) repeat-x 0 0; color: #ffffff; font-weight: bold; }
+
+
+/* states and images / */
+.ui-icon { width: 22px; height: 22px; background-image: url(Common/popup_close.jpg); }
+.ui-widget-content .ui-icon {background-image:  url(Common/popup_close.jpg); }
+.ui-widget-header .ui-icon {background-image: url(Common/popup_close.jpg); }
+.ui-state-default .ui-icon { background-image: url(images/ui-icons_cc0000_256x240.png); }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(Common/popup_close_over.jpg); }
+.ui-state-active .ui-icon {background-image: url(Common/popup_close_over.jpg); }
+.ui-state-highlight .ui-icon {background-image: url(images/ui-icons_004276_256x240.png); }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(images/ui-icons_cc0000_256x240.png); }
+
+
+/* Interaction states ----------------------------------*/
+
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { background: url(../../App_Themes/KaarNetTheme/Common/popup_close_over.jpg); font-weight: bold; color: #111111; }
+
+.ajax__calendar_container{ z-index:9999 !important; }

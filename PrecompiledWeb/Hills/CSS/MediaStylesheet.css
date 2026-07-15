@@ -1,0 +1,31 @@
+﻿@media only screen and (min-device-width: 800px) {
+body 
+{
+    background-color: #f0ffff;
+    width: 800px;
+    height: auto;
+}
+
+		div#wrapper {
+			width: 500px;
+		}
+
+		div#header {
+			background-image: url(media-queries-phone.jpg);
+			height: 93px;
+			position: relative;
+		}
+
+		div#header h1 {
+			font-size: 140%;
+		}
+
+		
+
+		#navigation {
+			float:none;
+			width: auto;
+		}
+		
+	}
+	

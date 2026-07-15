@@ -1,0 +1,4 @@
+E:\Source Code\HillsInternational\HillsInternational\Hills\obj\x86\Debug\vshillsintl.csproj.AssemblyReference.cache
+E:\Source Code\HillsInternational\HillsInternational\Hills\obj\x86\Debug\vshillsintl.App_GlobalResources.AgilerMail.resources
+E:\Source Code\HillsInternational\HillsInternational\Hills\obj\x86\Debug\vshillsintl.csproj.GenerateResource.cache
+E:\Source Code\HillsInternational\HillsInternational\Hills\obj\x86\Debug\vshillsintl.csproj.CoreCompileInputs.cache

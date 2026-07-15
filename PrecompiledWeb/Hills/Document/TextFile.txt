@@ -1,0 +1,21 @@
+﻿
+select * from tblMailPrograms order by ProgramSequence desc
+
+insert into tblMailPrograms(ProgramName,ProgramAccessPath,IsActive,	MainMenu,SubMenu,ChildMenu,IsAdmin,ProgramSequence)
+values('Sector Group','ProjectSectorGroupMaster.aspx',1,'EnterPrise','Common','Sector Group',NULL,1502)
+
+insert into tblMailPrograms(ProgramName,ProgramAccessPath,IsActive,	MainMenu,SubMenu,ChildMenu,IsAdmin,ProgramSequence)
+values('Sector Class','ProjectSectorClassMaster.aspx',1,'EnterPrise','Common','Sector Class',NULL,1503)
+
+insert into tblMailPrograms(ProgramName,ProgramAccessPath,IsActive,	MainMenu,SubMenu,ChildMenu,IsAdmin,ProgramSequence)
+values('Input Common Factor','A_ProjectInputIOWCommonFactor.aspx',1,'Transaction','IOW','Input Common Factor',NULL,5510)
+
+insert into tblMailPrograms(ProgramName,ProgramAccessPath,IsActive,	MainMenu,SubMenu,ChildMenu,IsAdmin,ProgramSequence)
+values('Input Cost Calculation','A_ProjectInputIOWCostCalculation.aspx',1,'Transaction','IOW','Input Cost Calculation',NULL,5512)
+
+insert into tblMailPrograms(ProgramName,ProgramAccessPath,IsActive,	MainMenu,SubMenu,ChildMenu,IsAdmin,ProgramSequence)
+values('Project Input','A_ProjectInputSheet.aspx',1,'Transaction','Project','Project Input',NULL,6010)
+
+
+
+

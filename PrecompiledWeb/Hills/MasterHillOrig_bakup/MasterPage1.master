@@ -1,0 +1,169 @@
+﻿<%@ master language="C#" autoeventwireup="true" inherits="MasterPage1, App_Web_12pgwcyk" %>
+<%@ Register Assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head id="Head1" runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title><%: Page.Title %> Hills TIS</title>
+           <link id="Link1" href="~/css/scs.css" rel="stylesheet" type="text/css" runat="server"/> 
+    <style type="text/css">
+       
+        .style21
+        {
+            width: 112px;
+        }
+        .style23
+        {
+            width: 103px;
+        }
+        .style27
+        {
+            width: 1125px;
+        }
+   
+        #Container
+        {
+            width: 135px;
+        }
+                    
+        .style31
+        {
+            width: 55px;
+        }
+          .grow 
+          { width: 100%; background-color:#e8d6f6;}
+          .Shrink {width: 7.5%; background-color:#e8d6f6;​}
+          
+        .style32
+        {
+            width: 65px;
+        }
+        .style34
+        {
+            width: 172px;
+        }
+    </style>
+            <script type="text/javascript" language="javascript">
+                function DisableBackButton() {
+                    window.history.forward()
+
+                }
+                DisableBackButton();
+                window.onload = DisableBackButton;
+                window.onpageshow = function (evt) { if (evt.persisted) DisableBackButton() }
+                window.onunload = function () { void (0) }
+ </script>
+</head>
+<body id="body1" runat="server" oncontextmenu="return false"  >
+        
+    <%--style="background: url(Images/LogoMasters.jpg) no-repeat; height: 606px; margin-top: 0px;">  display:none; position:fixed;float:left; list-style:none;--%>
+        <%--#container { z-index:2; }--%>
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" />
+       <div>
+            <asp:Panel ID="Panel2" runat="server" Height="55px"  BorderStyle ="Ridge" Width="1260px" CssClass="XSmall">
+
+        <table >
+            <tr>
+                <td>
+                    <asp:Image ID="Image3" runat="server" ImageUrl="~/Images/CompanyLeft.jpg" 
+                        Width="65px"  Height="50px" style="margin-left: 0px" />
+                </td>
+            
+                <td class="style27" align = "center" style = "text-decoration:underline"> 
+                           <asp:Label ID="lblHeading" runat="server" Height="20px" 
+                        Text="Tender Insight System - Version:1:0:00" Font-Size = "Large" Font-Italic="true"
+                                Width="394px" ForeColor="Navy"  />   
+                </td>                    
+                <td>
+                    <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/CompanyRight.jpg" 
+                        Width="65px"  Height="50px" style="margin-left: 0px" />
+                </td><td></td>
+            </tr>
+        </table>
+    </asp:Panel>
+      </div>
+      
+       <asp:Panel ID="Pnl2" runat="server"  CssClass="XSmall"  Style="z-index: 100; left: 1100px;   position: absolute; top: 35px; height: 23px; width: 60px;">
+        <asp:LinkButton id="lnkLogOut" runat="server" onclick="lnkLogOut_Click">Logout</asp:LinkButton>
+      </asp:Panel>
+       <asp:panel ID = "pnlSeparator" runat = "server"  Height="28px" CssClass="XSmall"
+               Width = "1260px">
+         <table style="width: 1119px; height: 12px">
+             <tr>
+                 <td class="style32">
+                 <asp:LinkButton id="LnkCollapse" runat="server" Text="Menu -" onclick="Collapse_Click"></asp:LinkButton>
+                 </td>
+                 <td class="style31" ><%--<asp:SiteMapPath ID="SiteMapPath" runat="server" Font-Size= "X-Small" PathSeparator=" &gt; " Font-Bold="True" Font-Names="Verdana" >
+                </asp:SiteMapPath>--%>
+                <asp:LinkButton id="LnkHome" runat="server" onclick="lnkHome_Click">Home</asp:LinkButton>
+                </td>
+
+                 <td class="style23">
+                 <asp:Label ID="lbluname" runat="server" ForeColor="#333399"  Width="168px" Height="16px"
+                      Font-Bold="True" style="text-align:right"></asp:Label>
+             </td>
+                 <td class="style21">
+                 <asp:Label ID="lblDate" runat="server" ForeColor="#333399" 
+                     style="margin-left: 0px; text-align: right;" Width="144px" Height="16px" 
+                         Font-Bold="True"  ></asp:Label>
+              </td><%--</tr> <tr>--%>
+                 <td class="style34" >
+                     <asp:Label ID="lblVersionName" runat="server" ForeColor="#333399"  Width="59px"  Visible="false"
+                      style="text-align: right; margin-left: 19px;" 
+                         Font-Bold="True" Text="Version: " Height="20px"></asp:Label>
+                </td>
+                 <td  class="style23">
+                                     <asp:Label ID="lblVersionNumber" runat="server" ForeColor="#333399"  Width="93px" Visible="false"
+                     style="text-align:left" Font-Bold="True" Height="20px"></asp:Label>
+                     </td>
+                   <td  class="style23">
+                                     <asp:Label ID="Label1" runat="server" ForeColor="#333399"  Width="143px"  Text = "Back button Disabled"
+                     style="text-align:left" Font-Bold="True"  Height="20px"></asp:Label>
+                     </td>
+            </tr>
+      </table>
+                
+      </asp:panel>
+  <asp:Panel ID="Panel3" runat="server" width = "1260px" >
+     <table class="grow">
+       <tr>
+          <td id="tdmenu" class="Shrink">
+        <asp:Panel ID="Panel1" runat="server" CssClass="Small" Height="511px"  
+                  BackColor="DarkBlue" Width="95px">
+             <asp:Menu ID="mnuMainMenu" runat="server"  CssClass="ForegroundStyle"
+           DynamicHorizontalOffset="3" ForeColor="White" 
+            Orientation="Vertical" RenderingMode="List" StaticSubMenuIndent="5px">
+            <StaticSelectedStyle BackColor="DarkBlue" />
+            <StaticMenuItemStyle BackColor="DarkBlue" HorizontalPadding="2px" 
+                VerticalPadding="10px" />
+            <DynamicHoverStyle BackColor="#FF9900" BorderColor="Black" BorderStyle="Solid" 
+                ForeColor="White" />
+            <DynamicMenuStyle BackColor="DarkBlue" />
+            <DynamicSelectedStyle BackColor="#FFCC66" />
+            <DynamicMenuItemStyle BorderStyle="Ridge" HorizontalPadding="5px" 
+                VerticalPadding="2px" />
+            <StaticHoverStyle BackColor="#FF9900" ForeColor="White" />
+        </asp:Menu>
+    </asp:Panel>
+  </td>
+           <td class="grow">
+          <asp:Panel ID="Panel4" runat="server" Height="514px" Width="1250px"
+            BackColor="#e8d6f6"  CssClass="XSmall">  
+             <div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">    
+         </asp:ContentPlaceHolder>  
+         </div> 
+        </asp:Panel>
+    
+    </td>
+       </tr>
+     </table>
+  </asp:Panel>
+    </form>
+   
+</body>
+</html>

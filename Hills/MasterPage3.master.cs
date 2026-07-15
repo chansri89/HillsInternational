@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Text;
 using Ganini.Lib;
 
 
@@ -20,19 +21,6 @@ public partial class MasterPage3 : System.Web.UI.MasterPage
     public static string currValue="1";
     public static string wcurVal = "1";
     public static string Viwstateval = "1";
-    int MenuCount = 0;
-//    string UserName, HitCounter, Id, LogofDateTime, PlantId, PlantName = null;
-    string MainMenu, MainSubMenu = null;
-    string WMainMenu, WMainSubMenu, WSubMenu = null;
-    MenuItem Menu1 = new MenuItem();
-    MenuItem Menu2 = new MenuItem();
-    MenuItem Menu3 = new MenuItem();
-    MenuItem Menu4 = new MenuItem();
-    MenuItem Menu5 = new MenuItem();
-    MenuItem Menu6 = new MenuItem();
-    MenuItem Menu7 = new MenuItem();
-    MenuItem Menu8 = new MenuItem();
-    MenuItem Menu9 = new MenuItem();
    private DataTable dtMenu
     {
         get
@@ -100,160 +88,90 @@ public partial class MasterPage3 : System.Web.UI.MasterPage
     }
 
     #region MenuLoading
-    private void LoadMenu(List<ProgramMsg> ProgramList)
+    private void LoadMenu(List<ProgramMsg> programList)
     {
-        
-        //foreach (DataRow dr in dtMenu.Rows)
-        foreach (ProgramMsg dr in ProgramList)
+        litMenu.Text = BuildMenuMarkup(programList);
+    }
+
+    private string BuildMenuMarkup(IEnumerable<ProgramMsg> programList)
+    {
+        var topLevelGroups = (programList ?? Enumerable.Empty<ProgramMsg>())
+            .Where(item => !string.IsNullOrWhiteSpace(item.MainMenu))
+            .GroupBy(item => item.MainMenu)
+            .OrderBy(group => group.Min(menuItem => menuItem.ProgramSequence))
+            .ToList();
+
+        var builder = new StringBuilder();
+        builder.Append("<ul class=\"tis-menu\">");
+
+        foreach (var group in topLevelGroups)
         {
-            WMainMenu = dr.MainMenu.ToString();
-            WSubMenu = dr.SubMenu.ToString();
-            WMainSubMenu = WMainMenu + WSubMenu;
-            #region NewMainMenu
-            if (MainMenu != dr.MainMenu.ToString()) // This is a new menu  //Add MainMenu Item
+            var mainMenuName = group.Key ?? string.Empty;
+            var subMenuGroups = group.Where(item => !string.IsNullOrWhiteSpace(item.SubMenu))
+                .GroupBy(item => item.SubMenu)
+                .OrderBy(subGroup => subGroup.Min(menuItem => menuItem.ProgramSequence))
+                .ToList();
+
+            builder.Append("<li class=\"tis-menu__item\">");
+
+            if (subMenuGroups.Count > 0)
             {
-                
-                MenuCount = MenuCount + 1;
-                LoadMainMenuName(MenuCount, WMainMenu);   // Load MainMenu Name Based on MenuCount
-                if (WMainSubMenu != WMainMenu) // There is a submenu item in this main menu
+                builder.AppendFormat("<a href=\"javascript:void(0)\" class=\"tis-menu__link\">{0}</a>", HttpUtility.HtmlEncode(mainMenuName));
+                builder.Append("<ul class=\"tis-menu__submenu\">");
+
+                foreach (var subGroup in subMenuGroups)
                 {
-                    MenuItem Sub = new MenuItem();
-                    Sub.Text = WSubMenu;
-                    List<ProgramMsg> drsubMenu = new List<ProgramMsg>();
-                    drsubMenu = (from drsub in ProgramList  where drsub.MainMenu==WMainMenu && drsub.SubMenu==WSubMenu select drsub).ToList();
-                    //foreach (DataRow drSubTrans in dtMenu.Select("MainMenu ='" + WMainMenu + "' and SubMenu = '" + WSubMenu + "'"))
-                    foreach( ProgramMsg drSubTrans in drsubMenu)
+                    var subMenuName = subGroup.Key ?? string.Empty;
+                    var childItems = subGroup.Where(item => !string.IsNullOrWhiteSpace(item.ChildMenu)).ToList();
+                    builder.Append("<li class=\"tis-menu__submenu-item\">");
+
+                    if (childItems.Count > 0)
                     {
-                        MenuItem SubSubMenu = new MenuItem();
-                        SubSubMenu.Text = drSubTrans.ChildMenu.ToString();
-                        SubSubMenu.NavigateUrl = drSubTrans.ProgramAccessPath.ToString();
-                        Sub.ChildItems.Add(SubSubMenu);
-                    }
-                    MainMenu = WMainMenu;
-                    MainSubMenu = WMainSubMenu;
-                    LoadSubMenu(MenuCount, Sub); // Load SubMenu Under the MainMenu Depending on MenuCount 
-                }
-                else //There's no SubMenu hence the submenu becomes the child menu for hyper linking
-                {
-                    List<ProgramMsg> drsubMenu = new List<ProgramMsg>();
-                    drsubMenu = (from drsub in ProgramList where drsub.MainMenu == WMainMenu select drsub).ToList();
-                    //foreach (DataRow drSubTrans in dtMenu.Select("MainMenu = '" + WMainMenu + "'"))
-                    foreach (ProgramMsg drSubTrans in drsubMenu)
-                    {
-                        MenuItem SubSubMenu = new MenuItem();
-                        SubSubMenu.Text = drSubTrans.ChildMenu.ToString();
-                        SubSubMenu.NavigateUrl = drSubTrans.ProgramAccessPath.ToString();
-                        LoadSubMenu(MenuCount, SubSubMenu); // Load SubSubMenu Under the MainMenu Depending on MenuCount
-                    }
-                    MainMenu = WMainMenu;
-                    MainSubMenu = WMainSubMenu;
-                }
-            }
-            #endregion
-            #region Submenu
-            else // MainMenu Remains Same
-            {
-                //If there is a new submenu for same main menu add it else SKIP
-                if (MainSubMenu != WMainSubMenu) // There is a new Submenu hence proceed
-                {
-                    if (WMainSubMenu != WMainMenu) // There is a submenu item in this main menu
-                    {
-                        List<ProgramMsg> drsubMenu = new List<ProgramMsg>();
-                        MenuItem Sub = new MenuItem();
-                        Sub.Text = WSubMenu;
-                        drsubMenu = (from drsub in ProgramList where drsub.MainMenu == WMainMenu && drsub.SubMenu == WSubMenu select drsub).ToList();
-                        //foreach (DataRow drSub in dtMenu.Select("MainMenu ='" + WMainMenu + "' and SubMenu = '" + WSubMenu + "'"))
-                        foreach (ProgramMsg drSub in drsubMenu)
+                        builder.AppendFormat("<a href=\"javascript:void(0)\" class=\"tis-menu__sublink\">{0}</a>", HttpUtility.HtmlEncode(subMenuName));
+                        builder.Append("<ul class=\"tis-menu__childmenu\">");
+
+                        foreach (var child in childItems)
                         {
-                            MenuItem SubSubMenu = new MenuItem();
-                            SubSubMenu.Text = drSub.ChildMenu.ToString();
-                            SubSubMenu.NavigateUrl = drSub.ProgramAccessPath.ToString();
-                            Sub.ChildItems.Add(SubSubMenu);
+                            var link = string.IsNullOrWhiteSpace(child.ProgramAccessPath) ? "#" : child.ProgramAccessPath;
+                            builder.AppendFormat("<li class=\"tis-menu__childitem\"><a href=\"{0}\" class=\"tis-menu__childlink\">{1}</a></li>",
+                                HttpUtility.HtmlAttributeEncode(link),
+                                HttpUtility.HtmlEncode(child.ChildMenu ?? string.Empty));
                         }
-                        MainMenu = WMainMenu;
-                        MainSubMenu = WMainSubMenu;
-                        LoadSubMenu(MenuCount, Sub); // Load SubMenu Under the MainMenu Depending on MenuCount
+
+                        builder.Append("</ul>");
                     }
-                    else  // There is no submenu item in this main menu
+                    else
                     {
-                        List<ProgramMsg> drsubMenu = new List<ProgramMsg>();
-                        drsubMenu = (from drsub in ProgramList where drsub.MainMenu == WMainMenu && drsub.SubMenu == WSubMenu select drsub).ToList();
-                        //foreach (DataRow drSub in dtMenu.Select("MainMenu = '" + WMainMenu + "'"))
-                        foreach (ProgramMsg drSub in drsubMenu)
-                        {
-                            MenuItem SubSubMenu = new MenuItem();
-                            SubSubMenu.Text = drSub.ChildMenu.ToString();
-                            SubSubMenu.NavigateUrl = drSub.ProgramAccessPath.ToString();
-                            LoadSubMenu(MenuCount, SubSubMenu); // Load SubSubMenu Under the MainMenu Depending on MenuCount  
-                        }
-                        MainMenu = WMainMenu;
-                        MainSubMenu = WMainSubMenu;
+                        var fallbackLink = "#";
+                        builder.AppendFormat("<a href=\"{0}\" class=\"tis-menu__sublink\">{1}</a>",
+                            HttpUtility.HtmlAttributeEncode(fallbackLink),
+                            HttpUtility.HtmlEncode(subMenuName));
                     }
+
+                    builder.Append("</li>");
                 }
-                else
-                {
-                    //Skip
-                }
+
+                builder.Append("</ul>");
             }
-            #endregion
-        }
-        for (int i = 1; i <= MenuCount; i++)
-        {
-            if (i == 1)
-            {
-                mnuMainMenu.Items.Add(Menu1);
-            }
-            else if (i == 2)
-            {
-                mnuMainMenu.Items.Add(Menu2);
-            }
-            else if (i == 3)
-            {
-                mnuMainMenu.Items.Add(Menu3);
-            }
-            else if (i == 4)
-            {
-                mnuMainMenu.Items.Add(Menu4);
-            }
-            else if (i == 5)
-            {
-                mnuMainMenu.Items.Add(Menu5);
-            }
-            else if (i == 6)
-            {
-                mnuMainMenu.Items.Add(Menu6);
-            }
-            else if (i == 7)
-            {
-                mnuMainMenu.Items.Add(Menu7);
-            }
-            else if (i == 8)
-            {
-                mnuMainMenu.Items.Add(Menu8);
-            }
-            else if (i == 9)
-            {
-                mnuMainMenu.Items.Add(Menu9);
-            }
-            //else if (i == 10)
-            //{
-            //    mnuMainMenu.Items.Add(Menu10);
-            //}
             else
             {
+                var firstChild = group.FirstOrDefault();
+                var fallbackLink = "#";
+                if (firstChild != null && !string.IsNullOrWhiteSpace(firstChild.ProgramAccessPath))
+                {
+                    fallbackLink = firstChild.ProgramAccessPath;
+                }
+
+                builder.AppendFormat("<a href=\"{0}\" class=\"tis-menu__link\">{1}</a>",
+                    HttpUtility.HtmlAttributeEncode(fallbackLink),
+                    HttpUtility.HtmlEncode(mainMenuName));
             }
-            //Loading All Menus in MasterPage
-            //mnuMainMenu.Items.Add(Menu1);
-            //mnuMainMenu.Items.Add(Menu2);
-            //mnuMainMenu.Items.Add(Menu3);
-            //mnuMainMenu.Items.Add(Menu4);
-            //mnuMainMenu.Items.Add(Menu5);
-            //mnuMainMenu.Items.Add(Menu6);
-            //mnuMainMenu.Items.Add(Menu7);
-            //mnuMainMenu.Items.Add(Menu8);
-            //mnuMainMenu.Items.Add(Menu9);
+
+            builder.Append("</li>");
         }
 
+        builder.Append("</ul>");
+        return builder.ToString();
     }
 
 //        private void LoadMenu(DataTable dtMenu)
@@ -378,95 +296,6 @@ public partial class MasterPage3 : System.Web.UI.MasterPage
     }
     #endregion
     #region Methods
- 
-    public void LoadMainMenuName(int MenuCount, string MainMenuName)
-    {
-        if (MenuCount == 1)
-        {
-            Menu1.Text = MainMenuName;
-        }
-        else if (MenuCount == 2)
-        {
-            Menu2.Text = MainMenuName;
-        }
-        else if (MenuCount == 3)
-        {
-            Menu3.Text = MainMenuName;
-        }
-        else if (MenuCount == 4)
-        {
-            Menu4.Text = MainMenuName;
-        }
-        else if (MenuCount == 5)
-        {
-            Menu5.Text = MainMenuName;
-        }
-        else if (MenuCount == 6)
-        {
-            Menu6.Text = MainMenuName;
-        }
-        else if (MenuCount == 7)
-        {
-            Menu7.Text = MainMenuName;
-        }
-        else if (MenuCount == 8)
-        {
-            Menu8.Text = MainMenuName;
-        }
-        else if (MenuCount == 9)
-        {
-            Menu9.Text = MainMenuName;
-        }
-    }
-    //This Method is to Load SubMenu into MainMenu
-    public void LoadSubMenu(int MenuCount, MenuItem Sub)
-    {
-        if (MenuCount == 1)
-        {
-            Menu1.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 2)
-        {
-            Menu2.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 3)
-        {
-            Menu3.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 4)
-        {
-            Menu4.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 5)
-        {
-            Menu5.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 6)
-        {
-            Menu6.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 7)
-        {
-            Menu7.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 8)
-        {
-            Menu8.ChildItems.Add(Sub);
-
-        }
-        else if (MenuCount == 9) //scs 160417 to include 9th main menu
-        {
-            Menu9.ChildItems.Add(Sub);
-
-        }
-    }
     protected void lnkLogOut_Click(object sender, EventArgs e)
     {
         LoginInfoMsg Login=new LoginInfoMsg();

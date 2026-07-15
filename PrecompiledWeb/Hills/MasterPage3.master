@@ -1,0 +1,59 @@
+﻿<%@ master language="C#" autoeventwireup="true" inherits="MasterPage3, App_Web_iredolts" %>
+<%@ Register Assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%: Page.Title %> Hills TIS</title>
+    <link id="Link1" href="~/css/scs.css" rel="stylesheet" type="text/css" runat="server" />
+    <link href="CSS/theme.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/modern.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <script src="JS/modern-ui.js" type="text/javascript"></script>
+</head>
+<body id="body1" runat="server">
+    <form id="form1" runat="server">
+
+        <a href="#tis-main" class="tis-skip-link">Skip to content</a>
+
+        <!-- Top app bar -->
+        <header class="tis-appbar">
+            <button type="button" class="tis-menu-toggle" aria-label="Toggle navigation">&#9776;</button>
+            <span class="tis-appbar__brand">
+                <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Hill Logo.jpg" AlternateText="Hills logo" />
+                <asp:Label ID="lblHeading" runat="server" Text="Tender Insight System" />
+            </span>
+            <span class="tis-appbar__spacer"></span>
+            <nav class="tis-appbar__meta">
+                <asp:LinkButton ID="LnkHome" runat="server" onclick="lnkHome_Click">Home</asp:LinkButton>
+                <asp:LinkButton ID="LnkCollapse" runat="server" Text="Menu -" onclick="Collapse_Click"></asp:LinkButton>
+                <asp:Label ID="lbluname" runat="server"></asp:Label>
+                <asp:Label ID="lblDate" runat="server"></asp:Label>
+                <asp:Label ID="lblVersionName" runat="server" Visible="false" Text="Version: "></asp:Label>
+                <asp:Label ID="lblVersionNumber" runat="server" Visible="false"></asp:Label>
+                <asp:LinkButton ID="lnkLogOut" runat="server" onclick="lnkLogOut_Click">Logout</asp:LinkButton>
+            </nav>
+        </header>
+
+        <div class="tis-shell">
+            <div class="tis-nav-backdrop"></div>
+            <!-- Sidebar navigation (Panel1 kept for Collapse_Click) -->
+            <asp:Panel ID="Panel1" runat="server" CssClass="tis-sidebar" role="navigation">
+                <asp:Literal ID="litMenu" runat="server"></asp:Literal>
+            </asp:Panel>
+
+            <!-- Main content (upload accent) -->
+            <main id="tis-main" class="tis-main tis-main--upload">
+                <div class="tis-container">
+                    <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+            </main>
+        </div>
+    </form>
+</body>
+</html>
