@@ -1,0 +1,16 @@
+<%--
+    Hills TIS control defaults. Applied as a StyleSheetTheme (Web.config
+    <pages styleSheetTheme="TIS">), so any property set on a page still wins.
+    Visual styling lives in CSS/tis/*.css; skins only attach the CSS classes.
+--%>
+
+<asp:GridView runat="server"
+    CssClass="tis-table"
+    GridLines="None"
+    CellSpacing="0"
+    BorderStyle="None"
+    BorderWidth="0">
+    <SelectedRowStyle CssClass="tis-row-selected" />
+    <PagerStyle CssClass="tis-pager" />
+    <EmptyDataRowStyle CssClass="tis-empty-row" />
+</asp:GridView>

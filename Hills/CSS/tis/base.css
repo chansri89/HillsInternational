@@ -1,0 +1,214 @@
+/* ==========================================================================
+   Hills TIS base: reset, typography and default form-element styling.
+   WebForms controls render plain elements (input, select, table), so the
+   defaults here make every control look right without per-page classes.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    font-size: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--tis-font);
+    font-size: var(--tis-fs-base);
+    line-height: var(--tis-lh);
+    font-feature-settings: "cv11", "ss01";
+    color: var(--tis-text);
+    background: var(--tis-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+form { margin: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    color: var(--tis-text);
+    font-weight: var(--tis-w-semibold);
+    letter-spacing: var(--tis-tracking-tight);
+    line-height: 1.25;
+}
+h1 { font-size: var(--tis-fs-2xl); }
+h2 { font-size: var(--tis-fs-xl); }
+h3 { font-size: var(--tis-fs-lg); }
+h4 { font-size: var(--tis-fs-base); }
+
+p { margin: 0; }
+
+a { color: var(--tis-accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+a:focus-visible { outline: none; box-shadow: var(--tis-focus); border-radius: var(--tis-r-sm); }
+
+img, svg { max-width: 100%; }
+img { height: auto; border-style: none; }
+
+hr { border: 0; border-top: 1px solid var(--tis-border); margin: var(--tis-s-5) 0; }
+
+code, kbd, .tis-mono { font-family: var(--tis-font-mono); font-size: 0.92em; }
+
+::selection { background: var(--tis-accent-soft); color: var(--tis-accent-text); }
+
+table { border-collapse: collapse; }
+td, th, input, select, .tis-num { font-variant-numeric: tabular-nums; }
+
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+
+/* --------------------------------------------------------------- controls */
+
+input[type="text"], input[type="password"], input[type="email"], input[type="number"],
+input[type="search"], input[type="tel"], input[type="date"], input[type="url"],
+input:not([type]), select, textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    height: var(--tis-control-h);
+    padding: 0 var(--tis-control-px);
+    font: inherit;
+    font-size: var(--tis-control-fs);
+    color: var(--tis-text);
+    background: var(--tis-surface);
+    border: 1px solid var(--tis-border-strong);
+    border-radius: var(--tis-r-md);
+    box-shadow: var(--tis-shadow-sm);
+    transition: border-color var(--tis-t-fast) var(--tis-ease), box-shadow var(--tis-t-fast) var(--tis-ease);
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+textarea {
+    height: auto;
+    min-height: 88px;
+    padding: 8px var(--tis-control-px);
+    line-height: 1.5;
+    resize: vertical;
+}
+
+select {
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23697386' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+select[multiple], select[size] {
+    height: auto;
+    padding: 4px;
+    background-image: none;
+}
+select[multiple] option, select[size] option { padding: 6px 8px; border-radius: var(--tis-r-sm); }
+select::-ms-expand { display: none; }
+
+input::placeholder, textarea::placeholder { color: var(--tis-faint); opacity: 1; }
+
+input:hover, select:hover, textarea:hover { border-color: var(--tis-faint); }
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--tis-accent);
+    box-shadow: var(--tis-focus);
+}
+
+input:disabled, select:disabled, textarea:disabled,
+input[readonly], textarea[readonly] {
+    color: var(--tis-muted);
+    background-color: var(--tis-sunken);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+input[readonly], textarea[readonly] { cursor: default; }
+
+input[type="checkbox"], input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    flex: none;
+    vertical-align: -3px;
+    accent-color: var(--tis-accent);
+    cursor: pointer;
+}
+input[type="checkbox"]:disabled, input[type="radio"]:disabled { cursor: not-allowed; opacity: 0.7; }
+input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible { outline: none; box-shadow: var(--tis-focus); border-radius: 4px; }
+
+/* asp:CheckBox renders <span><input/><label/></span> */
+span > input[type="checkbox"] + label,
+span > input[type="radio"] + label {
+    margin-left: 8px;
+    color: var(--tis-text-2);
+    font-size: var(--tis-fs-sm);
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    font: inherit;
+    font-size: var(--tis-fs-sm);
+    color: var(--tis-muted);
+}
+input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    height: 32px;
+    padding: 0 12px;
+    font: inherit;
+    font-weight: var(--tis-w-medium);
+    color: var(--tis-text);
+    background: var(--tis-surface);
+    border: 1px solid var(--tis-border-strong);
+    border-radius: var(--tis-r-md);
+    cursor: pointer;
+}
+
+/* Buttons: bare asp:Button renders input[type=submit]; it gets the secondary look. */
+input[type="submit"], input[type="button"], input[type="reset"], button {
+    font: inherit;
+}
+
+/* --------------------------------------------------------------- utilities */
+
+.tis-sr-only {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0);
+    white-space: nowrap; border: 0;
+}
+.tis-muted { color: var(--tis-muted); }
+.tis-faint { color: var(--tis-faint); }
+.tis-num { text-align: right; }
+.tis-nowrap { white-space: nowrap; }
+.tis-hidden { display: none !important; }
+.tis-grow { flex: 1 1 auto; min-width: 0; }
+.tis-text-sm { font-size: var(--tis-fs-sm); }
+.tis-text-xs { font-size: var(--tis-fs-xs); }
+.tis-mt-0 { margin-top: 0 !important; }
+.tis-mt-4 { margin-top: var(--tis-s-4) !important; }
+.tis-mt-6 { margin-top: var(--tis-s-6) !important; }
+.tis-mb-4 { margin-bottom: var(--tis-s-4) !important; }
+
+.tis-icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vertical-align: middle;
+}
+.tis-icon--sm { width: 14px; height: 14px; }
+.tis-icon--lg { width: 20px; height: 20px; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}

@@ -1,0 +1,189 @@
+/* ==========================================================================
+   Hills TIS design tokens
+   Light theme is the default; [data-theme="dark"] on <html> switches palettes.
+   [data-density="compact"] (on <html> or any container) tightens tables/forms.
+   ========================================================================== */
+
+@font-face {
+    font-family: "Inter";
+    src: url("../../fonts/InterVariable.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "Inter";
+    src: url("../../fonts/InterVariable-Italic.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+:root {
+    color-scheme: light;
+
+    /* Surfaces */
+    --tis-bg: #F6F8FA;
+    --tis-surface: #FFFFFF;
+    --tis-surface-2: #F9FAFB;
+    --tis-sunken: #F1F4F7;
+    --tis-overlay: rgba(26, 31, 54, 0.38);
+
+    /* Borders */
+    --tis-border: #E3E8EE;
+    --tis-border-strong: #D1D9E2;
+    --tis-divider: #EDF1F5;
+
+    /* Text */
+    --tis-text: #1A1F36;
+    --tis-text-2: #3C4257;
+    --tis-muted: #697386;
+    --tis-faint: #A3ACB9;
+    --tis-inverse: #FFFFFF;
+
+    /* Brand / accent */
+    --tis-accent: #635BFF;
+    --tis-accent-hover: #5851EA;
+    --tis-accent-active: #4B45C6;
+    --tis-accent-soft: #EFEEFF;
+    --tis-accent-softer: #F7F6FF;
+    --tis-accent-text: #4B45C6;
+    --tis-on-accent: #FFFFFF;
+
+    /* Status */
+    --tis-success: #0E7C57;
+    --tis-success-soft: #E3F5EC;
+    --tis-warning: #B25E09;
+    --tis-warning-soft: #FCF1E3;
+    --tis-danger: #DF1B41;
+    --tis-danger-soft: #FDE8EC;
+    --tis-info: #0570DE;
+    --tis-info-soft: #E6F1FC;
+
+    /* Row states used by upload and mapping grids */
+    --tis-row-mapped: #EAF7F0;
+    --tis-row-unmapped: #EAF2FD;
+    --tis-row-error: #FDECEF;
+
+    /* Typography */
+    --tis-font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --tis-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    --tis-fs-xs: 12px;
+    --tis-fs-sm: 13px;
+    --tis-fs-base: 14px;
+    --tis-fs-md: 15px;
+    --tis-fs-lg: 16px;
+    --tis-fs-xl: 18px;
+    --tis-fs-2xl: 22px;
+    --tis-fs-3xl: 28px;
+    --tis-lh: 1.45;
+    --tis-w-regular: 400;
+    --tis-w-medium: 500;
+    --tis-w-semibold: 600;
+    --tis-w-bold: 700;
+    --tis-tracking-tight: -0.011em;
+
+    /* Spacing (4px grid) */
+    --tis-s-1: 4px;
+    --tis-s-2: 8px;
+    --tis-s-3: 12px;
+    --tis-s-4: 16px;
+    --tis-s-5: 20px;
+    --tis-s-6: 24px;
+    --tis-s-7: 28px;
+    --tis-s-8: 32px;
+    --tis-s-10: 40px;
+    --tis-s-12: 48px;
+
+    /* Radius */
+    --tis-r-sm: 4px;
+    --tis-r-md: 6px;
+    --tis-r-lg: 8px;
+    --tis-r-xl: 12px;
+    --tis-r-pill: 999px;
+
+    /* Elevation (used sparingly: popovers, dialogs, toasts) */
+    --tis-shadow-sm: 0 1px 2px rgba(26, 31, 54, 0.06);
+    --tis-shadow-md: 0 4px 12px rgba(26, 31, 54, 0.08), 0 1px 3px rgba(26, 31, 54, 0.06);
+    --tis-shadow-lg: 0 18px 48px rgba(26, 31, 54, 0.18), 0 4px 12px rgba(26, 31, 54, 0.08);
+    --tis-focus: 0 0 0 3px rgba(99, 91, 255, 0.28);
+
+    /* Controls and density */
+    --tis-control-h: 36px;
+    --tis-control-px: 12px;
+    --tis-control-fs: var(--tis-fs-base);
+    --tis-row-h: 44px;
+    --tis-cell-py: 11px;
+    --tis-cell-px: 14px;
+    --tis-table-fs: var(--tis-fs-base);
+    --tis-th-fs: 11.5px;
+
+    /* Shell */
+    --tis-sidebar-w: 248px;
+    --tis-rail-w: 64px;
+    --tis-topbar-h: 56px;
+    --tis-content-px: 32px;
+    --tis-content-py: 28px;
+
+    /* Motion */
+    --tis-ease: cubic-bezier(0.2, 0, 0, 1);
+    --tis-t-fast: 120ms;
+    --tis-t: 180ms;
+}
+
+[data-density="compact"] {
+    --tis-control-h: 30px;
+    --tis-control-px: 9px;
+    --tis-control-fs: var(--tis-fs-sm);
+    --tis-row-h: 32px;
+    --tis-cell-py: 6px;
+    --tis-cell-px: 10px;
+    --tis-table-fs: var(--tis-fs-sm);
+    --tis-th-fs: 11px;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    --tis-bg: #0E121B;
+    --tis-surface: #161B27;
+    --tis-surface-2: #1A2030;
+    --tis-sunken: #121722;
+    --tis-overlay: rgba(0, 0, 0, 0.6);
+
+    --tis-border: #2A3142;
+    --tis-border-strong: #3A4357;
+    --tis-divider: #222938;
+
+    --tis-text: #E6E9F0;
+    --tis-text-2: #C4CAD6;
+    --tis-muted: #8792A2;
+    --tis-faint: #5A6474;
+    --tis-inverse: #0E121B;
+
+    --tis-accent: #7A73FF;
+    --tis-accent-hover: #8B85FF;
+    --tis-accent-active: #9C97FF;
+    --tis-accent-soft: #26244A;
+    --tis-accent-softer: #1D1C38;
+    --tis-accent-text: #B3AEFF;
+    --tis-on-accent: #FFFFFF;
+
+    --tis-success: #3FC28F;
+    --tis-success-soft: #12281F;
+    --tis-warning: #F0A14A;
+    --tis-warning-soft: #31230F;
+    --tis-danger: #FF5A76;
+    --tis-danger-soft: #35161D;
+    --tis-info: #5AA9FF;
+    --tis-info-soft: #132A45;
+
+    --tis-row-mapped: #13271F;
+    --tis-row-unmapped: #152338;
+    --tis-row-error: #33161D;
+
+    --tis-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --tis-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+    --tis-shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.6);
+    --tis-focus: 0 0 0 3px rgba(122, 115, 255, 0.4);
+}
