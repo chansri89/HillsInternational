@@ -1,63 +1,129 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage1.master.cs" Inherits="MasterPage1" %>
-<%@ Register Assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
-    Namespace="System.Web.UI" TagPrefix="asp" %>
-
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-
+<html lang="en">
 <head id="Head1" runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title><%: Page.Title %> Hills TIS</title>
-    <link id="Link1" href="~/css/scs.css" rel="stylesheet" type="text/css" runat="server" />
-    <link href="CSS/theme.css" rel="stylesheet" type="text/css" />
-    <link href="CSS/modern.css" rel="stylesheet" type="text/css" />
-    <link href="CSS/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <script src="JS/modern-ui.js" type="text/javascript"></script>
+    <meta name="color-scheme" content="light dark" />
+    <title>Hills TIS</title>
+    <script type="text/javascript">
+        (function () { try { var d = document.documentElement; d.setAttribute("data-theme", localStorage.getItem("tis.theme") || "light"); if (localStorage.getItem("tis.nav") === "rail") d.setAttribute("data-nav", "rail"); } catch (e) { } })();
+    </script>
+    <link href="CSS/tis/tokens.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/base.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/layout.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/components.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/pages.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 </head>
-<body id="body1" runat="server">
+<body class="tis-app">
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server" />
-
-        <a href="#tis-main" class="tis-skip-link">Skip to content</a>
-
-        <!-- Top app bar -->
-        <header class="tis-appbar">
-            <button type="button" class="tis-menu-toggle" aria-label="Toggle navigation">&#9776;</button>
-            <span class="tis-appbar__brand">
-                <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Hill Logo.jpg" AlternateText="Hills logo" />
-                <asp:Label ID="lblHeading" runat="server" Text="Tender Insight System" />
-            </span>
-            <span class="tis-appbar__spacer"></span>
-            <nav class="tis-appbar__meta">
-                <asp:LinkButton ID="LnkHome" runat="server" onclick="lnkHome_Click">Home</asp:LinkButton>
-                <asp:LinkButton ID="LnkCollapse" runat="server" Text="Menu -" onclick="Collapse_Click"></asp:LinkButton>
-                <asp:Label ID="lbluname" runat="server"></asp:Label>
-                <asp:Label ID="lblDate" runat="server"></asp:Label>
-                <asp:Label ID="lblVersionName" runat="server" Visible="false" Text="Version: "></asp:Label>
-                <asp:Label ID="lblVersionNumber" runat="server" Visible="false"></asp:Label>
-                <asp:LinkButton ID="lnkLogOut" runat="server" onclick="lnkLogOut_Click">Logout</asp:LinkButton>
-            </nav>
-        </header>
+        <a class="tis-skip" href="#main">Skip to content</a>
 
         <div class="tis-shell">
-            <div class="tis-nav-backdrop"></div>
-            <!-- Sidebar navigation (Panel1 kept for Collapse_Click) -->
-            <asp:Panel ID="Panel1" runat="server" CssClass="tis-sidebar" role="navigation">
-                <asp:Menu ID="mnuMainMenu" runat="server" CssClass="ForegroundStyle"
-                    DynamicHorizontalOffset="3" Orientation="Vertical" RenderingMode="List"
-                    StaticSubMenuIndent="5px">
-                </asp:Menu>
-            </asp:Panel>
+            <aside class="tis-sidebar" id="tisSidebar" aria-label="Sidebar">
+                <a class="tis-sidebar__brand" href="Default.aspx" data-tip="Hills TIS">
+                    <img class="tis-sidebar__logo" src="Images/Hill%20Logo.jpg" alt="" />
+                    <span class="tis-sidebar__name">
+                        <span class="tis-sidebar__title">Hills TIS</span>
+                        <span class="tis-sidebar__subtitle">Tender Insight System</span>
+                    </span>
+                </a>
 
-            <!-- Main content -->
-            <main id="tis-main" class="tis-main">
-                <div class="tis-container">
-                    <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
-                    </asp:ContentPlaceHolder>
+                <button type="button" class="tis-sidebar__search" data-tis-palette="1" data-tip="Search (Ctrl+K)">
+                    <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-search"></use></svg>
+                    <span>Search or jump to...</span>
+                    <kbd class="tis-kbd">Ctrl K</kbd>
+                </button>
+
+                <nav class="tis-nav" aria-label="Main navigation">
+                    <a id="lnkNavHome" runat="server" href="~/Default.aspx" class="tis-nav__link">
+                        <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-home"></use></svg>
+                        <span class="tis-nav__label">Home</span>
+                    </a>
+                    <asp:Repeater ID="rptNavGroups" runat="server" EnableViewState="false">
+                        <ItemTemplate>
+                            <div class="<%# Eval("GroupClass") %>" data-group="<%# Eval("Key") %>">
+                                <button type="button" class="tis-nav__toggle" aria-expanded="false">
+                                    <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-<%# Eval("Icon") %>"></use></svg>
+                                    <span class="tis-nav__label"><%# Eval("TextHtml") %></span>
+                                    <svg class="tis-icon tis-icon--sm tis-nav__chevron" aria-hidden="true"><use href="Images/icons.svg#i-chevron-right"></use></svg>
+                                </button>
+                                <div class="tis-nav__items">
+                                    <asp:Repeater ID="rptNavItems" runat="server" EnableViewState="false" DataSource='<%# ((TisNavGroup)Container.DataItem).Items %>'>
+                                        <ItemTemplate>
+                                            <span class="<%# Eval("SectionClass") %>"><%# Eval("SectionHtml") %></span>
+                                            <a class="<%# Eval("LinkClass") %>" href="<%# Eval("UrlAttr") %>" aria-current="<%# Eval("AriaCurrent") %>" data-section="<%# Eval("SectionHtml") %>"><span class="tis-nav__label"><%# Eval("TextHtml") %></span></a>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </nav>
+
+                <div class="tis-sidebar__footer">
+                    <span class="tis-avatar" aria-hidden="true"><asp:Literal ID="litInitials" runat="server" /></span>
+                    <span class="tis-sidebar__user">
+                        <strong><asp:Label ID="lbluname" runat="server" /></strong>
+                        <span>Version <asp:Label ID="lblVersionNumber" runat="server" /></span>
+                    </span>
                 </div>
-            </main>
+            </aside>
+            <div class="tis-backdrop" aria-hidden="true"></div>
+
+            <div class="tis-main">
+                <header class="tis-topbar">
+                    <button type="button" class="tis-iconbtn tis-menu-btn" data-tis-menu="1" aria-label="Open navigation">
+                        <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-menu"></use></svg>
+                    </button>
+                    <button type="button" class="tis-iconbtn tis-rail-btn" data-tis-rail-toggle="1" aria-label="Collapse or expand the sidebar" title="Collapse or expand the sidebar">
+                        <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-panel-left"></use></svg>
+                    </button>
+                    <ol class="tis-crumbs" aria-label="Breadcrumb">
+                        <asp:Literal ID="litBreadcrumb" runat="server" />
+                    </ol>
+                    <span class="tis-topbar__spacer"></span>
+                    <button type="button" class="tis-iconbtn" data-tis-palette="1" aria-label="Search pages (Ctrl+K)" title="Search pages (Ctrl+K)">
+                        <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-search"></use></svg>
+                    </button>
+                    <button type="button" class="tis-iconbtn tis-theme-toggle" data-tis-theme-toggle="1" aria-label="Toggle dark mode" title="Toggle dark mode">
+                        <svg class="tis-icon tis-icon-moon" aria-hidden="true"><use href="Images/icons.svg#i-moon"></use></svg>
+                        <svg class="tis-icon tis-icon-sun" aria-hidden="true"><use href="Images/icons.svg#i-sun"></use></svg>
+                    </button>
+                    <details class="tis-usermenu">
+                        <summary aria-label="Account menu">
+                            <span class="tis-avatar"><asp:Literal ID="litInitialsTop" runat="server" /></span>
+                            <svg class="tis-icon tis-icon--sm tis-faint" aria-hidden="true"><use href="Images/icons.svg#i-chevron-down"></use></svg>
+                        </summary>
+                        <div class="tis-usermenu__panel" role="menu">
+                            <div class="tis-usermenu__head">
+                                <strong><asp:Label ID="lblUserMenuName" runat="server" /></strong>
+                                <span><asp:Label ID="lblDate" runat="server" /> &middot; Tender Insight System</span>
+                            </div>
+                            <a class="tis-usermenu__item" href="Default.aspx" role="menuitem">
+                                <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-home"></use></svg>Home
+                            </a>
+                            <a class="tis-usermenu__item" href="ChangePassword.aspx" role="menuitem">
+                                <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-key"></use></svg>Change password
+                            </a>
+                            <button type="button" class="tis-usermenu__item" data-tis-palette="1" style="border:0;background:none;font:inherit;cursor:pointer" role="menuitem">
+                                <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-keyboard"></use></svg>Search pages<span class="tis-kbd" style="margin-left:auto">Ctrl K</span>
+                            </button>
+                            <asp:LinkButton ID="lnkLogOut" runat="server" CssClass="tis-usermenu__item tis-usermenu__item--danger" OnClick="lnkLogOut_Click" CausesValidation="false" data-tis-logout="1">
+                                <svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-logout"></use></svg>Sign out
+                            </asp:LinkButton>
+                        </div>
+                    </details>
+                </header>
+
+                <main id="main" class="tis-content" tabindex="-1">
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+                </main>
+            </div>
         </div>
     </form>
+    <script src="JS/tis-ui.js" type="text/javascript"></script>
 </body>
 </html>

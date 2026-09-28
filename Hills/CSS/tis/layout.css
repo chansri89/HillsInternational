@@ -362,7 +362,7 @@ html[data-nav="rail"] .tis-sidebar__footer { justify-content: center; padding-le
     padding: var(--tis-content-py) var(--tis-content-px) var(--tis-s-12);
 }
 .tis-content:focus { outline: none; }
-.tis-content--upload { background: linear-gradient(180deg, var(--tis-accent-softer) 0, var(--tis-bg) 220px); }
+.tis-upload-area { min-width: 0; }
 
 .tis-page { display: flex; flex-direction: column; gap: var(--tis-s-5); max-width: 1600px; margin: 0 auto; }
 .tis-page--narrow { max-width: 760px; }

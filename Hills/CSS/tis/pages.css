@@ -56,13 +56,15 @@
 .tis-auth__version { margin-top: auto; padding-top: 32px; font-size: var(--tis-fs-xs); color: rgba(255, 255, 255, 0.7); position: relative; z-index: 1; }
 
 .tis-auth__panel {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 48px 24px;
     background: var(--tis-surface);
 }
-.tis-auth__form { width: min(380px, 100%); display: flex; flex-direction: column; gap: var(--tis-s-5); }
+.tis-auth__form { width: min(380px, 100%); }
+.tis-auth__form > div, .tis-auth__stack { display: flex; flex-direction: column; gap: var(--tis-s-5); }
 .tis-auth__heading { font-size: var(--tis-fs-3xl); font-weight: var(--tis-w-bold); letter-spacing: -0.02em; }
 .tis-auth__heading span { font: inherit; }
 .tis-auth__sub { margin-top: 6px; font-size: var(--tis-fs-sm); color: var(--tis-muted); }
