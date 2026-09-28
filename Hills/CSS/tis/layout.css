@@ -306,6 +306,7 @@ html[data-nav="rail"] .tis-sidebar__footer { justify-content: center; padding-le
 [data-theme="dark"] .tis-theme-toggle .tis-icon-moon { display: none; }
 
 .tis-menu-btn { display: none; }
+.tis-backdrop { display: none; }
 
 /* User menu (details/summary dropdown) */
 .tis-usermenu { position: relative; }
@@ -520,6 +521,7 @@ html[data-nav="rail"] .tis-sidebar__footer { justify-content: center; padding-le
     html[data-nav="rail"] .tis-nav__group.is-open > .tis-nav__items { display: block !important; }
     html[data-nav="rail"] .tis-nav__link, html[data-nav="rail"] .tis-nav__toggle { justify-content: flex-start; padding: 6px 10px; }
     .tis-backdrop {
+        display: block;
         position: fixed;
         inset: 0;
         z-index: 35;

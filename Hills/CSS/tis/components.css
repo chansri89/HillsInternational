@@ -308,11 +308,9 @@ table.tis-table, .tis-table-wrap > div > table, .tis-table-wrap > table {
 /* ------------------------------------------------------------- choices
    asp:RadioButtonList / CheckBoxList with RepeatLayout="Flow". */
 
-.tis-choices { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; min-height: var(--tis-control-h); }
-.tis-choices > span { display: inline-flex; align-items: center; gap: 6px; }
-.tis-choices label { font-size: var(--tis-fs-sm); color: var(--tis-text-2); cursor: pointer; margin: 0; }
+.tis-choices { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 0; min-height: var(--tis-control-h); }
+.tis-choices label { font-size: var(--tis-fs-sm); color: var(--tis-text-2); cursor: pointer; margin: 0 18px 0 7px; }
 .tis-choices br { display: none; }
-.tis-choices input + label { margin-left: 6px; }
 
 /* Segmented control variant */
 .tis-segmented {

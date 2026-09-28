@@ -2,7 +2,7 @@
 <%@ MasterType VirtualPath="~/MasterPage1.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-    <div class="tis-page">
+    <asp:Panel ID="Panel4" runat="server" CssClass="tis-page">
         <section class="tis-hero">
             <div class="tis-hero__text">
                 <span class="tis-eyebrow"><asp:Label ID="lblToday" runat="server" /></span>
@@ -16,8 +16,8 @@
             </div>
         </section>
 
+        <div class="tis-modules">
         <asp:Repeater ID="rptModules" runat="server" EnableViewState="false">
-            <HeaderTemplate><div class="tis-modules"></HeaderTemplate>
             <ItemTemplate>
                 <section class="tis-module">
                     <div class="tis-module__head">
@@ -37,8 +37,8 @@
                     </ul>
                 </section>
             </ItemTemplate>
-            <FooterTemplate></div></FooterTemplate>
         </asp:Repeater>
+        </div>
 
         <asp:Panel ID="pnlNoModules" runat="server" Visible="false" CssClass="tis-card">
             <tis:EmptyState ID="emptyModules" runat="server" Icon="lock" Title="No modules assigned yet"
@@ -59,5 +59,5 @@
                 <div><strong>Dark mode</strong>Switch themes from the top bar; your choice is remembered.</div>
             </div>
         </section>
-    </div>
+    </asp:Panel>
 </asp:Content>
