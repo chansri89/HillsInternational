@@ -40,6 +40,14 @@ public partial class CRAMSubGroupMaster : System.Web.UI.Page
             
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        AllClear();
+        btnSave.Text = "Save";
+        GrdIOWSubGroupMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        ddlGroupName.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         
@@ -136,7 +144,7 @@ public partial class CRAMSubGroupMaster : System.Web.UI.Page
                 //chkIsActive.Checked = ((CheckBox)row.FindControl("chkActive")).Checked;
                 //chkIsActive.Visible = true;
                 btnSave.Text = "Update";
-                Pnlgv.Visible = false;
+                GrdIOWSubGroupMaster.SelectedIndex = row.RowIndex;
                 pnlAdd.Visible = true;
                 break;
             }

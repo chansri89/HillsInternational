@@ -190,7 +190,7 @@ public partial class CRAMIOWHeadDtlContextMaster : System.Web.UI.Page
                 {
                     txtCRAMIOWHeadCode.Text = ((Label)row.FindControl("lblIOWHeadCode")).Text;
                     txtCRAMIOWHeadName.Text = ((Label)row.FindControl("lblIOWHeadName")).Text;
-                    Pnlgv.Visible = false;
+                    GrdIOWHeadMaster.SelectedIndex = row.RowIndex;
                     iowlst = LoadGridIOWDtl(Convert.ToInt32(ddlCompany.SelectedValue), txtCRAMIOWHeadCode.Text);
                     LoadGridIOwDtlDisp(iowlst);
                     pnlIOW.Visible = true;

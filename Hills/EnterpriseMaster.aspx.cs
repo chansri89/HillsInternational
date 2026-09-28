@@ -36,6 +36,14 @@ public partial class EnterpriseMaster : System.Web.UI.Page
         }
        
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        GrdEnterpriseMaster.EditIndex = -1;
+        AllClear();
+        GrdEnterpriseMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtEnterprisename.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
         ///For Deleting a Record from Grid-Ends

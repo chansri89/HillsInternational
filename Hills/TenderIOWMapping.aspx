@@ -1,649 +1,392 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="TenderIOWMapping.aspx.cs" Inherits="TenderIOWMapping" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
- <%-- <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
- <script type="text/javascript">
-     function scrollToTargetRow() {
-         var targetId = document.getElementById('<%= hdnTargetRowId.ClientID %>').value;
-         if (targetId) {
-             var rowElement = document.getElementById(targetId);
-             var containerElement = document.getElementById('scrollContainer');
-             if (rowElement && containerElement) {
-                 // Scroll the container to the row's vertical position
-                 containerElement.scrollTop = rowElement.offsetTop - containerElement.offsetTop;
-                 // Optional: Highlight the row for visibility
-                 rowElement.style.backgroundColor = '#ffffcc';
-             }
-         }
-     }
-</script>
- <style type="text/css">
-    .WrapTextColumn {
-        white-space: normal;
-        word-break: break-all; /* Ensures long words without spaces wrap */
-        /*width: 60px;  Set a fixed width */
+<script type="text/javascript">
+    function scrollToTargetRow() {
+        var targetId = document.getElementById('<%= hdnTargetRowId.ClientID %>').value;
+        if (targetId) {
+            var rowElement = document.getElementById(targetId);
+            var containerElement = document.getElementById('scrollContainer');
+            if (rowElement && containerElement) {
+                // Scroll the container to the row's vertical position
+                containerElement.scrollTop = rowElement.offsetTop - containerElement.offsetTop;
+                // Optional: Highlight the row for visibility
+                rowElement.style.backgroundColor = '#ffffcc';
+            }
+        }
     }
-    </style>
-  <asp:Label ID="lblIOWMaster" runat="server" Align= "center" Text="Tender IOW Mapping" CssClass="XSmall"
-         width="787px" Font-Size ="12pt" Font-Bold="True"  style="text-align: center"></asp:Label>
-   <%--<asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
- <%--   <div style="overflow:auto; height: 509px; width: 1246px; margin-right: 21px;">--%>
-        <%--</td></tr>
-    </table>--%>    <%--</asp:Panel>DataKeyNames="IOWCode"--%>
-    
-<asp:HiddenField ID="hdnTargetRowId" runat="server" Value="" />
+</script>
+<div class="tis-page" data-density="compact">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Tender</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblIOWMaster" runat="server" Text="Tender IOW mapping" /></h1>
+            <p class="tis-page-header__desc">Tick one tender row, find the matching CRAM IOW, select it and save to map the two.</p>
+        </div>
+    </div>
 
-       <asp:Panel ID="Panel3" runat="server" Height="55px" Width="1077px" 
-        CssClass="XSmall">
-       <table style="width: 1018px">
-        <tr>
-        <td class="style34" style="width: 392px">
-    <asp:Panel ID="pnlPendind" runat="server" Height="50px" Width="786px" CssClass="XSmall"
-            GroupingText="Selection" >
-        <table style="height:33px; width: 743px;">
-            <tr>
-              <td style="width: 70px">
-                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td style="width: 100px" >
-                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true"
-                   DataTextField="CompanyName" DataValueField="CompanyId" Font-Size="X-Small"
-                   Width="190px"  AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlCompanyChanged" Height="18px"  >
-                 </asp:DropDownList>
-            </td>
-             <td  style="width: 70px">
-                <asp:Label ID="lblClients" runat="server" Text="Clients" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td style="width: 100px" >
-                <asp:DropDownList ID="ddlClient"  runat="server"  Visible="true" AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlClientChanged"  Font-Size="X-Small"
-                    DataTextField="ClientName" DataValueField="ClientCode"
-                    Width="158px"  Height="16px"  >
-                 </asp:DropDownList>
-            </td>
+    <asp:HiddenField ID="hdnTargetRowId" runat="server" Value="" />
 
-             <td style="width: 70px">
-                <asp:Label ID="lblProject" runat="server" Text="Project" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td style="width: 100px">
-                <asp:DropDownList ID="ddlProject"  runat="server"  Visible="true"
-                     DataTextField="ProjectName" DataValueField="ClientProjectId" Font-Size="X-Small"
-                    Width="206px"  Height="16px"  >
-                 </asp:DropDownList>
-            </td>
- 
-                <td  style="width: 62px" >
-                         <asp:Button ID="btnGo" runat="server"
-                               Height="21px" onclick="btnGo_Click"   Text="Go" Width="36px" />
-                 </td>   
-         
-            </tr>
-          
-        </table>
+    <asp:Panel ID="Panel3" runat="server" CssClass="tis-card">
+        <asp:Panel ID="pnlPendind" runat="server" CssClass="tis-card__body" DefaultButton="btnGo">
+            <div class="tis-toolbar">
+                <div class="tis-field">
+                    <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true" AssociatedControlID="ddlCompany" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlCompany" runat="server" Visible="true" DataTextField="CompanyName" DataValueField="CompanyId"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblClients" runat="server" Text="Client" Visible="true" AssociatedControlID="ddlClient" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlClient" runat="server" Visible="true" AutoPostBack="true" OnSelectedIndexChanged="ddlClientChanged"
+                        DataTextField="ClientName" DataValueField="ClientCode" />
+                </div>
+                <div class="tis-field tis-toolbar__grow">
+                    <asp:Label ID="lblProject" runat="server" Text="Project" Visible="true" AssociatedControlID="ddlProject" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlProject" runat="server" Visible="true" DataTextField="ProjectName" DataValueField="ClientProjectId" />
+                </div>
+                <asp:Button ID="btnGo" runat="server" OnClick="btnGo_Click" Text="Load tender" CssClass="tis-btn tis-btn--primary" />
+            </div>
+        </asp:Panel>
     </asp:Panel>
-    </td> <td>
-       <%--<asp:Panel ID="Panel2" runat="server" Height="50px" Width="227px" CssClass="XSmall"
-            GroupingText="Display Tender Row" >
-        <table style="height:31px; width: 209px;">
-            <tr>
-                 <td>
-                <asp:TextBox ID="txtTenderRowId" runat="server" Text="" Enabled="false"
-                  Font-Bold="true"  Width="60px" ></asp:TextBox>
-           </td> 
-           <td style="width: 129px">  
-                <asp:Button ID="btnGoToSelectRow" runat="server"
-                     Height="21px" onclick="btnGoToSelectRow_Click"   Text="DispalyTenderRow" 
-                    Width="122px" />
-                </td>                
-            </tr>
-          
-        </table>
-    </asp:Panel>--%>
-    </td>
-    </tr>
-    </table>
-</asp:Panel>
-    <asp:panel ID="Pnlgv" runat="server" Width="1240px" Height="460px" CssClass="XXSmall"
-            ToolTip="">
-        <div id="divIOWdtl" runat="server"  
-            style="overflow:auto;  width:1230px; height:450px">
-           <table style="width: 1220px; height: 440px;">
-    <tr>
-        <td style="width: 450px">
-           <asp:panel ID="PnlTender" runat="server" Width="430px" Height="430px" 
-                GroupingText="Tender Data"  >
-                <table style="width: 425px">
-                <tr>
-                     <td class="style31" style="width: 33px">
-                <asp:Label ID="lblFilter" runat="server" Text="XL Row #" Visible="true"
-                  Font-Bold="true" ></asp:Label>
-           </td>
 
-            <td class="style31" style="width: 16px">
-                <asp:TextBox ID="txtFilter" runat="server" Text="" Visible="true"
-                  Font-Bold="true"  Width="40px" ></asp:TextBox>
-           </td>
-          
-                 <td  style="width: 10px" >
-                      <asp:CheckBox ID="chkQtyOnly" runat="server" Checked="false" Text="Only Qty"
-                    Width="62px" Enabled="true"></asp:CheckBox>
-                 </td> 
-                    <td  >
-                      <asp:CheckBox ID="chkNoMap" runat="server" Checked="false" Text="No Map"
-                    Width="62px" Enabled="true"></asp:CheckBox>
-                 </td>
-                   <td  >
-                         <asp:Button ID="btnFilter" runat="server" Font-Size="XX-Small"
-                               Height="21px" onclick="btnFilter_Click"  Text="Filter" Width="32px" />
-                 </td>  
+    <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-stack" ToolTip="">
+        <div id="divIOWdtl" runat="server" class="tis-form-grid tis-form-grid--3">
+            <asp:Panel ID="PnlTender" runat="server" CssClass="tis-card" DefaultButton="btnFilter">
+                <div class="tis-card__header">
+                    <div class="tis-card__heading">
+                        <div class="tis-card__title">Tender items</div>
+                        <div class="tis-card__subtitle">Tick the row you want to map.</div>
+                    </div>
+                    <asp:Label ID="Label1" runat="server" Text="Mapped" Visible="true" CssClass="tis-badge tis-badge--success" />
+                    <asp:Label ID="Label2" runat="server" Text="Not mapped" CssClass="tis-badge tis-badge--info" />
+                </div>
+                <div class="tis-card__body">
+                    <div class="tis-toolbar">
+                        <div class="tis-field">
+                            <asp:Label ID="lblFilter" runat="server" Text="Excel row" Visible="true" AssociatedControlID="txtFilter" CssClass="tis-label" />
+                            <asp:TextBox ID="txtFilter" runat="server" Text="" Visible="true" placeholder="Row #" />
+                        </div>
+                        <div class="tis-field tis-field--check">
+                            <asp:CheckBox ID="chkQtyOnly" runat="server" Checked="false" Text="With qty only" Enabled="true" />
+                        </div>
+                        <div class="tis-field tis-field--check">
+                            <asp:CheckBox ID="chkNoMap" runat="server" Checked="false" Text="Unmapped only" Enabled="true" />
+                        </div>
+                        <asp:Button ID="btnFilter" runat="server" OnClick="btnFilter_Click" Text="Filter" CssClass="tis-btn tis-btn--sm" />
+                    </div>
+                </div>
+                <div id="div2" runat="server" class="tis-table-wrap tis-table-wrap--xtall">
+                    <asp:GridView ID="GrdTender" runat="server" AutoGenerateColumns="False" OnRowDataBound="GridTender_Databound">
+                        <Columns>
+                            <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Client Project TenderId" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblClientTenderId" runat="server" Text='<%# Eval("ClientProjectTenderId") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Tender IOW Mapped" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblTenderIOWMapped" runat="server" Text='<%# Eval("TenderIOWMapped") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Sheet" Visible="true" ItemStyle-CssClass="nowrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblExcelSheetName" runat="server" Text='<%# Eval("ExcelSheetName") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Row" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblExcelRowNo" runat="server" Text='<%# Eval("ExcelRowNumber") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Sr no." Visible="true" ItemStyle-CssClass="code">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblSrlNo" runat="server" Text='<%# Eval("Srlno") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Description" Visible="true" ItemStyle-CssClass="wrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("Description") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="UOM" Visible="true" ItemStyle-CssClass="nowrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Qty" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Pick" HeaderStyle-CssClass="center" ItemStyle-CssClass="check">
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="chkSelectBox" runat="server" Checked="false" Enabled="true" AutoPostBack="True"
+                                        OnCheckedChanged="chkSelect_CheckedChanged" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <EmptyDataTemplate>
+                            <tis:EmptyState ID="emptyTender" runat="server" Icon="sheet" Title="No tender rows"
+                                Text="Choose a company, client and project, then load the tender." />
+                        </EmptyDataTemplate>
+                    </asp:GridView>
+                </div>
+                <input type="hidden" id="hdnScrollTop" runat="server" value="0" />
+            </asp:Panel>
 
-                       <td style="width: 130px">
-                <asp:Label ID="Label1" runat="server" Text=" Green - Mapping Done. " Visible="true" ForeColor="Green"
-                  Font-Bold="true"   ></asp:Label>
-              
-                <asp:Label ID="Label2" runat="server" Width = "184px" 
-                               Text="Light Blue - Mapping to be done" ForeColor="Blue"
-                  Font-Bold="True"   ></asp:Label>
-                 
-                 </td>
+            <asp:Panel ID="Panel1" runat="server" CssClass="tis-card" DefaultButton="btnSelect">
+                <div class="tis-card__header">
+                    <div class="tis-card__heading">
+                        <div class="tis-card__title">CRAM IOWs</div>
+                        <div class="tis-card__subtitle">Select an IOW to add it to the mapping; click its code to see the head details.</div>
+                    </div>
+                </div>
+                <div class="tis-card__body">
+                    <asp:TextBox ID="txtClientProjectTenderId" runat="server" Text="" Visible="false" />
+                    <div class="tis-form-grid tis-form-grid--2">
+                        <div class="tis-field">
+                            <asp:Label ID="lblGroup" runat="server" Text="Group" Visible="true" AssociatedControlID="ddlGroup" CssClass="tis-label" />
+                            <asp:DropDownList ID="ddlGroup" runat="server" Visible="true" AutoPostBack="true" OnSelectedIndexChanged="ddlGroupChanged"
+                                DataTextField="GroupName" DataValueField="GroupCode" />
+                        </div>
+                        <div class="tis-field">
+                            <asp:Label ID="lblSubGroup" runat="server" Text="Sub group" Visible="true" AssociatedControlID="ddlSubGroup" CssClass="tis-label" />
+                            <asp:DropDownList ID="ddlSubGroup" runat="server" Visible="true" DataTextField="SubGroupName" DataValueField="SubGroupCode" />
+                        </div>
+                        <div class="tis-field">
+                            <asp:Label ID="lblIOWFilter" runat="server" Text="IOW search" Visible="true" AssociatedControlID="txtIOWFilter" CssClass="tis-label" />
+                            <asp:TextBox ID="txtIOWFilter" runat="server" Text="" Visible="true" MaxLength="32" placeholder="Code or words" />
+                        </div>
+                        <div class="tis-field tis-field--check">
+                            <asp:Button ID="btnSelect" runat="server" OnClick="btnSelect_Click" Text="Get IOW" CssClass="tis-btn" />
+                        </div>
+                    </div>
+                </div>
+                <div id="div1" runat="server" class="tis-table-wrap tis-table-wrap--xtall">
+                    <asp:GridView ID="grdIow" runat="server" AutoGenerateColumns="False" OnRowCommand="GrdIOW_RowCommand">
+                        <Columns>
+                            <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Tender IOW Mapped" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblTenderIOWMapped" runat="server" Text='<%# Eval("TenderIOWMapped") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Group Code" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblGroupCode" runat="server" Text='<%# Eval("GroupCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="SubGroup Code" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblSubGroupCode" runat="server" Text='<%# Eval("SubGroupCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="CRAMIOWHeadDtlId" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCRAMIOWHeadDtlId" runat="server" Text='<%# Eval("CRAMIOWHeadDtlId") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IOW code" Visible="true" ItemStyle-CssClass="nowrap">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkIOWCode" runat="server" CssClass="tis-link" CommandArgument='<%#Eval("IOWCode")%>'
+                                        CommandName="IOWCode" Text='<%#Eval("IOWCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IOW Code" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IOW" Visible="true" ItemStyle-CssClass="wrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIOwName" runat="server" Text='<%# Eval("IOWDescription") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="UOM" Visible="True" ItemStyle-CssClass="nowrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIOWUOM" runat="server" Text='<%# Eval("IOWUOM") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Temp" Visible="true" HeaderStyle-CssClass="center" ItemStyle-CssClass="check">
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="lblTempIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>' Enabled="false" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Select" Visible="false">
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="chkSelectBox" runat="server" Checked="false" Enabled="false" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="" Visible="true" ItemStyle-CssClass="actions">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkIOWItem" runat="server" CssClass="tis-link tis-link--strong" CommandArgument='<%#Eval("IOWCode")%>'
+                                        CommandName="IOWItemSel" Text="Select" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <EmptyDataTemplate>
+                            <tis:EmptyState ID="emptyIow" runat="server" Icon="search" Title="No IOWs listed"
+                                Text="Tick a tender row, narrow by group or search text, then select Get IOW." />
+                        </EmptyDataTemplate>
+                    </asp:GridView>
+                </div>
+            </asp:Panel>
 
-                 
-                </tr>
-                </table>
-             <div id="div2" runat="server" class="WrapTextColumn"
-                    style="overflow:auto; width: 420px; height:410px; " >
-           
-                <asp:GridView ID="GrdTender" runat="server" CellPadding="3" 
-                    Width="410px"  AutoGenerateColumns="False" 
-                    Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-                    OnRowDataBound="GridTender_Databound">
-                <EditRowStyle Font-Size="XX-Small" />  <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-                <RowStyle BackColor="#EEEEEE" ForeColor="Black" />     <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />    <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-                    HorizontalAlign="Left" />      <AlternatingRowStyle BackColor="#DCDCDC" />
+            <asp:Panel ID="pnlIOWSelected" runat="server" CssClass="tis-card">
+                <div class="tis-card__header">
+                    <div class="tis-card__heading">
+                        <div class="tis-card__title">Mapped IOW</div>
+                        <div class="tis-card__subtitle">Exactly one IOW can be mapped to a tender row. Drop it to choose another.</div>
+                    </div>
+                    <asp:Label ID="Label3" runat="server" Text="" Visible="true" CssClass="tis-help" />
+                </div>
+                <div id="div4" runat="server" class="tis-table-wrap tis-table-wrap--xtall">
+                    <asp:GridView ID="grdIOWSelected" runat="server" AutoGenerateColumns="False" OnRowCommand="GrdIOWSelected_RowCommand">
+                        <Columns>
+                            <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Group Code" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblGroupCode" runat="server" Text='<%# Eval("GroupCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="SubGroup Code" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblSubGroupCode" runat="server" Text='<%# Eval("SubGroupCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Tender IOW Mapped" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblTenderIOWMapped" runat="server" Text='<%# Eval("TenderIOWMapped") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="CRAMIOWHeadDtlId" Visible="false">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblCRAMIOWHeadDtlId" runat="server" Text='<%# Eval("CRAMIOWHeadDtlId") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IOW code" Visible="true" ItemStyle-CssClass="code">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="IOW" Visible="true" ItemStyle-CssClass="wrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIOwName" runat="server" Text='<%# Eval("IOWDescription") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="UOM" Visible="True" ItemStyle-CssClass="nowrap">
+                                <ItemTemplate>
+                                    <asp:Label ID="lblIOWUOM" runat="server" Text='<%# Eval("IOWUOM") %>' />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Temp IOW" Visible="false">
+                                <ItemTemplate>
+                                    <asp:CheckBox ID="lblTempIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>' Enabled="false" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="" Visible="true" ItemStyle-CssClass="actions">
+                                <ItemTemplate>
+                                    <asp:LinkButton ID="lnkIOWselectedCode" runat="server" CssClass="tis-link" CommandArgument='<%#Eval("IOWCode")%>'
+                                        CommandName="Drop" Text="Drop" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <EmptyDataTemplate>
+                            <tis:EmptyState ID="emptySelected" runat="server" Icon="network" Title="Nothing mapped yet"
+                                Text="Select an IOW from the middle list to map it to the ticked tender row." />
+                        </EmptyDataTemplate>
+                    </asp:GridView>
+                </div>
+            </asp:Panel>
+        </div>
 
-                <Columns>
-                    <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
-                    </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Client Project TenderId" Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblClientTenderId" runat="server" Text='<%# Eval("ClientProjectTenderId") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="10px"/><ItemStyle Width = "10px" />
-                       </asp:TemplateField>
-                     <asp:TemplateField HeaderText="Tender IOW Mapped"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblTenderIOWMapped" runat="server" Text='<%# Eval("TenderIOWMapped") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
-                    </asp:TemplateField>
-
-                       <asp:TemplateField HeaderText="XL Sheet" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblExcelSheetName" runat="server" Text='<%# Eval("ExcelSheetName") %>' Width="40px" ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="40px"/><ItemStyle Width = "40px" />
-                       </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="XL #" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblExcelRowNo" runat="server" Text='<%# Eval("ExcelRowNumber") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="20px"/><ItemStyle Width = "20px" />
-                       </asp:TemplateField>
-                  <asp:TemplateField HeaderText="Srlno" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblSrlNo" runat="server" Text='<%# Eval("Srlno") %>'   Width="40px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="40px" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Description" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblDescription" runat="server" Text='<%# Eval("Description") %>'   Width="150px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="150px" />
-                    </asp:TemplateField>
-                  <asp:TemplateField HeaderText="UOM" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblUOM" runat="server" Text='<%# Eval("UOM") %>'   Width="35px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="35px" />
-                    </asp:TemplateField>
-
-                   <asp:TemplateField HeaderText="Qty" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblQuantity" runat="server" Text='<%# Eval("Quantity") %>'   Width="30px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="30px" />
-                    </asp:TemplateField>
-                     <asp:TemplateField HeaderText="Sel ect">
-                     <ItemTemplate>
-                      <asp:CheckBox ID="chkSelectBox" runat="server" Checked="false"
-                     Width="30px" Enabled="true"  AutoPostBack="True" 
-                              OnCheckedChanged="chkSelect_CheckedChanged"></asp:CheckBox>
-                     </ItemTemplate>         <HeaderStyle Width="30px" />       <ItemStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-          <%--
-                <asp:TemplateField HeaderText="Click IowItem" Visible="true" >
-                    <ItemTemplate>  
-                    <asp:LinkButton ID="lnkIOWItemName" Width="60px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
-                     CommandName ="IOWItem" Text ="IOW Item"></asp:LinkButton>
-                      </ItemTemplate> <HeaderStyle Width="60px" />
-                    </asp:TemplateField>--%>
-            
-                </Columns>
-                <sortedascendingcellstyle backcolor="#F1F1F1" />
-                <sortedascendingheaderstyle backcolor="#0000A9" />
-                <sorteddescendingcellstyle backcolor="#CAC9C9" />
-                <sorteddescendingheaderstyle backcolor="#000065" />
-            </asp:GridView>
+        <div class="tis-actionbar">
+            <div class="tis-actionbar__text">
+                Tender row <strong><asp:Label ID="lblTenderSrlNo" runat="server" Text="" Visible="true" /></strong>
+                <asp:Label ID="lblTenderDesc" runat="server" Visible="False" />
             </div>
-            <input type="hidden" id="hdnScrollTop" runat="server" value="0" />
-           </asp:panel>
-        </td>
-        <td>
-           <asp:panel ID="Panel1" runat="server" Width="410px" Height="430px"   GroupingText="IOW Data" 
-                style="margin-left: 0px" >
-            <table> 
-              <tr>
-             <td>
-                <asp:TextBox ID="txtClientProjectTenderId" runat="server" Text="" Visible="false"
-                  Font-Bold="true"   Width="22px" Height="16px" ></asp:TextBox>
-           </td>
+            <asp:Button ID="btnShowTender" runat="server" OnClick="btnShowTender_Click" Text="All tender rows" CssClass="tis-btn tis-btn--ghost" />
+            <asp:Button ID="btnIOWSave" runat="server" OnClick="btnIOWSave_Click" Text="Save" CssClass="tis-btn tis-btn--primary" />
+        </div>
+    </asp:Panel>
 
-                    <td  style="width: 85px">
-                <asp:Label ID="lblTenderSrlNo" runat="server" Text="" Visible="true"  ForeColor="DarkBlue"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-
-            <td style="width: 70px">
-                <asp:Label ID="lblTenderDesc" runat="server" ForeColor="DarkBlue" Visible="False"
-                  Font-Bold="True"   Width="216px"      Height="16px" ></asp:Label>
-           </td>
-            <td  >
-                         <asp:Button ID="btnShowTender" runat="server"  BackColor="Aqua" Font-Size="X-Small"
-                               Height="20px" onclick="btnShowTender_Click"  
-                               Text="Tender" Width="49px" />
-                 </td>   
-                </tr>
-             </table>
-             <table style="width: 400px">
-                <tr>
-
-                  <td>
-                             <asp:Label ID="lblGroup" runat="server" Text="Group" Visible="true"
-                            Font-Bold="true"   ></asp:Label>
-                        </td>
-                  <td>
-                        <asp:DropDownList ID="ddlGroup"  runat="server"  Visible="true" AutoPostBack="true" 
-                             OnSelectedIndexChanged="ddlGroupChanged" Font-Size="XX-Small"
-                             DataTextField="GroupName" DataValueField="GroupCode"
-                             Width="61px"  Height="16px"  >
-                         </asp:DropDownList>
-                    </td>
-                  <td>
-                             <asp:Label ID="lblSubGroup" runat="server" Text="Sub Group" Visible="true"
-                            Font-Bold="true"   ></asp:Label>
-                   </td>
-                  <td >
-                        <asp:DropDownList ID="ddlSubGroup"  runat="server"  Visible="true" 
-                             DataTextField="SubGroupName" DataValueField="SubGroupCode" Font-Size="XX-Small"
-                             Width="63px"  Height="20px"  >
-                         </asp:DropDownList>
-                    </td>
-                    <td >
-                <asp:Label ID="lblIOWFilter" runat="server" Text="IOW Filter" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-
-            <td>
-                <asp:TextBox ID="txtIOWFilter" runat="server" Text="" Visible="true" MaxLength="32"
-                  Font-Bold="true"   Width="88px" ></asp:TextBox>
-           </td>
-          
-                      <td  >
-                         <asp:Button ID="btnSelect" runat="server" Font-Size="X-Small"
-                               Height="21px" onclick="btnSelect_Click"  Text="Get IOW" Width="58px" />
-                 </td>  
-                              
-                </tr>
-
-             </table> 
- 
-                          <div id="div1" runat="server" 
-                   style="overflow:auto;  width:400px; height:392px;">
-                <asp:GridView ID="grdIow" runat="server" CellPadding="3" 
-                    Width="383px"  AutoGenerateColumns="False" 
-                    Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-                     OnRowCommand="GrdIOW_RowCommand" >
-                <EditRowStyle Font-Size="XX-Small" />  <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-                <RowStyle BackColor="#EEEEEE" ForeColor="Black" />     <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />    <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-                    HorizontalAlign="Left" />      <AlternatingRowStyle BackColor="#DCDCDC" />
-
-                <Columns>
-                    <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
-                    </asp:TemplateField>
-
-                     <asp:TemplateField HeaderText="Tender IOW Mapped"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblTenderIOWMapped" runat="server" Text='<%# Eval("TenderIOWMapped") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Group Code" Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblGroupCode" runat="server" Text='<%# Eval("GroupCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="SubGroup Code" Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblSubGroupCode" runat="server" Text='<%# Eval("SubGroupCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-
-
-                    <asp:TemplateField HeaderText="CRAMIOWHeadDtlId"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblCRAMIOWHeadDtlId" runat="server" Text='<%# Eval("CRAMIOWHeadDtlId") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
-                    </asp:TemplateField>
-                <asp:TemplateField HeaderText="IOW Code" Visible="true" >
-                    <ItemTemplate>  
-                    <asp:LinkButton ID="lnkIOWCode" Width="60px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
-                     CommandName ="IOWCode" Text ='<%#Eval("IOWCode") %>'></asp:LinkButton>
-                      </ItemTemplate> <HeaderStyle Width="60px" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="IOW Code" Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="IOWName" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblIOwName" runat="server" Text='<%# Eval("IOWDescription") %>'   Width="170px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="17px" />
-                    </asp:TemplateField>
-                 <asp:TemplateField HeaderText="IOW UOM" Visible="True">
-                    <ItemTemplate>
-                    <asp:Label ID="lblIOWUOM" runat="server" Text='<%# Eval("IOWUOM") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Temp IOW" Visible="true">
-                     <ItemTemplate>
-                    <asp:CheckBox ID="lblTempIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>' Enabled="false"  Width="20px" >
-                    </asp:CheckBox></ItemTemplate>          <HeaderStyle Width="20px" />
-                    </asp:TemplateField>
-
-                     <asp:TemplateField HeaderText="Select" Visible="false">
-                     <ItemTemplate>
-                      <asp:CheckBox ID="chkSelectBox" runat="server" Checked="false" Enabled="false"  
-                     Width="30px"></asp:CheckBox>
-                     </ItemTemplate>         <HeaderStyle Width="30px" />       <ItemStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>
-
-          
-                <asp:TemplateField HeaderText="Select Iow" Visible="true" >
-                    <ItemTemplate>  
-                    <asp:LinkButton ID="lnkIOWItem" Width="40px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
-                     CommandName ="IOWItemSel" Text ="Select"></asp:LinkButton>
-                      </ItemTemplate> <HeaderStyle Width="40px" />
-                    </asp:TemplateField>
-            
-                </Columns>
-                <sortedascendingcellstyle backcolor="#F1F1F1" />
-                <sortedascendingheaderstyle backcolor="#0000A9" />
-                <sorteddescendingcellstyle backcolor="#CAC9C9" />
-                <sorteddescendingheaderstyle backcolor="#000065" />
-            </asp:GridView>
+    <asp:Panel ID="PnlIOWdtl" runat="server" CssClass="tis-card" ToolTip="">
+        <div class="tis-card__header">
+            <div class="tis-card__heading">
+                <div class="tis-card__title">IOW head details</div>
+                <div class="tis-card__subtitle">Where this IOW sits in the CRAM group, sub group and level hierarchy.</div>
             </div>
-           </asp:panel>
-        </td>
-        <td>
-                      <asp:panel ID="pnlIOWSelected" runat="server" Width="375px" Height="430px"  
-                        GroupingText="IOW Selected Data"  ForeColor="DarkGreen" >
-                        <table>
-                        <tr>
-                         <td class="style28" style="width: 241px">
-                            <asp:Label ID="Label3" runat="server" Text="" Visible="true"
-                              Font-Bold="true"   ></asp:Label>
-                       </td>
-                         <td class="style28" style="width: 41px" >
-                         <asp:Button ID="btnIOWSave" runat="server"  BackColor="Aqua" Font-Size="X-Small"
-                               Height="21px" onclick="btnIOWSave_Click"    Text="Save" Width="37px" />
-                 </td>     
-                        </tr>
-                        </table>
-               <div id="div4" runat="server" 
-                   style="overflow:auto; width:365px; height:400px; ">
-                <asp:GridView ID="grdIOWSelected" runat="server" CellPadding="3" 
-                    Width="346px"  AutoGenerateColumns="False" 
-                    Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-                    OnRowCommand = "GrdIOWSelected_RowCommand" >
-                <EditRowStyle Font-Size="XX-Small" />  <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-                <RowStyle BackColor="#EEEEEE" ForeColor="Black" />     <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />    <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-                    HorizontalAlign="Left" />      <AlternatingRowStyle BackColor="#DCDCDC" />
-
+            <asp:Button ID="btnBack" runat="server" OnClick="btnBack_Click" Text="Back to mapping" CssClass="tis-btn tis-btn--sm" />
+        </div>
+        <div id="div3" runat="server" class="tis-table-wrap tis-table-wrap--tall">
+            <asp:GridView ID="GrdIOWDtl" runat="server" AutoGenerateColumns="False">
                 <Columns>
-                    <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
+                    <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                        <ItemTemplate>
+                            <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' />
+                        </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Group Code" Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblGroupCode" runat="server" Text='<%# Eval("GroupCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="SubGroup Code" Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblSubGroupCode" runat="server" Text='<%# Eval("SubGroupCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-
-
-                     <asp:TemplateField HeaderText="Tender IOW Mapped"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblTenderIOWMapped" runat="server" Text='<%# Eval("TenderIOWMapped") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
+                    <asp:TemplateField HeaderText="Group" Visible="true" ItemStyle-CssClass="nowrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblGroupName" runat="server" Text='<%# Eval("GroupName") %>' />
+                        </ItemTemplate>
                     </asp:TemplateField>
-                  
-
-                    <asp:TemplateField HeaderText="CRAMIOWHeadDtlId"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblCRAMIOWHeadDtlId" runat="server" Text='<%# Eval("CRAMIOWHeadDtlId") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
+                    <asp:TemplateField HeaderText="Sub group" Visible="true" ItemStyle-CssClass="nowrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblSubGroupName" runat="server" Text='<%# Eval("SubGroupName") %>' />
+                        </ItemTemplate>
                     </asp:TemplateField>
- 
-                    <asp:TemplateField HeaderText="IOW Code" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="40px"/><ItemStyle Width = "40px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="IOWName" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblIOwName" runat="server" Text='<%# Eval("IOWDescription") %>'   Width="180px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="180px" />
+                    <asp:TemplateField HeaderText="IOW code" Visible="true" ItemStyle-CssClass="code">
+                        <ItemTemplate>
+                            <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>' />
+                        </ItemTemplate>
                     </asp:TemplateField>
-                 <asp:TemplateField HeaderText="IOW UOM" Visible="True">
-                    <ItemTemplate>
-                    <asp:Label ID="lblIOWUOM" runat="server" Text='<%# Eval("IOWUOM") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Temp IOW" Visible="false">
-                     <ItemTemplate>
-                    <asp:CheckBox ID="lblTempIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>' Enabled="false"  Width="20px" >
-                    </asp:CheckBox></ItemTemplate>          <HeaderStyle Width="20px" />
+                    <asp:TemplateField HeaderText="IOW" Visible="true" ItemStyle-CssClass="wrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblIOwName" runat="server" Text='<%# Eval("IOWDescription") %>' />
+                        </ItemTemplate>
                     </asp:TemplateField>
-
-                <asp:TemplateField HeaderText="Drop IOW" Visible="true" >
-                    <ItemTemplate>  
-                    <asp:LinkButton ID="lnkIOWselectedCode" Width="30px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
-                     CommandName ="Drop" Text ="Drop"></asp:LinkButton>
-                      </ItemTemplate> <HeaderStyle Width="30px" />
+                    <asp:TemplateField HeaderText="Temp" Visible="true" HeaderStyle-CssClass="center" ItemStyle-CssClass="check">
+                        <ItemTemplate>
+                            <asp:CheckBox ID="lblTempIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>' Enabled="false" />
+                        </ItemTemplate>
                     </asp:TemplateField>
-
-          <%--
-                <asp:TemplateField HeaderText="Click IowItem" Visible="true" >
-                    <ItemTemplate>  
-                    <asp:LinkButton ID="lnkIOWItemName" Width="60px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
-                     CommandName ="IOWItem" Text ="IOW Item"></asp:LinkButton>
-                      </ItemTemplate> <HeaderStyle Width="60px" />
-                    </asp:TemplateField>--%>
-            
+                    <asp:TemplateField HeaderText="Level 1" Visible="true" ItemStyle-CssClass="wrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblL1Desc" runat="server" Text='<%# Eval("L1Desc") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Level 2" Visible="true" ItemStyle-CssClass="wrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblL2Desc" runat="server" Text='<%# Eval("L2Desc") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Level 3" Visible="true" ItemStyle-CssClass="wrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblL3Desc" runat="server" Text='<%# Eval("L3Desc") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Level 4" Visible="true" ItemStyle-CssClass="wrap">
+                        <ItemTemplate>
+                            <asp:Label ID="lblL4Desc" runat="server" Text='<%# Eval("L4Desc") %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
                 </Columns>
-                <sortedascendingcellstyle backcolor="#F1F1F1" />
-                <sortedascendingheaderstyle backcolor="#0000A9" />
-                <sorteddescendingcellstyle backcolor="#CAC9C9" />
-                <sorteddescendingheaderstyle backcolor="#000065" />
             </asp:GridView>
-            </div>
-           </asp:panel>
-        </td>
-
-    </tr>
-</table>
-    </div>
-
-    </asp:panel>
-  <%--  </div>--%>
-   <asp:panel ID="PnlIOWdtl" runat="server" Width="1196px" Height="255px" CssClass="XXSmall"
-            ToolTip="">
-        <div id="div3" runat="server"  
-            style="overflow:auto; height:240px; width:1190px">
-            <table>
-                <tr>
-                <td style="width:900px"></td>
-                    <td>
-                        <asp:Button ID="btnBack" runat="server"
-                               Height="20px" onclick="btnBack_Click"   Text="Back" Width="50px" />
-                    </td>
-                </tr>
-            </table>
-                      <asp:GridView ID="GrdIOWDtl" runat="server" CellPadding="3" 
-                    Width="1170px"  AutoGenerateColumns="False" 
-                    Height="28px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-                    >
-                <EditRowStyle Font-Size="XX-Small" />  <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-                <RowStyle BackColor="#EEEEEE" ForeColor="Black" />     <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-                <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />    <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-                    HorizontalAlign="Left" />      <AlternatingRowStyle BackColor="#DCDCDC" />
-
-                <Columns>
-                    <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-                    <ItemTemplate>
-                    <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="10px" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="GroupName"  Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblGroupName" runat="server" Text='<%# Eval("GroupName") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="30px" /> <ItemStyle Width="30px" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="SubGroup Name"  Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblSubGroupName" runat="server" Text='<%# Eval("SubGroupName") %>'  ></asp:Label></ItemTemplate>
-                     <HeaderStyle Width="30px" /> <ItemStyle Width="30px" />
-                    </asp:TemplateField>
-
-
-                   <asp:TemplateField HeaderText="IOW Code" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblIOWCode" runat="server" Text='<%# Eval("IOWCode") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>
-                    <asp:TemplateField HeaderText="IOWName" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblIOwName" runat="server" Text='<%# Eval("IOWDescription") %>'   Width="180px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="180px" />
-                    </asp:TemplateField>
-
-                    <asp:TemplateField HeaderText="Temp IOW" Visible="true">
-                     <ItemTemplate>
-                    <asp:CheckBox ID="lblTempIOW" runat="server" Checked='<%# Eval("IsTemproryIOW") %>' Enabled="false"  Width="20px" >
-                    </asp:CheckBox></ItemTemplate>          <HeaderStyle Width="20px" />
-                    </asp:TemplateField>
-
-
-<%--                    <asp:TemplateField HeaderText="L1Code" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblL1Code" runat="server" Text='<%# Eval("L1Code") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>--%>
-
-                    <asp:TemplateField HeaderText="L1 Description" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblL1Desc" runat="server" Text='<%# Eval("L1Desc") %>'   Width="180px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="180px" />
-                    </asp:TemplateField>
-
- <%--                   <asp:TemplateField HeaderText="L2Code" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblL2Code" runat="server" Text='<%# Eval("L2Code") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>--%>
-                    <asp:TemplateField HeaderText="L2 Description" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblL2Desc" runat="server" Text='<%# Eval("L2Desc") %>'   Width="180px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="180px" />
-                    </asp:TemplateField>
-
- <%--                   <asp:TemplateField HeaderText="L3Code" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblL3Code" runat="server" Text='<%# Eval("L3Code") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>--%>
-                    <asp:TemplateField HeaderText="L3 Description" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblL3Desc" runat="server" Text='<%# Eval("L3Desc") %>'   Width="180px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="180px" />
-                    </asp:TemplateField>
-
- <%--                   <asp:TemplateField HeaderText="L4Code" Visible="true">
-                    <ItemTemplate>
-                    <asp:Label ID="lblL4Code" runat="server" Text='<%# Eval("L4Code") %>'  ></asp:Label></ItemTemplate>
-                      <HeaderStyle Width="30px"/><ItemStyle Width = "30px" />
-                       </asp:TemplateField>--%>
-                    <asp:TemplateField HeaderText="L4 Description" Visible="true">
-                     <ItemTemplate>
-                    <asp:Label ID="lblL4Desc" runat="server" Text='<%# Eval("L4Desc") %>'   Width="180px" ></asp:Label></ItemTemplate>
-                        <HeaderStyle Width="180px" />
-                    </asp:TemplateField>
-
- 
-<%--
-                     <asp:TemplateField HeaderText="Select">
-                     <ItemTemplate>
-                      <asp:CheckBox ID="chkSelectBox" runat="server" Checked="false"
-                     Width="30px" Enabled="true"></asp:CheckBox>
-                     </ItemTemplate>         <HeaderStyle Width="30px" />       <ItemStyle HorizontalAlign="Center" />
-                    </asp:TemplateField>--%>
-
-          <%--
-                <asp:TemplateField HeaderText="Click IowItem" Visible="true" >
-                    <ItemTemplate>  
-                    <asp:LinkButton ID="lnkIOWItemName" Width="60px" runat ="server" CommandArgument='<%#Eval("IOWCode")%>'
-                     CommandName ="IOWItem" Text ="IOW Item"></asp:LinkButton>
-                      </ItemTemplate> <HeaderStyle Width="60px" />
-                    </asp:TemplateField>--%>
-            
-                </Columns>
-                <sortedascendingcellstyle backcolor="#F1F1F1" />
-                <sortedascendingheaderstyle backcolor="#0000A9" />
-                <sorteddescendingcellstyle backcolor="#CAC9C9" />
-                <sorteddescendingheaderstyle backcolor="#000065" />
-            </asp:GridView>     
-    </div>
-    </asp:panel>
- 
-
+        </div>
+    </asp:Panel>
+</div>
 </asp:Content>
-

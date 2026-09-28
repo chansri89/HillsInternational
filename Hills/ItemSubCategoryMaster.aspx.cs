@@ -50,6 +50,14 @@ public partial class ItemSubCategoryMaster : System.Web.UI.Page
             }
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        GrdItemSubCategoryMaster.EditIndex = -1;
+        if (ddlCompany.SelectedIndex > 0) AllClear();
+        GrdItemSubCategoryMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtItemSubCategorycode.Focus();
+    }
     protected void btnFilter_Click(object sender, EventArgs e)
     {
         // ClientFilter();

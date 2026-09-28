@@ -43,6 +43,14 @@ public partial class ProjectSectorClassMaster : System.Web.UI.Page
             LoadGridSectorClass();
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        AllClear();
+        btnSave.Text = "Save";
+        GrdSectorClass.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtProjectSectorClass.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         
@@ -116,7 +124,7 @@ public partial class ProjectSectorClassMaster : System.Web.UI.Page
                 chkIsActive.Visible = true;
                 btnSave.Text = "Update";
                 pnlAdd.GroupingText = "Update Sector Class";
-                Pnlgv.Visible = false;
+                GrdSectorClass.SelectedIndex = row.RowIndex;
                 pnlAdd.Visible = true;
                 break;
             }

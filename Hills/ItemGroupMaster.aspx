@@ -1,150 +1,99 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="ItemGroupMaster.aspx.cs" Inherits="ItemGroupMaster" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <%-- <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
+<div class="tis-page">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Item Masters</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblItemGroupMaster" runat="server" Text="Item groups" /></h1>
+            <p class="tis-page-header__desc">Top-level groups used to organise items. Choose a company to see and edit its item groups.</p>
+        </div>
+    </div>
 
-  <asp:Label ID="lblItemGroupMaster" runat="server" Align= "center" Text="Item Group Master" 
-         width="653px" CssClass="XSmall"    Font-Size ="12pt" Font-Bold="True"  
-        style="text-align: center"></asp:Label>
- <%--  <asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
-    <div style="overflow:auto; height: 471px; width: 1202px;">
-        <%--</td></tr>
-    </table>--%>    <%--</asp:Panel>DataKeyNames="Item GroupCode"--%>
-    <asp:Panel ID="pnlPendind" runat="server" Height="28px" Width="657px" 
-            CssClass="XSmall">
-        <table style="height: 22px; width: 647px;">
-            <tr>
-                      <td  style="width: 70px">
-                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td style="width: 89px" >
-                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true"
-                     DataTextField="CompanyName" DataValueField="CompanyId" Font-Size="XX-Small"
-                     Width="224px"  AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlCompanyChanged" Height="16px"  >
-                 </asp:DropDownList>
-            </td>
-                  <td style="width: 98px">
-                <asp:Label ID="lblFilter" runat="server" Text="Item Group Filter" Visible="true"
-                  ></asp:Label>
-           </td>
-
-            <td  style="width: 70px">
-                <asp:TextBox ID="txtFilter" runat="server" Text="" Visible="true"
-                  Font-Bold="true"  ></asp:TextBox>
-           </td>
-                <td style="width: 62px" >
-                         <asp:Button ID="btnFilter" runat="server"  Height="21px" onclick="btnFilter_Click"   Text="Filter" Width="43px" />
-                 </td>                               
-            </tr>
-               
-        </table>
+    <asp:Panel ID="pnlPendind" runat="server" CssClass="tis-card" DefaultButton="btnFilter">
+        <div class="tis-card__body">
+            <div class="tis-toolbar">
+                <div class="tis-field">
+                    <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true" AssociatedControlID="ddlCompany" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlCompany" runat="server" Visible="true" DataTextField="CompanyName" DataValueField="CompanyId"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged" />
+                </div>
+                <div class="tis-field tis-toolbar__grow">
+                    <asp:Label ID="lblFilter" runat="server" Text="Search by item group name" Visible="true" AssociatedControlID="txtFilter" CssClass="tis-label" />
+                    <asp:TextBox ID="txtFilter" runat="server" Text="" Visible="true" placeholder="e.g. Electrical" />
+                </div>
+                <asp:Button ID="btnFilter" runat="server" OnClick="btnFilter_Click" Text="Filter" CssClass="tis-btn" />
+            </div>
+        </div>
     </asp:Panel>
 
-    <asp:panel ID="Pnlgv" runat="server" Width="659px" Height="360px" CssClass="XXSmall" ToolTip="Click On ItemGroup Name link for Updating.."
-            GroupingText="Item Group Grid">
-        <div id="divItemGroup" runat="server"  
-            style="overflow:auto; height:340px; width:643px">
+    <div class="tis-split">
+        <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-card tis-split__list">
+            <div class="tis-card__header">
+                <div class="tis-card__heading">
+                    <div class="tis-card__title">Item groups</div>
+                    <div class="tis-card__subtitle">Select an item group name to edit it.</div>
+                </div>
+                <asp:Button ID="btnNew" runat="server" Text="New item group" CssClass="tis-btn tis-btn--primary tis-btn--sm"
+                    OnClick="btnNew_Click" CausesValidation="false" />
+            </div>
+            <div id="divItemGroup" runat="server" class="tis-table-wrap tis-table-wrap--tall">
+                <asp:GridView ID="GrdItemGroupMaster" runat="server" AutoGenerateColumns="False" OnRowCommand="GrdItemGroup_RowCommand">
+                    <Columns>
+                        <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ItemGrp Id" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblItemGroupId" runat="server" Text='<%# Eval("ItemGroupId") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Code" Visible="true" ItemStyle-CssClass="code">
+                            <ItemTemplate><asp:Label ID="lblItemGroupCode" runat="server" Text='<%# Eval("ItemGroupCode") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ItemGroup Name" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblItemGroupName" runat="server" Text='<%# Eval("ItemGroupName") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Item group" Visible="true">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkCustName" runat="server" CssClass="tis-link tis-link--strong"
+                                    CommandArgument='<%#Eval("ItemGroupId")%>' CommandName="selectItemGroup" Text='<%#Eval("ItemGroupName") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkActive" runat="server" CssClass="tis-status" Checked='<%# Eval("IsActive") %>' Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <EmptyDataTemplate>
+                        <tis:EmptyState ID="emptyItemGroups" runat="server" Icon="layers" Title="No item groups yet"
+                            Text="Use New item group to add the first item group for this company." />
+                    </EmptyDataTemplate>
+                </asp:GridView>
+            </div>
+        </asp:Panel>
 
-    <asp:GridView ID="GrdItemGroupMaster" runat="server" CellPadding="3" 
-             Width="615px" AutoGenerateColumns="False" 
-            Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-            OnRowCommand="GrdItemGroup_RowCommand">
-
-        <EditRowStyle Font-Size="XX-Small" />
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-            HorizontalAlign="Left" />
-        <AlternatingRowStyle BackColor="#DCDCDC" />
-
-       
-        <Columns>
-            <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="ItemGrp Id"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblItemGroupId" runat="server" Text='<%# Eval("ItemGroupId") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="Item Group Code" Visible="true">
-            <ItemTemplate>
-            <asp:Label ID="lblItemGroupCode" runat="server"  Width="90px" Text='<%# Eval("ItemGroupCode") %>'  ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="90px" HorizontalAlign="Center"/>
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="ItemGroup Name" Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblItemGroupName" runat="server" Text='<%# Eval("ItemGroupName") %>' Width="60px" ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="60px"/>
-               </asp:TemplateField>
-
-         <asp:TemplateField HeaderText="ItemGroup Name" Visible="true" >
-            <ItemTemplate>  
-            <asp:LinkButton ID="lnkCustName" Width="140px" runat ="server" CommandArgument='<%#Eval("ItemGroupId")%>'
-             CommandName ="selectItemGroup" Text ='<%#Eval("ItemGroupName") %>'></asp:LinkButton>
-              </ItemTemplate> <HeaderStyle Width="140px" HorizontalAlign="Center"/>
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Is Active">
-             <ItemTemplate>    <asp:CheckBox ID="chkActive" Width="60px" runat="server" Checked='<%# Eval("IsActive") %>'
-             Enabled="false"></asp:CheckBox>         </ItemTemplate>
-               <HeaderStyle Width="60px" HorizontalAlign="Center"/>     <ItemStyle HorizontalAlign="Center" />
-            </asp:TemplateField>
-            
-        </Columns>
-        <sortedascendingcellstyle backcolor="#F1F1F1" />
-        <sortedascendingheaderstyle backcolor="#0000A9" />
-        <sorteddescendingcellstyle backcolor="#CAC9C9" />
-        <sorteddescendingheaderstyle backcolor="#000065" />
-    </asp:GridView>
+        <asp:Panel ID="pnlAdd" runat="server" GroupingText="Item group details" CssClass="tis-card tis-card--legend tis-split__detail" DefaultButton="btnSave">
+            <div class="tis-card__body">
+                <div class="tis-form-grid tis-form-grid--2">
+                    <div class="tis-field">
+                        <asp:Label ID="lblItemGroupCode" runat="server" Text="Item group code" AssociatedControlID="txtItemGroupCode" CssClass="tis-label" />
+                        <asp:TextBox ID="txtItemGroupCode" runat="server" />
+                    </div>
+                    <div class="tis-field tis-field--check">
+                        <asp:CheckBox ID="chkIsActive" runat="server" Text="Active" Visible="False" />
+                    </div>
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblItemGroupName" runat="server" Text="Item group name" AssociatedControlID="txtItemGroupName" CssClass="tis-label" />
+                        <asp:TextBox ID="txtItemGroupName" runat="server" />
+                    </div>
+                </div>
+                <asp:TextBox ID="txtItemGroupId" runat="server" Visible="false" />
+            </div>
+            <div class="tis-card__footer">
+                <asp:Button ID="btnClear" runat="server" Text="Clear" OnClick="btnClear_Click" CssClass="tis-btn tis-btn--ghost" />
+                <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="tis-btn tis-btn--primary" />
+            </div>
+        </asp:Panel>
     </div>
- 
-    </asp:panel>
-    <br />
-    <asp:panel ID="pnlAdd" runat="server" Width="662px"  GroupingText="Add Item Group" CssClass="XXSmall"
-            style="margin-top: 0px" Height="57px">
-    <table style="width: 98%; height: 39px;" >
-            <tr>
- 
-                    <td style="width: 135px; text-align: left;">
-                    <asp:Label ID="lblItemGroupCode" runat="server" Text="Item Group Code"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td>
-                    <asp:TextBox ID="txtItemGroupCode" runat="server"  height="18px" Width="76px"></asp:TextBox>
-                </td>
-      
-                <td  style="width: 145px; ">
-                    <asp:Label ID="lblItemGroupName" runat="server" Text="Item Group Name"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 237px">
-                    <asp:TextBox ID="txtItemGroupName" runat="server" height="18px" width="216px"></asp:TextBox>
-                </td>
- 
-                <td  style="width: 36px">
-                    <asp:CheckBox ID="chkIsActive" runat="server" Text="Is Active" Visible="False" />
-                </td>
-                <td>
-                    <asp:Button ID="btnSave" runat="server" Text="Save"    onclick="btnSave_Click"  />
-                </td>
-                <td  style="width: 64px">
-                    <asp:Button ID="btnClear" runat="server" Text="Clear"  onclick="btnClear_Click"  />
-                </td>
-                <td  style="width: 35px">
-                    <asp:TextBox ID="txtItemGroupId" runat="server"  Visible="false"
-                        height="18px" width="16px"></asp:TextBox>
-                </td>
-                </tr>
-               
-        </table>
-    </asp:panel>
-     </div>
+</div>
 </asp:Content>
-

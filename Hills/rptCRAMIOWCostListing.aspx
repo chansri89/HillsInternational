@@ -3,182 +3,87 @@
 <%@ Register assembly="Microsoft.ReportViewer.WebForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <%--<asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
-    <asp:Label ID="lblExceptionList" runat="server" Align= "center" Text="IOW Cost Listing Report"
-        Font ="Verdana" width="732px"  Font-Size ="12pt" Font-Bold="True" 
-        Font-Names="Verdana"  style="text-align: center" Height="29px"></asp:Label>
-       
-        <%--<asp:Label ID = "lblStkOpDate" runat = "server" align = "center" Height="15px" Width = "901px" Text = "" ></asp:Label>--%>
+<div class="tis-page">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Reports</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblExceptionList" runat="server" Text="IOW cost listing" /></h1>
+            <p class="tis-page-header__desc">Calculated CRAM item-of-work costs by group, sub group, region and month.</p>
+        </div>
+    </div>
 
-     <script src="js/jquery-1.9.1.js" type="text/javascript"></script> <%--MasterPageFile="~/MasterPage4.master"--%>
-   <script type="text/javascript">
-       var prm = Sys.WebForms.PageRequestManager.getInstance();
-       //Raised before processing of an asynchronous postback starts and the postback request is sent to the server.
-       prm.add_beginRequest(BeginRequestHandler);
-       // Raised after an asynchronous postback is finished and control has been returned to the browser.
-       prm.add_endRequest(EndRequestHandler);
+    <div class="tis-hidden" aria-hidden="true">
+        <asp:UpdateProgress ID="UpdateProgress" runat="server">
+            <ProgressTemplate>
+                <asp:Image ID="imgprocess" ImageUrl="~/Images/progressBar.gif" AlternateText="Processing" runat="server" />
+            </ProgressTemplate>
+        </asp:UpdateProgress>
+        <asp:modalpopupextender ID="modalPopup" runat="server" TargetControlID="UpdateProgress"
+            PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
+    </div>
 
-       function BeginRequestHandler(sender, args) {
-           //Shows the modal popup - the update progress
-           var popup = $find('<%= modalPopup.ClientID %>');
-           if (popup != null) {
-               popup.show();
-           }
-       }
-       function EndRequestHandler(sender, args) {
-           //Hide the modal popup - the update progress
-           var popup = $find('<%= modalPopup.ClientID %>');
-           if (popup != null) {
-               popup.hide();
-           }
-       }
-
-       </script>
-       <asp:UpdateProgress ID="UpdateProgress" runat="server">
-<ProgressTemplate>
-
-<asp:Image ID="imgprocess" ImageUrl="~/Images/progressBar.gif" AlternateText="Processing" runat="server" />
-</ProgressTemplate>
-</asp:UpdateProgress>
-
-<asp:modalpopupextender ID="modalPopup" runat="server" TargetControlID="UpdateProgress"
-PopupControlID="UpdateProgress" BackgroundCssClass="modalPopup" />
-
- <asp:Panel ID="pnlPendind" runat="server" Height="41px" Width="1142px" 
-        CssClass="XSmall">
-        <table style="height: 22px; width: 1131px;">
-            <tr>
-                      <td class="style44">
-                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
-                  Font-Bold="true" ></asp:Label>
-           </td>
-             <td style="width: 100px" class="style21">
-                <asp:DropDownList ID="ddlCompany"  runat="server"  Visible="true" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged"
-                   DataTextField="CompanyName" DataValueField="CompanyId" Font-Size="X-Small"     Width="158px"    Height="16px"  >
-                 </asp:DropDownList>
-            </td>
-
-          <td>
-                <asp:Label ID="lblGroup" runat="server" Text="Group" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlGroup"  runat="server"  Visible="true" AutoPostBack="true" OnSelectedIndexChanged="ddlGroupChanged"
-                  DataTextField="GroupName" DataValueField="GroupCode" Font-Size="X-Small"      Width="109px" height="24px"  >
-                 </asp:DropDownList>
-            </td>
-   
-         <td>
-                <asp:Label ID="lblSubGroup" runat="server" Text="Sub Group" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlSubGroup"  runat="server"  Visible="true"
-                    DataTextField="SubGroupName" DataValueField="SubGroupCode" Font-Size="X-Small"
-                     Width="109px" height="24px"  >
-                 </asp:DropDownList>
-            </td>   
-      <td >
-                <asp:Label ID="lblRegion" runat="server" Text="Region" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlRegion"  runat="server"  Visible="true" 
-                    DataTextField="Region" DataValueField="Region"  Style="font-size: X-Small" 
-                     Width="67px"    Height="17px"  >
-                 </asp:DropDownList>
-            </td>
-          <td>
-                <asp:Label ID="lblYearMonth" runat="server" Text="Year Month" Visible="true"
-                  Font-Bold="true" ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlForYearMonth"  runat="server"  Visible="true"
-                    DataTextField="ForYearMonth" DataValueField="ForYearMonth" Font-Size="X-Small"
-                     Width="85px" height="24px"  >
-                 </asp:DropDownList>
-            </td>  
-
-              <td style="text-align: left;" class="style43" >
-                   <asp:radiobuttonlist id="rbtType"  Visible="true" 
-                                    RepeatDirection="Horizontal" runat="server" Height="19px" 
-                    Width="150px"  Font-Bold="true">
-                        <asp:listitem Text="Cost Only" Selected="true" Value="1" />
-	                    <asp:listitem Text="Detail" Selected="false" Value="2"  />
-	                                
-                                    
-                </asp:radiobuttonlist>              
-                 </td> 
-
-                <td class="style45" >
-                         <asp:Button ID="btnView" runat="server"  Height="21px" onclick="btnView_Click" 
-                               Text="View" Width="43px" />
-                 </td>        
-                  <td >
-                           
-                           <asp:Button ID="btnClear" runat="server" 
-                               Height="21px" onclick="btnClear_Click" 
-                               Text="Clear" Width="43px" />
-                       </td>  
- 
-          <td>
-                   <asp:Textbox ID="txtItem" runat="server" Visible="false"  Text = ""
-                               Height="17px" Width="16px" MaxLength = "8" 
-                                  ></asp:Textbox>
-          </td>
- 
-             <td>
-                <asp:DropDownList ID="ddlIOWHead"  runat="server"  Visible="false"
-                    DataTextField="IOWHeadDescription" DataValueField="IOWHeadCode"
-                    
-                    Width="48px" height="28px"  >
-                 </asp:DropDownList>
-            </td>                              
-            </tr>
-               
-        </table>
+    <asp:Panel ID="pnlPendind" runat="server" CssClass="tis-card" DefaultButton="btnView">
+        <div class="tis-card__header">
+            <div class="tis-card__heading">
+                <div class="tis-card__title">Report parameters</div>
+                <div class="tis-card__subtitle">Choose a company and group, then narrow by sub group, region and month.</div>
+            </div>
+        </div>
+        <div class="tis-card__body">
+            <div class="tis-form-grid tis-form-grid--4">
+                <div class="tis-field">
+                    <asp:Label ID="lblCompany" runat="server" Text="Company" AssociatedControlID="ddlCompany" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlCompany" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged"
+                        DataTextField="CompanyName" DataValueField="CompanyId" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblGroup" runat="server" Text="Group" AssociatedControlID="ddlGroup" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlGroup" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlGroupChanged"
+                        DataTextField="GroupName" DataValueField="GroupCode" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblSubGroup" runat="server" Text="Sub group" AssociatedControlID="ddlSubGroup" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlSubGroup" runat="server" DataTextField="SubGroupName" DataValueField="SubGroupCode" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblRegion" runat="server" Text="Region" AssociatedControlID="ddlRegion" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlRegion" runat="server" DataTextField="Region" DataValueField="Region" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblYearMonth" runat="server" Text="Year month" AssociatedControlID="ddlForYearMonth" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlForYearMonth" runat="server" DataTextField="ForYearMonth" DataValueField="ForYearMonth" />
+                </div>
+                <div class="tis-field">
+                    <span class="tis-label">Report type</span>
+                    <asp:RadioButtonList ID="rbtType" runat="server" RepeatDirection="Horizontal" RepeatLayout="Flow" CssClass="tis-segmented">
+                        <asp:ListItem Text="Cost only" Selected="true" Value="1" />
+                        <asp:ListItem Text="Detail" Selected="false" Value="2" />
+                    </asp:RadioButtonList>
+                </div>
+            </div>
+            <asp:TextBox ID="txtItem" runat="server" Visible="false" Text="" MaxLength="8" />
+            <asp:DropDownList ID="ddlIOWHead" runat="server" Visible="false" DataTextField="IOWHeadDescription" DataValueField="IOWHeadCode" />
+        </div>
+        <div class="tis-card__footer tis-card__footer--between">
+            <span class="tis-help">Cost only gives the summary listing; Detail lists every line. Leave sub group or region unselected to include all.</span>
+            <span class="tis-cluster">
+                <asp:Button ID="btnClear" runat="server" OnClick="btnClear_Click" Text="Clear" CssClass="tis-btn tis-btn--ghost" />
+                <asp:Button ID="btnView" runat="server" OnClick="btnView_Click" Text="View report" CssClass="tis-btn tis-btn--primary" />
+            </span>
+        </div>
     </asp:Panel>
-    <style type="text/css">
-        .WordWrap {
-            width: 100%;
-            word-break: break-all;
-        }
-        .style41
-    {
-        width: 55px;
-    }
-        .style43
-        {
-            width: 67px;
-        }
-        .style44
-        {
-            width: 54px;
-        }
-        .style45
-        {
-            width: 50px;
-        }
-    </style>
-<asp:Panel ID="pnlExList" runat="server" Height="459px" style="margin-left: 0px" 
-        Width="1248px">
 
-        <div style="width: 1238px; height: 438px;">
-    <rsweb:ReportViewer ID="ReportViewer1" runat="server" Font-Names="Verdana" 
-        Font-Size="8pt" Height="420px" InteractiveDeviceInfos="(Collection)" 
-        WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" Width="1216px"
-        ShowFindControls="false" ShowBackButton="false"   
-                ShowPageNavigationControls = "true" ShowPrintButton = "false" 
-                ShowRefreshButton = "false">
-        <LocalReport ReportPath="">
-        </LocalReport>
-    </rsweb:ReportViewer>
-          <%--  <asp:SqlDataSource ID="SqlDataSource1" runat="server" 
-                ConnectionString="<%$ ConnectionStrings:DefaultConnection %>" 
-                SelectCommand="SELECT * FROM [BugNet_ApplicationLog]"></asp:SqlDataSource>--%>
-     </div>
-</asp:Panel>
-
-
+    <asp:Panel ID="pnlExList" runat="server" CssClass="tis-card tis-card--flush">
+        <div class="tis-report">
+            <rsweb:ReportViewer ID="ReportViewer1" runat="server" Font-Names="Inter, Segoe UI, Verdana" Font-Size="8pt"
+                Width="100%" Height="680px" InteractiveDeviceInfos="(Collection)"
+                WaitMessageFont-Names="Inter, Segoe UI, Verdana" WaitMessageFont-Size="12pt"
+                ShowFindControls="false" ShowBackButton="false" ShowPageNavigationControls="true"
+                ShowPrintButton="false" ShowRefreshButton="false">
+                <LocalReport ReportPath="">
+                </LocalReport>
+            </rsweb:ReportViewer>
+        </div>
+    </asp:Panel>
+</div>
 </asp:Content>
-

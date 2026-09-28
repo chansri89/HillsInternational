@@ -44,6 +44,14 @@ public partial class ItemMaster : System.Web.UI.Page
             
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        AllClear();
+        btnSave.Text = "Save";
+        GrdItemMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        ddlItemCategory.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         
@@ -182,7 +190,7 @@ public partial class ItemMaster : System.Web.UI.Page
                 
                 chkIsActive.Visible = true;
                 btnSave.Text = "Update";
-                Pnlgv.Visible = false;
+                GrdItemMaster.SelectedIndex = row.RowIndex;
                 pnlAdd.Visible = true;
                 break;
             }

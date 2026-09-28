@@ -1,159 +1,94 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="ProjectSectorClassMaster.aspx.cs" Inherits="ProjectSectorClassMaster" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <%-- <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
+<div class="tis-page">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Masters</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblClientMaster" runat="server" Text="Project Sector Classes" /></h1>
+            <p class="tis-page-header__desc">Sector classes within each project sector group. Select a class to edit it.</p>
+        </div>
+    </div>
 
-  <asp:Label ID="lblClientMaster" runat="server" Align= "center" Text="Client / Tenderer Master"  CssClass="XSmall"
-       width="787px"    Font-Size ="12pt" Font-Bold="True"  style="text-align: center"></asp:Label>
-  <%-- <asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
-    <div style="overflow:auto; height: 471px; width: 1202px;">
-
-    <asp:Panel ID="pnlPendind" runat="server" Height="31px" Width="380px" 
-            CssClass="XSmall">
-        <table style="height: 22px; width: 357px;">
-            <tr>
-    
-                  <td >
-                <asp:Label ID="lblFilter" runat="server" Text="Filter Class Name" 
-                   ></asp:Label>
-           </td>
-
-            <td  style="width: 70px">
-                <asp:TextBox ID="txtFilter" runat="server" Text="" 
-                  Font-Bold="true" Width="137px"   ></asp:TextBox>
-           </td>
-                <td style="width: 62px" >
-                         <asp:Button ID="btnFilter" runat="server"  Height="21px" onclick="btnFilter_Click" 
-                               Text="Filter" Width="43px" />
-                 </td>     
-          
-                             
-            </tr>
-               
-        </table>
+    <asp:Panel ID="pnlPendind" runat="server" CssClass="tis-card" DefaultButton="btnFilter">
+        <div class="tis-card__body">
+            <div class="tis-toolbar">
+                <div class="tis-field tis-toolbar__grow">
+                    <asp:Label ID="lblFilter" runat="server" Text="Filter by class name" AssociatedControlID="txtFilter" CssClass="tis-label" />
+                    <asp:TextBox ID="txtFilter" runat="server" Text="" />
+                </div>
+                <asp:Button ID="btnFilter" runat="server" OnClick="btnFilter_Click" Text="Filter" CssClass="tis-btn" />
+            </div>
+        </div>
     </asp:Panel>
 
-    <asp:panel ID="Pnlgv" runat="server" Width="674px" Height="345px" ToolTip="Click on Sector Class Link to Update.."
-            GroupingText="SectorClass Grid" CssClass="XXSmall">
-        <div id="divSectorClass" runat="server"  
-            style="overflow:auto; height:324px; width:98%">
+    <div class="tis-split">
+        <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-card tis-split__list">
+            <div class="tis-card__header">
+                <div class="tis-card__heading">
+                    <div class="tis-card__title">Sector classes</div>
+                    <div class="tis-card__subtitle">Select a class name to edit it.</div>
+                </div>
+                <asp:Button ID="btnNew" runat="server" Text="New class" CssClass="tis-btn tis-btn--primary tis-btn--sm"
+                    OnClick="btnNew_Click" CausesValidation="false" />
+            </div>
+            <div id="divSectorClass" runat="server" class="tis-table-wrap tis-table-wrap--tall">
+                <asp:GridView ID="GrdSectorClass" runat="server" AutoGenerateColumns="False" OnRowCommand="GrdSectorClass_RowCommand">
+                    <Columns>
+                        <asp:TemplateField HeaderText="ProjectSectorGroupId" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblProjectSectorGroupId" runat="server" Text='<%# Eval("ProjectSectorGroupId") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Sector group" Visible="true">
+                            <ItemTemplate><asp:Label ID="lblProjectSectorGroupName" runat="server" Text='<%# Eval("ProjectSectorGroupName") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ProjectSectorsubGroupId" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblProjectSectorSubGroupId" runat="server" Text='<%# Eval("ProjectSectorSubGroupId") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Class name" Visible="true">
+                            <ItemTemplate><asp:Label ID="lblProjectSectorClass" runat="server" Text='<%# Eval("ProjectSectorClass") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Sector class" Visible="true">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkSectorClass" runat="server" CssClass="tis-link tis-link--strong" CommandArgument='<%#Eval("ProjectSectorSubGroupId")%>'
+                                    CommandName="select" Text='<%#Eval("ProjectSectorClass") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate><asp:CheckBox ID="chkActive" runat="server" CssClass="tis-status" Checked='<%# Eval("IsActive") %>' Enabled="false" /></ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <EmptyDataTemplate>
+                        <tis:EmptyState ID="emptyClasses" runat="server" Icon="tag" Title="No sector classes yet"
+                            Text="Use New class to add the first project sector class." />
+                    </EmptyDataTemplate>
+                </asp:GridView>
+            </div>
+        </asp:Panel>
 
-    <asp:GridView ID="GrdSectorClass" runat="server" CellPadding="3" 
-            Width="98%"  AutoGenerateColumns="False" 
-            Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-            OnRowCommand="GrdSectorClass_RowCommand">
-
-        <EditRowStyle Font-Size="XX-Small" />
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White"  />
-        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-            HorizontalAlign="Left" />
-        <AlternatingRowStyle BackColor="#DCDCDC" />
-
-       
-        <Columns>
-            <asp:TemplateField HeaderText="ProjectSectorGroupId"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblProjectSectorGroupId" runat="server" Text='<%# Eval("ProjectSectorGroupId") %>'  ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-         <%--   <asp:TemplateField HeaderText="Cust Id"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblClientId" runat="server" Text='<%# Eval("ClientId") %>'  ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>--%>
-            
-            <asp:TemplateField HeaderText="Sector Group Name" Visible="true">
-            <ItemTemplate>
-            <asp:Label ID="lblProjectSectorGroupName" runat="server"  Width="120px" Text='<%# Eval("ProjectSectorGroupName") %>'  ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="120px" HorizontalAlign="Center"/>
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="ProjectSectorsubGroupId" Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblProjectSectorSubGroupId" runat="server" Text='<%# Eval("ProjectSectorSubGroupId") %>'  ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="50px"/>
-               </asp:TemplateField>
-               <asp:TemplateField HeaderText="Sector Class Name" Visible="true">
-            <ItemTemplate>
-            <asp:Label ID="lblProjectSectorClass" runat="server"  Width="130px" Text='<%# Eval("ProjectSectorClass") %>'  ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="130px" HorizontalAlign="Center"/>
-            </asp:TemplateField>
-
-         <asp:TemplateField HeaderText="Click Sector Class" Visible="true" >
-            <ItemTemplate>  
-            <asp:LinkButton ID="lnkSectorClass" Width="150px" runat ="server" CommandArgument='<%#Eval("ProjectSectorSubGroupId")%>'
-             CommandName ="select" Text ='<%#Eval("ProjectSectorClass") %>'></asp:LinkButton>
-              </ItemTemplate> <HeaderStyle Width="150px" HorizontalAlign="Center" />
-            </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="Is Active">
-             <ItemTemplate>    <asp:CheckBox ID="chkActive" Width="30px" runat="server" Checked='<%# Eval("IsActive") %>'
-             Enabled="false"></asp:CheckBox>         </ItemTemplate>
-               <HeaderStyle Width="30px"  HorizontalAlign="Center"/>     <ItemStyle HorizontalAlign="Center" />
-            </asp:TemplateField>
- 
-        </Columns>
-        <sortedascendingcellstyle backcolor="#F1F1F1" />
-        <sortedascendingheaderstyle backcolor="#0000A9" />
-        <sorteddescendingcellstyle backcolor="#CAC9C9" />
-        <sorteddescendingheaderstyle backcolor="#000065" />
-    </asp:GridView>
+        <asp:Panel ID="pnlAdd" runat="server" GroupingText="Add Sector Class" CssClass="tis-card tis-card--legend tis-split__detail" DefaultButton="btnSave">
+            <div class="tis-card__body">
+                <div class="tis-form-grid tis-form-grid--1">
+                    <div class="tis-field">
+                        <asp:Label ID="lblProjectSectorClass" runat="server" Text="Sector class" AssociatedControlID="txtProjectSectorClass" CssClass="tis-label" />
+                        <asp:TextBox ID="txtProjectSectorClass" runat="server" />
+                    </div>
+                    <div class="tis-field">
+                        <asp:Label ID="lblProjectSectorGroup" runat="server" Text="Sector group" AssociatedControlID="ddlProjectSectorGroup" CssClass="tis-label" />
+                        <asp:DropDownList ID="ddlProjectSectorGroup" runat="server"
+                            DataTextField="ProjectSectorGroupName" DataValueField="ProjectSectorGroupId" />
+                    </div>
+                    <div class="tis-field tis-field--check">
+                        <asp:CheckBox ID="chkIsActive" runat="server" Text="IsActive" Visible="False" />
+                    </div>
+                </div>
+                <asp:TextBox ID="txtProjectSectorGroupId" runat="server" Visible="false" />
+                <asp:TextBox ID="txtProjectSectorSubgroupId" runat="server" Visible="false" />
+            </div>
+            <div class="tis-card__footer">
+                <asp:Button ID="btnClear" runat="server" Text="Clear" OnClick="btnClear_Click" CssClass="tis-btn tis-btn--ghost" />
+                <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="tis-btn tis-btn--primary" />
+            </div>
+        </asp:Panel>
     </div>
-    </asp:panel>
-    <br />
-    <asp:panel ID="pnlAdd" runat="server" Width="677px" GroupingText="Add Sector Class" CssClass="XXSmall"
-            style="margin-top: 0px" Height="65px">
-    <table style="width: 98%; height: 45px;" >
-            <tr>
-      
-                <td>
-                    <asp:Label ID="lblProjectSectorClass" runat="server" Text="Sector Class"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-
-                 <td>
-                    <asp:TextBox ID="txtProjectSectorClass" runat="server"  height="24px" 
-                         Width="192px"></asp:TextBox>
-                </td>
-
-             <td >
-                    <asp:Label ID="lblProjectSectorGroup" runat="server" Text="Sector Group"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td >
-                    <asp:DropDownList ID="ddlProjectSectorGroup"  runat="server"  Font-Size="XX-Small"
-                    DataTextField="ProjectSectorGroupName" DataValueField="ProjectSectorGroupId"
-                    Width="115px"  Height="24px"  >
-                       
-                 </asp:DropDownList>
-                </td>
-              
-                <td >
-                    <asp:CheckBox ID="chkIsActive" runat="server" Text="IsActive" Visible="False" />
-                </td>
-                <td >
-                    <asp:Button ID="btnSave" runat="server" Text="Save"  onclick="btnSave_Click"  />
-                </td>
-                <td >
-                    <asp:Button ID="btnClear" runat="server" Text="Clear"  onclick="btnClear_Click"  />
-                </td>
-                 <td >
-                    <asp:TextBox ID="txtProjectSectorGroupId" runat="server" Visible="false"
-                        height="16px" width="10px"></asp:TextBox>
-                </td>
-                <td >
-                    <asp:TextBox ID="txtProjectSectorSubgroupId" runat="server" Visible="false"
-                        height="16px" width="10px"></asp:TextBox>
-                </td>
-                </tr>
-               
-        </table>
-    </asp:panel>
-    <%--</td></tr>
-    </table>--%>
-    <%--</asp:Panel>--%>
-    </div>
+</div>
 </asp:Content>
-

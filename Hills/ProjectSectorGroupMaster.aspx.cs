@@ -36,6 +36,16 @@ public partial class ProjectSectorGroupMaster : System.Web.UI.Page
         }        
        
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        GrdSectorGrp.EditIndex = -1;
+        GrdSectorGrp.Columns[2].Visible = true;
+        AllClear();
+        btnSave.Text = "Save";
+        GrdSectorGrp.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtProjectSectorGroupName.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
             

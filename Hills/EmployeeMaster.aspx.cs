@@ -46,6 +46,16 @@ public partial class EmployeeMaster : System.Web.UI.Page
        }
        
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        // ClearAll() rebinds the grid and manager list from EmpList, which is empty on a plain postback.
+        GrdEmployeeMaster.EditIndex = -1;
+        LoadGridEmployees();
+        ClearAll();
+        GrdEmployeeMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtEmployeeCode.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
        // For Deleting a Record from Grid-Starts

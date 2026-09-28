@@ -47,6 +47,15 @@ public partial class ClientProject : System.Web.UI.Page
             
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        AllClear();
+        btnSave.Text = "Save";
+        txtProjectCode.Enabled = true;
+        GrdProjMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtProjectCode.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         
@@ -187,7 +196,7 @@ public partial class ClientProject : System.Web.UI.Page
                 chkIsActive.Visible = true;
                 btnSave.Text = "Update";
                 pnlAdd.GroupingText = "Update Client";
-                Pnlgv.Visible = false;
+                GrdProjMaster.SelectedIndex = row.RowIndex;
                 pnlAdd.Visible = true;
                 break;
             }

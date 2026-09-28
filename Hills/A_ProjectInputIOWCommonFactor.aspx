@@ -1,227 +1,137 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="A_ProjectInputIOWCommonFactor.aspx.cs" Inherits="A_ProjectInputIOWCommonFactor" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<div class="tis-page" data-density="compact">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Project Input</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblCRAMCommonFactorMaster" runat="server" Text="Project input IOW common factors" /></h1>
+            <p class="tis-page-header__desc">Percentage factors applied across IOWs for one project and rate month. Choose the project and month, then view its factors.</p>
+        </div>
+    </div>
 
-
-  <asp:Label ID="lblCRAMCommonFactorMaster" runat="server" Align= "center" Text="Project Input IOW Common Factor" 
-         width="787px"  Font-Size ="12pt" Font-Bold="True" style="text-align: center"></asp:Label>
-
-    <asp:Panel ID="pnlPendind" runat="server" Height="28px" Width="932px" 
-        CssClass="XSmall">
-        <table style="height: 22px; width: 797px;">
-            <tr>
-                      <td  style="width: 70px">
-                <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td style="width: 37px" class="style32" >
-                <asp:DropDownList ID="ddlCompany"  runat="server"  Font-Size="X-Small"
-                   DataTextField="CompanyName" DataValueField="CompanyId"           
-                     Width="181px"  AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlCompanyChanged" Height="26px"  >
-                 </asp:DropDownList>
-            </td>
-              <td class="style28" style="width: 70px">
-                <asp:Label ID="lblClients" runat="server" Text="Clients" Visible="true"
-                  Font-Bold="true"   ></asp:Label>
-           </td>
-             <td style="width: 100px" class="style21">
-                <asp:DropDownList ID="ddlClient"  runat="server"  Visible="true" AutoPostBack="true" 
-                     OnSelectedIndexChanged="ddlClientChanged" Font-Size="X-Small"
-                     DataTextField="ClientName" DataValueField="ClientCode"
-                     Width="121px"  Height="22px"  >
-                 </asp:DropDownList>
-            </td>
-          <td>
-                <asp:Label ID="lblProject" runat="server" Text="Project" Visible="true"
-                  Font-Bold="true"  ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlProject"  runat="server" 
-                   DataTextField="ProjectName" DataValueField="ProjectCode" Font-Size="X-Small"
-                    
-                    Width="119px" height="22px"  >
-                 </asp:DropDownList>
-            </td>
-           <td>
-                <asp:Label ID="lblYearMonth" runat="server" Text="Year Month" Visible="true"
-                  Font-Bold="true" ></asp:Label>
-           </td>
-             <td>
-                <asp:DropDownList ID="ddlForYearMonth"  runat="server"  Visible="true"
-                    DataTextField="ForYearMonth" DataValueField="ForYearMonth" Font-Size="X-Small"
-                     Width="109px" height="24px"  >
-                 </asp:DropDownList>
-            </td>  
- 
- 
-                <td class="style45" >
-                         <asp:Button ID="btnView" runat="server"  Height="21px" onclick="btnView_Click" 
-                               Text="View" Width="43px" />
-                 </td>        
-                  <td >
-                           
-                           <asp:Button ID="Button1" runat="server" 
-                               Height="21px" onclick="btnClear_Click" 
-                               Text="Clear" Width="43px" />
-                       </td>  
-                                                            
-            </tr>
-               
-        </table>
+    <asp:Panel ID="pnlPendind" runat="server" CssClass="tis-card" DefaultButton="btnView">
+        <div class="tis-card__body">
+            <div class="tis-toolbar">
+                <div class="tis-field">
+                    <asp:Label ID="lblCompany" runat="server" Text="Company" Visible="true" AssociatedControlID="ddlCompany" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlCompany" runat="server" DataTextField="CompanyName" DataValueField="CompanyId"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblClients" runat="server" Text="Client" Visible="true" AssociatedControlID="ddlClient" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlClient" runat="server" Visible="true" AutoPostBack="true" OnSelectedIndexChanged="ddlClientChanged"
+                        DataTextField="ClientName" DataValueField="ClientCode" />
+                </div>
+                <div class="tis-field tis-toolbar__grow">
+                    <asp:Label ID="lblProject" runat="server" Text="Project" Visible="true" AssociatedControlID="ddlProject" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlProject" runat="server" DataTextField="ProjectName" DataValueField="ProjectCode" />
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblYearMonth" runat="server" Text="Year month" Visible="true" AssociatedControlID="ddlForYearMonth" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlForYearMonth" runat="server" Visible="true" DataTextField="ForYearMonth" DataValueField="ForYearMonth" />
+                </div>
+                <asp:Button ID="btnView" runat="server" OnClick="btnView_Click" Text="View" CssClass="tis-btn tis-btn--primary" />
+                <asp:Button ID="Button1" runat="server" OnClick="btnClear_Click" Text="Clear" CssClass="tis-btn tis-btn--ghost" />
+            </div>
+        </div>
     </asp:Panel>
 
-    <asp:panel ID="Pnlgv" runat="server" Width="883px" Height="360px" CssClass="XSmall"      GroupingText="Common Factor Grid">
-        <div id="divCRAMCommonFactor" runat="server"     style="overflow:auto; height:340px; width:863px">
+    <div class="tis-split">
+        <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-card tis-split__list">
+            <div class="tis-card__header">
+                <div class="tis-card__heading">
+                    <div class="tis-card__title">Common factors</div>
+                    <div class="tis-card__subtitle">Select a factor name to edit it.</div>
+                </div>
+                <asp:Button ID="btnNew" runat="server" Text="New factor" CssClass="tis-btn tis-btn--primary tis-btn--sm"
+                    OnClick="btnNew_Click" CausesValidation="false" />
+            </div>
+            <div id="divCRAMCommonFactor" runat="server" class="tis-table-wrap tis-table-wrap--tall">
+                <asp:GridView ID="GrdIOWCommonFactor" runat="server" AutoGenerateColumns="False" OnRowCommand="GrdIOWCommonFactor_RowCommand">
+                    <Columns>
+                        <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ClientCode" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblClientCode" runat="server" Text='<%# Eval("ClientCode") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="ProjectCode" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblProjectCode" runat="server" Text='<%# Eval("ProjectCode") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="YearMonth" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblYearMonth" runat="server" Text='<%# Eval("ForYearMonth") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Comm Fact Id" Visible="false">
+                            <ItemTemplate><asp:Label ID="lblIOWCommonFactorId" runat="server" Text='<%# Eval("IOWCommonFactorId") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Comm Fact " Visible="false">
+                            <ItemTemplate><asp:Label ID="lblIOWCommonFactor" runat="server" Text='<%# Eval("IOWCommonFactor") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Common factor" Visible="true" ItemStyle-CssClass="wrap">
+                            <ItemTemplate>
+                                <asp:LinkButton ID="lnkCommonFactorName" runat="server" CssClass="tis-link tis-link--strong"
+                                    CommandArgument='<%#Eval("IOWCommonFactorId")%>' CommandName="selectCommonFactor" Text='<%#Eval("IOWCommonFactor") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Seq #" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                            <ItemTemplate><asp:Label ID="lblSequenceNumber" runat="server" Text='<%# Eval("SequenceNumber") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Seq group" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                            <ItemTemplate><asp:Label ID="lblSequenceGroup" runat="server" Text='<%# Eval("SequenceGroup") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Factor %" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                            <ItemTemplate><asp:Label ID="lblFactorPercentage" runat="server" Text='<%# Eval("FactorPercentage") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Effective %" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                            <ItemTemplate><asp:Label ID="lblEffectivePercentage" runat="server" Text='<%# Eval("EffectivePercentage") %>' /></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate>
+                                <asp:CheckBox ID="chkActive" runat="server" CssClass="tis-status" Checked='<%# Eval("IsActive") %>' Enabled="false" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                    <EmptyDataTemplate>
+                        <tis:EmptyState ID="emptyFactors" runat="server" Icon="percent" Title="No common factors"
+                            Text="Use New factor to add the first common factor for this project and month." />
+                    </EmptyDataTemplate>
+                </asp:GridView>
+            </div>
+        </asp:Panel>
 
-    <asp:GridView ID="GrdIOWCommonFactor" runat="server" CellPadding="3" 
-            Width="833px"  AutoGenerateColumns="False" 
-            Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-            OnRowCommand="GrdIOWCommonFactor_RowCommand">
-
-        <EditRowStyle Font-Size="XX-Small" />
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-            HorizontalAlign="Left" />
-        <AlternatingRowStyle BackColor="#DCDCDC" />
-       
-        <Columns>
-            <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-           <asp:TemplateField HeaderText="ClientCode"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblClientCode" runat="server" Text='<%# Eval("ClientCode") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-           <asp:TemplateField HeaderText="ProjectCode"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblProjectCode" runat="server" Text='<%# Eval("ProjectCode") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-           <asp:TemplateField HeaderText="YearMonth"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblYearMonth" runat="server" Text='<%# Eval("ForYearMonth") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="Comm Fact Id"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblIOWCommonFactorId" runat="server" Text='<%# Eval("IOWCommonFactorId") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-           <asp:TemplateField HeaderText="Comm Fact "  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblIOWCommonFactor" runat="server" Text='<%# Eval("IOWCommonFactor") %>' ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-
-          <asp:TemplateField HeaderText="IOW Comm Factor" Visible="true" >
-            <ItemTemplate>  
-            <asp:LinkButton ID="lnkCommonFactorName" Width="340px" runat ="server" CommandArgument='<%#Eval("IOWCommonFactorId")%>'
-             CommandName ="selectCommonFactor" Text ='<%#Eval("IOWCommonFactor") %>'></asp:LinkButton>
-              </ItemTemplate> <HeaderStyle Width="340px" HorizontalAlign="Center"/>
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Seq #" Visible="true">
-            <ItemTemplate>
-            <asp:Label ID="lblSequenceNumber" runat="server"  Width="60px" Text='<%# Eval("SequenceNumber") %>' ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="60px" HorizontalAlign="Center"/> <ItemStyle HorizontalAlign="Right"/>
-            </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="Seq Group" Visible="true">
-            <ItemTemplate>
-            <asp:Label ID="lblSequenceGroup" runat="server" Text='<%# Eval("SequenceGroup") %>' Width="60px"></asp:Label></ItemTemplate>
-              <HeaderStyle Width="60px" HorizontalAlign="Center"/> <ItemStyle HorizontalAlign="Right"/>
-               </asp:TemplateField>
-
-               <asp:TemplateField HeaderText="Fact %" Visible="true">
-             <ItemTemplate>
-            <asp:Label ID="lblFactorPercentage" runat="server" Text='<%# Eval("FactorPercentage") %>' Width="80px"></asp:Label></ItemTemplate>
-                <HeaderStyle Width="80px" HorizontalAlign="Center" /> <ItemStyle HorizontalAlign="Right"/>
-            </asp:TemplateField>
-               <asp:TemplateField HeaderText="Eff. %" Visible="true">
-             <ItemTemplate>
-            <asp:Label ID="lblEffectivePercentage" runat="server" Text='<%# Eval("EffectivePercentage") %>' Width="80px"></asp:Label></ItemTemplate>
-                <HeaderStyle Width="80px" HorizontalAlign="Center" /> <ItemStyle HorizontalAlign="Right"/>
-            </asp:TemplateField>
-
-            <asp:TemplateField HeaderText="Is Active">
-             <ItemTemplate>    <asp:CheckBox ID="chkActive" Width="60px" runat="server" Checked='<%# Eval("IsActive") %>'
-            Enabled="false"></asp:CheckBox>         </ItemTemplate>
-               <HeaderStyle Width="60px" HorizontalAlign="Center"/>     <ItemStyle HorizontalAlign="Center" />
-            </asp:TemplateField>
-            
-        </Columns>
-        <sortedascendingcellstyle backcolor="#F1F1F1" />
-        <sortedascendingheaderstyle backcolor="#0000A9" />
-        <sorteddescendingcellstyle backcolor="#CAC9C9" />
-        <sorteddescendingheaderstyle backcolor="#000065" />
-    </asp:GridView>
+        <asp:Panel ID="pnlAdd" runat="server" CssClass="tis-card tis-card--legend tis-split__detail" GroupingText="Add Common Factor" DefaultButton="btnSave">
+            <div class="tis-card__body">
+                <div class="tis-form-grid tis-form-grid--2">
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblIOWCommonFactorName" runat="server" Text="Common factor name" AssociatedControlID="txtIOWCommonFactor" CssClass="tis-label" />
+                        <asp:TextBox ID="txtIOWCommonFactor" runat="server" TextMode="MultiLine" Rows="3" />
+                    </div>
+                    <div class="tis-field">
+                        <asp:Label ID="lblSequenceNumber" runat="server" Text="Sequence no." AssociatedControlID="txtSequenceNumber" CssClass="tis-label" />
+                        <asp:TextBox ID="txtSequenceNumber" runat="server" placeholder="e.g. 010" />
+                        <span class="tis-help">Exactly 3 digits, unique in this list.</span>
+                    </div>
+                    <div class="tis-field">
+                        <asp:Label ID="lblFactorPercentage" runat="server" Text="Factor %" AssociatedControlID="txtFactorPercentage" CssClass="tis-label" />
+                        <asp:TextBox ID="txtFactorPercentage" runat="server" />
+                    </div>
+                    <div class="tis-field">
+                        <asp:Label ID="lblEffectivePercentage" runat="server" Text="Effective %" AssociatedControlID="txtEffectivePercentage" CssClass="tis-label" />
+                        <asp:TextBox ID="txtEffectivePercentage" runat="server" />
+                        <span class="tis-help">Must be equal to or more than the factor %.</span>
+                    </div>
+                    <div class="tis-field tis-field--check">
+                        <asp:CheckBox ID="chkIsActive" runat="server" Text="Active" Visible="False" />
+                    </div>
+                </div>
+                <asp:TextBox ID="txtIOWCommonFactorId" runat="server" Visible="false" />
+            </div>
+            <div class="tis-card__footer">
+                <asp:Button ID="btnClear" runat="server" Text="Close" OnClick="btnClear_Click" CssClass="tis-btn tis-btn--ghost" />
+                <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="tis-btn tis-btn--primary" />
+            </div>
+        </asp:Panel>
     </div>
-    <%--</td>
-    </tr>--%>
-    </asp:panel>
-    <br />
-    <asp:panel ID="pnlAdd" runat="server" Width="880px" CssClass="XSmall" GroupingText="Add Common Factor" 
-            style="margin-top: 0px" Height="165px">
-    <table style="width: 99%; height: 46px;" >
-            <tr>
- 
-                <td  style="width: 326px; ">
-                    <asp:Label ID="lblIOWCommonFactorName" runat="server" Text="Comm. Fact. Name"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 237px">
-                    <asp:TextBox ID="txtIOWCommonFactor" runat="server"  TextMode="MultiLine"
-                         height="29px" width="308px"></asp:TextBox>
-                </td>
- 
-                <td style="width: 110px; ">
-                    <asp:Label ID="lblSequenceNumber" runat="server" Text="Seq. No"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 137px">
-                    <asp:TextBox ID="txtSequenceNumber" runat="server" height="18px" width="37px"></asp:TextBox>
-                </td>
-                  <td  style="width: 110px; ">
-                    <asp:Label ID="lblFactorPercentage" runat="server" Text="Factor %"  
-                        Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 100px" >
-                    <asp:TextBox ID="txtFactorPercentage" runat="server" height="18px" width="47px"></asp:TextBox>
-                </td>
-                 <td  style="width: 110px; ">
-                    <asp:Label ID="lblEffectivePercentage" runat="server" Text="Eff. %"    Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 55px" class="style23">
-                    <asp:TextBox ID="txtEffectivePercentage" runat="server" height="18px" width="50px"></asp:TextBox>
-                </td>
-
-                <td style="width: 36px">
-                    <asp:CheckBox ID="chkIsActive" runat="server"  Text="Is Active" Visible="False" />
-                </td>
-                <td>
-                    <asp:Button ID="btnSave" runat="server" Text="Save"  onclick="btnSave_Click" />
-                </td>
-                <td  style="width: 64px">
-                    <asp:Button ID="btnClear" runat="server" Text="Clear"  onclick="btnClear_Click"  />
-                </td>
-                                <td  style="width: 35px">
-                    <asp:TextBox ID="txtIOWCommonFactorId" runat="server"  Visible="false"
-                       height="18px" width="16px"></asp:TextBox>
-                </td>
-                </tr>
-               
-        </table>
-    </asp:panel>
-    <%--</td></tr>
-    </table>--%>
-    <%--</asp:Panel>--%>
-
+</div>
 </asp:Content>
-

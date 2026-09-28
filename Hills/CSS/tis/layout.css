@@ -441,7 +441,14 @@ html[data-nav="rail"] .tis-sidebar__footer { justify-content: center; padding-le
 .tis-field--span-2 { grid-column: span 2; }
 .tis-field--full { grid-column: 1 / -1; }
 .tis-field--inline { flex-direction: row; align-items: center; gap: var(--tis-s-2); }
-.tis-field--check { justify-content: flex-end; min-height: 100%; }
+.tis-field--check {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    align-self: end;
+    gap: 4px 0;
+    min-height: var(--tis-control-h);
+}
 .tis-field--check > span { display: inline-flex; align-items: center; min-height: var(--tis-control-h); }
 
 .tis-label, .tis-field > label, .tis-field > .tis-label {

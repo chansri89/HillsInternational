@@ -1,261 +1,136 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="EmployeeMaster.aspx.cs" Inherits="EmployeeMaster" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <asp:Label ID = "lblSeparator" runat = "server" Height="15px" Width = "901px" ></asp:Label>
-<asp:Label ID="lblempoyeemaster" runat="server"  Text="Employee Master" CssClass="XSmall"
-        width="787px" Font-Size ="12pt" Font-Bold="True"  style="text-align: center"></asp:Label>
-<asp:Label ID = "lblSeparator1" runat = "server"  Height="15px" Width = "901px" ></asp:Label>
-   
-    <asp:panel ID="Pnlgv" runat="server" Height="310px" Width="928px" 
-        CssClass="XXSmall">
-        <div style="overflow:auto; height:297px; width:908px">
-    <asp:GridView ID="GrdEmployeeMaster" runat="server" CellPadding="3" 
-             Width="883px" AutoGenerateColumns="False"   Height="37px" GridLines="Vertical" BackColor="White" BorderColor="#999999"  
-                BorderStyle="None" BorderWidth="1px" 
-                onrowcancelingedit="GrdEmployeeMaster_RowCancelingEdit" 
-                onrowdeleting="GrdEmployeeMaster_RowDeleting" 
-                onrowediting="GrdEmployeeMaster_RowEditing" 
-                onrowupdating="GrdEmployeeMaster_RowUpdating">
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-            HorizontalAlign="Left" />
-        <AlternatingRowStyle BackColor="#DCDCDC" />
-        <Columns>
-            <asp:TemplateField HeaderText="Employee Code" >
-            <ItemTemplate>
-            <asp:Label ID="lblEmployeeCode" runat="server" Text='<%# Eval("EmployeeCode") %>' Width="30px" ></asp:Label></ItemTemplate>
-             <EditItemTemplate>
-            <asp:TextBox ID="txtEmployeeCode" runat="server" Text='<%# Bind("EmployeeCode") %>' ReadOnly="true"  Width="60px"  ></asp:TextBox></EditItemTemplate>
-                <HeaderStyle Width="60px" />
-            </asp:TemplateField>
-             <asp:TemplateField HeaderText="Employee Name" >
-            <ItemTemplate>
-            <asp:Label ID="lblEmployeeName" runat="server" Text='<%# Eval("EmployeeName") %>'></asp:Label></ItemTemplate>
-             <EditItemTemplate>
-            <asp:TextBox ID="txtEmpName" runat="server" Text='<%# Bind("EmployeeName") %>' ></asp:TextBox></EditItemTemplate>
-                <HeaderStyle Width="80px" />
-            </asp:TemplateField>
-             <asp:TemplateField HeaderText="EmailId">
-             <ItemTemplate>
-            <asp:Label ID="lblEmailId" runat="server" Text='<%# Eval("EmailId") %>'></asp:Label></ItemTemplate>
-             <EditItemTemplate>
-            <asp:TextBox ID="txtEmailId" runat="server" Text='<%# Bind("EmailId") %>' ></asp:TextBox></EditItemTemplate>
-                 <HeaderStyle Width="100px" />
-            </asp:TemplateField>
-               <asp:TemplateField HeaderText="Company Name">
-             <ItemTemplate>
-            <asp:Label ID="lblCompanyName" runat="server" Text='<%# Eval("CompanyName") %>'></asp:Label></ItemTemplate>
-             <EditItemTemplate>
-                 <asp:DropDownList ID="ddlCompanyName" runat="server" DataValueField="CompanyCode" DataTextField="CompanyName"   DataSource='<%#getCompanyName() %>'
-                 >
-                 </asp:DropDownList>
-            </EditItemTemplate>
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Manager Name">
-             <ItemTemplate>
-            <asp:Label ID="lblManagerName" runat="server" Text='<%# Eval("ManagerName") %>'></asp:Label></ItemTemplate>
-             <EditItemTemplate>
-                 <asp:DropDownList ID="ddlManagerName" runat="server" Width="60px" DataValueField="EmployeeCode" DataTextField="EmployeeName"   DataSource='<%#getManagerName() %>'
-                 >
-                
-                 </asp:DropDownList>
-            </EditItemTemplate>
-            </asp:TemplateField>
-            
-            <asp:TemplateField HeaderText="Designation">
-            <ItemTemplate>
-            <asp:Label ID="lblEmployeeDesignation" runat="server" Text='<%# Eval("EmployeeDesignation") %>'></asp:Label></ItemTemplate>
-             <EditItemTemplate>
-            <asp:TextBox ID="txtEmployeeDesignation" runat="server" Width="60px"  Text='<%# Bind("EmployeeDesignation") %>'>
-            </asp:TextBox></EditItemTemplate>
-                <HeaderStyle Width="60px" />
-            </asp:TemplateField>
-          
-          <asp:TemplateField HeaderText="Is Auditor" Visible ="false">
-             <ItemTemplate>
-  
-              <asp:CheckBox ID="chkAuditor" runat="server" Checked='<%# Eval("IsAuditor") %>'
-             Enabled="false"></asp:CheckBox>
-             </ItemTemplate>
-
-             <EditItemTemplate>
-           <asp:CheckBox ID="chkIsAuditor" runat="server" Checked='<%# Bind("IsAuditor") %>'
-            ></asp:CheckBox>
-           </EditItemTemplate>
-                <HeaderStyle Width="30px" />
-                <ItemStyle HorizontalAlign="Center" />
-            </asp:TemplateField>
-           
-          <asp:TemplateField HeaderText="Is Company Admin">
-             <ItemTemplate>
- 
-              <asp:CheckBox ID="chkCompanyAdmin" runat="server" Checked='<%# Eval("IsCompanyAdmin") %>'
-             Enabled="false"></asp:CheckBox>
-             </ItemTemplate>
-             <EditItemTemplate>
-           <asp:CheckBox ID="chkCompanyAdmin" runat="server" Width="30px" Checked='<%# Bind("IsCompanyAdmin") %>' 
-            ></asp:CheckBox>
-           </EditItemTemplate>
-                <HeaderStyle Width="30px" />
-                <ItemStyle HorizontalAlign="Center" />
-            </asp:TemplateField>
-
-
-             <asp:TemplateField HeaderText="Is Active">
-             <ItemTemplate>
- 
-              <asp:CheckBox ID="chkActive" runat="server" Checked='<%# Eval("IsActive") %>'
-             Width="30px" Enabled="false"></asp:CheckBox>
-             </ItemTemplate>
-
-             <EditItemTemplate>
-           <asp:CheckBox ID="chkIsActive" runat="server" Width="30px" Checked='<%# Bind("IsActive") %>'
-            ></asp:CheckBox>
-           </EditItemTemplate>
-                <HeaderStyle Width="30px" />
-                <ItemStyle HorizontalAlign="Center" />
-            </asp:TemplateField>
-
- 
-            
-            <asp:CommandField HeaderText="Edit" ShowEditButton="True" 
-                CausesValidation="False">
-            <HeaderStyle Width="40px" />
-            </asp:CommandField>
- 
-        </Columns>
-        <sortedascendingcellstyle backcolor="#F1F1F1" />
-        <sortedascendingheaderstyle backcolor="#0000A9" />
-        <sorteddescendingcellstyle backcolor="#CAC9C9" />
-        <sorteddescendingheaderstyle backcolor="#000065" />
-    </asp:GridView>
+<div class="tis-page">
+    <span class="tis-hidden"><asp:Label ID="lblSeparator" runat="server" /><asp:Label ID="lblSeparator1" runat="server" /></span>
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Masters</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblempoyeemaster" runat="server" Text="Employee Master" /></h1>
+            <p class="tis-page-header__desc">Employees who can sign in, with their location, manager and designation.</p>
+        </div>
     </div>
-    </asp:panel>
-    <asp:panel ID="pnlAdd" runat="server" Width="640px" Height="182px" 
-        CssClass="XSmall" >
-    <table style="width: 99%; height: 97%;">
-            <tr>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblEmployeeCode" runat="server" Text="Employee Code"  
-                         style="font-weight: bold"></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:TextBox ID="txtEmployeeCode" runat="server"  height="15px"
-                        Width="96px"></asp:TextBox>
-                </td>
 
-            </tr>
-             <tr>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblEmpname" runat="server" Text="Employee Name"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:TextBox ID="txtEmpname" runat="server"  height="15px"
-                        Width="231px"></asp:TextBox>
-                </td>
+    <div class="tis-split">
+        <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-card tis-split__list">
+            <div class="tis-card__header">
+                <div class="tis-card__heading">
+                    <div class="tis-card__title">Employees</div>
+                    <div class="tis-card__subtitle">Use Edit on a row to change it in place.</div>
+                </div>
+                <asp:Button ID="btnNew" runat="server" Text="New employee" CssClass="tis-btn tis-btn--primary tis-btn--sm"
+                    OnClick="btnNew_Click" CausesValidation="false" />
+            </div>
+            <div class="tis-table-wrap tis-table-wrap--tall">
+                <asp:GridView ID="GrdEmployeeMaster" runat="server" AutoGenerateColumns="False"
+                    OnRowCancelingEdit="GrdEmployeeMaster_RowCancelingEdit"
+                    OnRowDeleting="GrdEmployeeMaster_RowDeleting"
+                    OnRowEditing="GrdEmployeeMaster_RowEditing"
+                    OnRowUpdating="GrdEmployeeMaster_RowUpdating">
+                    <Columns>
+                        <asp:TemplateField HeaderText="Code" ItemStyle-CssClass="code">
+                            <ItemTemplate><asp:Label ID="lblEmployeeCode" runat="server" Text='<%# Eval("EmployeeCode") %>' /></ItemTemplate>
+                            <EditItemTemplate><asp:TextBox ID="txtEmployeeCode" runat="server" Text='<%# Bind("EmployeeCode") %>' ReadOnly="true" /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Employee" ItemStyle-CssClass="strong">
+                            <ItemTemplate><asp:Label ID="lblEmployeeName" runat="server" Text='<%# Eval("EmployeeName") %>' /></ItemTemplate>
+                            <EditItemTemplate><asp:TextBox ID="txtEmpName" runat="server" Text='<%# Bind("EmployeeName") %>' /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Email">
+                            <ItemTemplate><asp:Label ID="lblEmailId" runat="server" Text='<%# Eval("EmailId") %>' /></ItemTemplate>
+                            <EditItemTemplate><asp:TextBox ID="txtEmailId" runat="server" Text='<%# Bind("EmailId") %>' /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Location">
+                            <ItemTemplate><asp:Label ID="lblCompanyName" runat="server" Text='<%# Eval("CompanyName") %>' /></ItemTemplate>
+                            <EditItemTemplate>
+                                <asp:DropDownList ID="ddlCompanyName" runat="server" DataValueField="CompanyCode" DataTextField="CompanyName" DataSource='<%#getCompanyName() %>' />
+                            </EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Manager">
+                            <ItemTemplate><asp:Label ID="lblManagerName" runat="server" Text='<%# Eval("ManagerName") %>' /></ItemTemplate>
+                            <EditItemTemplate>
+                                <asp:DropDownList ID="ddlManagerName" runat="server" DataValueField="EmployeeCode" DataTextField="EmployeeName" DataSource='<%#getManagerName() %>' />
+                            </EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Designation">
+                            <ItemTemplate><asp:Label ID="lblEmployeeDesignation" runat="server" Text='<%# Eval("EmployeeDesignation") %>' /></ItemTemplate>
+                            <EditItemTemplate><asp:TextBox ID="txtEmployeeDesignation" runat="server" Text='<%# Bind("EmployeeDesignation") %>' /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Auditor" Visible="false">
+                            <ItemTemplate><asp:CheckBox ID="chkAuditor" runat="server" CssClass="tis-status tis-status--yes" Checked='<%# Eval("IsAuditor") %>' Enabled="false" /></ItemTemplate>
+                            <EditItemTemplate><asp:CheckBox ID="chkIsAuditor" runat="server" Checked='<%# Bind("IsAuditor") %>' /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Company admin" HeaderStyle-CssClass="center" ItemStyle-CssClass="center">
+                            <ItemTemplate><asp:CheckBox ID="chkCompanyAdmin" runat="server" CssClass="tis-status tis-status--yes" Checked='<%# Eval("IsCompanyAdmin") %>' Enabled="false" /></ItemTemplate>
+                            <EditItemTemplate><asp:CheckBox ID="chkCompanyAdmin" runat="server" Checked='<%# Bind("IsCompanyAdmin") %>' /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate><asp:CheckBox ID="chkActive" runat="server" CssClass="tis-status" Checked='<%# Eval("IsActive") %>' Enabled="false" /></ItemTemplate>
+                            <EditItemTemplate><asp:CheckBox ID="chkIsActive" runat="server" Text="Active" Checked='<%# Bind("IsActive") %>' /></EditItemTemplate>
+                        </asp:TemplateField>
+                        <asp:CommandField HeaderText="Edit" ShowEditButton="True" CausesValidation="False" ItemStyle-CssClass="actions" />
+                    </Columns>
+                    <EmptyDataTemplate>
+                        <tis:EmptyState ID="emptyEmployees" runat="server" Icon="user" Title="No employees yet"
+                            Text="Use New employee to add the first employee." />
+                    </EmptyDataTemplate>
+                </asp:GridView>
+            </div>
+        </asp:Panel>
 
-                  <td style="width: 118px; text-align: left;">
-                    <asp:CheckBox ID="ChkIsCompanyAdmin" runat="server"  
-                            Text="Company Admin" Visible="True" />
-                </td>
-                  <td  style="width: 80px; text-align: left;">
-                    <asp:CheckBox ID="ChkIsAuditor" runat="server"  
-                         Text="IsAuditor" Visible="false"  
-                         oncheckedchanged="ChkIsAuditor_CheckedChanged" AutoPostBack="True"/>
-                </td>
-            </tr>
-             
-             <tr>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblEmailid" runat="server" Text="EmailId"  
-                         style="font-weight: bold"></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:TextBox ID="txtEmailId" runat="server"  
-                        Width="230px" height="15px"></asp:TextBox>
-                </td>
-                          
- 
-       <%--     </tr>
-            <tr>--%>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblUserPassword" runat="server" Text="Password"  
-                         Font-Bold="True"></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:TextBox ID="txtPassword" runat="server"  height="16px"
-                        TextMode="Password" Width="146px"></asp:TextBox>
-                </td>
-
-            </tr>
-            <tr>
-                <td style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblCompanyName" runat="server" Text="Company Name"  
-                         style="font-weight: 700"></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:DropDownList ID="ddlCompanyName" runat="server"  
-                        Height="15px" Width="239px">
-                    </asp:DropDownList>
-                </td>
-                
-        <%--    </tr>
-            <tr>--%>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblManagerName" runat="server" Text="Manager Name"  
-                        ></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:DropDownList ID="ddlManagerName" runat="server"  Height="16px" 
-                        Width="160px">
-                    </asp:DropDownList>
-                </td>
-            </tr>
-            <tr>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:Label ID="lblEmployeeDesignation" runat="server" 
-                        Text="Designation"   
-                        style="font-weight: 700"></asp:Label>
-                </td>
-                <td style="width: 125px">
-                    <asp:TextBox ID="txtEmployeeDesignation" runat="server"  height="15px"
-                        Width="228px"></asp:TextBox>
-                </td>
-           <%-- </tr>
-           
-
-            <tr>
-             <td></td>--%>
-                <td  style="width: 116px; text-align: left;">
-                    <asp:CheckBox ID="chkIsActive" runat="server"  
-                         Text="IsActive  " Visible="False" />
-                </td>
-                <td>
-                        <asp:Button ID="Button1" runat="server"  Text="Save" 
-                        onclick="btnSave_Click" style="height: 20px" />
-                </td>
-
-                 
-
-              <%--  <td style="width: 125px">
-                    <asp:Button ID="btnSave" runat="server"  Text="Save" 
-                        onclick="btnSave_Click" style="height: 20px" />
-                </td>--%>
-           </tr>
-           <tr><td></td>
-                <td style="width: 116px" > <asp:HiddenField ID="HidDeleteCount" Value="0" runat="server"  />
-                
-                </td><td></td>
-                <td class="style23" style="width: 80px"> <asp:HiddenField ID="HidUpdateCount" Value="0" runat="server" /> </td>
-            </tr>
-            
-        </table>
-    </asp:panel>
-    
-  <%--  </div>--%>
+        <asp:Panel ID="pnlAdd" runat="server" CssClass="tis-card tis-split__detail" DefaultButton="Button1">
+            <div class="tis-card__header">
+                <div class="tis-card__heading">
+                    <div class="tis-card__title">Add employee</div>
+                    <div class="tis-card__subtitle">All fields except manager are required.</div>
+                </div>
+            </div>
+            <div class="tis-card__body">
+                <div class="tis-form-grid tis-form-grid--2">
+                    <div class="tis-field">
+                        <asp:Label ID="lblEmployeeCode" runat="server" Text="Employee code" AssociatedControlID="txtEmployeeCode" CssClass="tis-label" />
+                        <asp:TextBox ID="txtEmployeeCode" runat="server" />
+                    </div>
+                    <div class="tis-field">
+                        <asp:Label ID="lblUserPassword" runat="server" Text="Password" AssociatedControlID="txtPassword" CssClass="tis-label" />
+                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" />
+                    </div>
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblEmpname" runat="server" Text="Employee name" AssociatedControlID="txtEmpname" CssClass="tis-label" />
+                        <asp:TextBox ID="txtEmpname" runat="server" />
+                    </div>
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblEmailid" runat="server" Text="Email" AssociatedControlID="txtEmailId" CssClass="tis-label" />
+                        <asp:TextBox ID="txtEmailId" runat="server" />
+                    </div>
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblCompanyName" runat="server" Text="Location" AssociatedControlID="ddlCompanyName" CssClass="tis-label" />
+                        <asp:DropDownList ID="ddlCompanyName" runat="server" />
+                    </div>
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblManagerName" runat="server" Text="Manager" AssociatedControlID="ddlManagerName" CssClass="tis-label" />
+                        <asp:DropDownList ID="ddlManagerName" runat="server" />
+                    </div>
+                    <div class="tis-field tis-field--full">
+                        <asp:Label ID="lblEmployeeDesignation" runat="server" Text="Designation" AssociatedControlID="txtEmployeeDesignation" CssClass="tis-label" />
+                        <asp:TextBox ID="txtEmployeeDesignation" runat="server" />
+                    </div>
+                    <div class="tis-field tis-field--check">
+                        <asp:CheckBox ID="ChkIsCompanyAdmin" runat="server" Text="Company admin" Visible="True" />
+                    </div>
+                    <div class="tis-field tis-field--check">
+                        <asp:CheckBox ID="ChkIsAuditor" runat="server" Text="IsAuditor" Visible="false"
+                            OnCheckedChanged="ChkIsAuditor_CheckedChanged" AutoPostBack="True" />
+                        <asp:CheckBox ID="chkIsActive" runat="server" Text="IsActive" Visible="False" />
+                    </div>
+                </div>
+                <asp:HiddenField ID="HidDeleteCount" Value="0" runat="server" />
+                <asp:HiddenField ID="HidUpdateCount" Value="0" runat="server" />
+            </div>
+            <div class="tis-card__footer">
+                <asp:Button ID="Button1" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="tis-btn tis-btn--primary" />
+            </div>
+        </asp:Panel>
+    </div>
+</div>
 </asp:Content>
-

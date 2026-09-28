@@ -84,6 +84,14 @@ public partial class A_ProjectInputIOWCommonFactor : System.Web.UI.Page
             pnlAdd.Visible = true;
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        AllClear();
+        btnSave.Text = "Save";
+        GrdIOWCommonFactor.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtIOWCommonFactor.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         Pnlgv.Visible = false;
@@ -152,7 +160,7 @@ public partial class A_ProjectInputIOWCommonFactor : System.Web.UI.Page
                 chkIsActive.Checked = ((CheckBox)row.FindControl("chkActive")).Checked;
                // chkIsActive.Visible = true;
                 btnSave.Text = "Update";
-                Pnlgv.Visible = false;
+                GrdIOWCommonFactor.SelectedIndex = row.RowIndex;
                 pnlAdd.Visible = true;
                 pnlAdd.GroupingText = "Update Common Factor";
                 break;

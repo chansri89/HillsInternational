@@ -38,6 +38,14 @@ public partial class FinancialYearMaster : System.Web.UI.Page
             }
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        GrdFinancialYearMaster.EditIndex = -1;
+        AllClear();
+        GrdFinancialYearMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtFromDate.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
         System.Globalization.DateTimeFormatInfo dateinfo = new System.Globalization.DateTimeFormatInfo();

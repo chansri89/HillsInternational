@@ -221,26 +221,26 @@ public partial class TenderIOWMapping : System.Web.UI.Page
             int WTMapped = Convert.ToInt16(TMapped); // when 0 Tender Not Mapped else it is mapped.
             if (col1 == "0" && col2.Length > 0 && WTMapped==0) // scs 251223 tenderquerydoc3 to show mapped item with qty 0 in green added WTMapped = 0
             {
-                e.Row.BackColor = System.Drawing.Color.LightBlue; // not mapped show it in Magenta
+                e.Row.CssClass = "is-unmapped"; // not mapped show it in Magenta
             }
             else if (col1 == "0" && col2 == "")  //(col1 == "0" || col2 == "")
             {
-                e.Row.BackColor = System.Drawing.Color.White;
+                e.Row.CssClass = "";
                 e.Row.Enabled = false;
             }
             else
             {
                 if (WTMapped == 0) 
                 {
-                    e.Row.BackColor = System.Drawing.Color.LightBlue; // not mapped show it in Magenta
+                    e.Row.CssClass = "is-unmapped"; // not mapped show it in Magenta
                 }
                 else if (WTMapped == 1 && col1 == "0" && col2.Length > 0)
                 {
-                    e.Row.BackColor = System.Drawing.Color.LightGreen; // when mapped for quantity 0 show it in green tender query doc 3 from hills point 3
+                    e.Row.CssClass = "is-mapped"; // when mapped for quantity 0 show it in green tender query doc 3 from hills point 3
                 }
                 else
                 {
-                    e.Row.BackColor = System.Drawing.Color.LightGreen; // when mapped show it in green
+                    e.Row.CssClass = "is-mapped"; // when mapped show it in green
                 }
                 e.Row.Enabled = true;
             }
@@ -685,7 +685,7 @@ public partial class TenderIOWMapping : System.Web.UI.Page
                     SelIowNew.TenderMapId = Convert.ToInt64(txtClientProjectTenderId.Text);
                     SelIowNew.ClientProjectId = Convert.ToInt64(ddlProject.SelectedValue);
                     Seliowlst.Add(SelIowNew);
-                    gvr.BackColor = System.Drawing.Color.LightGreen; // when mapped show it in green
+                    gvr.CssClass = "is-mapped"; // when mapped show it in green
                     break;
                 }
             }
@@ -726,7 +726,7 @@ public partial class TenderIOWMapping : System.Web.UI.Page
             if ((((Label)gvr.FindControl("lblIOWCode")).Text) == WIOWCode)
             {
                 ((CheckBox)gvr.FindControl("chkSelectBox")).Checked = false;
-                gvr.BackColor = System.Drawing.Color.White;
+                gvr.CssClass = "";
                 break;
             }
         }
@@ -790,7 +790,7 @@ public partial class TenderIOWMapping : System.Web.UI.Page
                 if ((((Label)gvri.FindControl("lblIOWCode")).Text) == WIOwCode)
                 {
                     ((CheckBox)gvri.FindControl("chkSelectBox")).Checked = true;
-                    gvri.BackColor = System.Drawing.Color.LightGreen; // when mapped show it in green
+                    gvri.CssClass = "is-mapped"; // when mapped show it in green
                 }
             }
         }
@@ -804,7 +804,7 @@ public partial class TenderIOWMapping : System.Web.UI.Page
             int WTMapped = Convert.ToInt16(TMapped); // when 0 Tender Not Mapped else it is mapp
             if (WTMapped == 1)
             {
-                gvr.BackColor = System.Drawing.Color.LightGreen; // when mapped show it in green
+                gvr.CssClass = "is-mapped"; // when mapped show it in green
                 ((CheckBox)gvr.FindControl("chkSelectBox")).Checked = true;
                 string WIOWCode = (((Label)gvr.FindControl("lblIOWCode")).Text);
                 LoadSelectedIOW(WIOWCode);

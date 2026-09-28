@@ -58,6 +58,16 @@ public partial class LoginUser : System.Web.UI.Page
         CompanyChanged(); //scs single company to show on top
     }
 
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        ClearAll();
+        btnSave.Text = "Save";
+        txtUserPassword.Visible = true;
+        lblUserPassword.Visible = true;
+        GrdEmployeeMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtUserName.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
         if (!user.HasPermission(ProgramName, UserPermission.CanCreate.ToString()))
@@ -97,7 +107,7 @@ public partial class LoginUser : System.Web.UI.Page
                 ddlDepartName.SelectedValue = log.DepartmentId.ToString();
                 btnSave.Text = "Update";
                 txtLoginUserId.Text = (WLoginUserId);
-                Pnlgv.Visible = false;
+                GrdEmployeeMaster.SelectedIndex = ((GridViewRow)((Control)e.CommandSource).NamingContainer).RowIndex;
                 pnlAdd.Visible = true;
                 pnlAdd.GroupingText="Edit User";
             }

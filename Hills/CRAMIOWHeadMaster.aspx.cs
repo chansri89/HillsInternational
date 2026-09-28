@@ -36,6 +36,16 @@ public partial class CRAMIOWHeadMaster : System.Web.UI.Page
             LoadCompany();
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        AllClear();
+        btnSave.Text = "Save";
+        txtIOWHeadCode.Enabled = true;
+        GrdIOWHeadMaster.SelectedIndex = -1;
+        Pnlgv.Visible = true;
+        pnlAdd.Visible = true;
+        txtIOWHeadCode.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         
@@ -160,7 +170,7 @@ public partial class CRAMIOWHeadMaster : System.Web.UI.Page
                     }
 
                     btnSave.Text = "Update";
-                    Pnlgv.Visible = false;
+                    GrdIOWHeadMaster.SelectedIndex = row.RowIndex;
                     txtIOWHeadCode.Enabled = false;
                     pnlPendind.Enabled = false;
                     break;

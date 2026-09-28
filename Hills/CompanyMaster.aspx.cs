@@ -56,6 +56,19 @@ public partial class CompanyMaster : System.Web.UI.Page
             }
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        // AllClear() rebinds the grid from CompanyList, which is empty on a plain postback.
+        txtCompanyCode.Text = "";
+        txtCompanyName.Text = "";
+        txtCompanyShortName.Text = "";
+        ddlCompanyType.SelectedIndex = 0;
+        ddlStateShortName.SelectedIndex = 0;
+        ddlEnterpriseName.SelectedIndex = 0;
+        ddlParentCompanyName.SelectedIndex = 0;
+        pnlAdd.Visible = true;
+        txtCompanyCode.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
 

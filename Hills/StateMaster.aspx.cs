@@ -34,6 +34,14 @@ public partial class StateMaster : System.Web.UI.Page
         }        
        
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        GrdStateMaster.EditIndex = -1;
+        AllClear();
+        GrdStateMaster.SelectedIndex = -1;
+        pnlAdd.Visible = true;
+        txtStatetName.Focus();
+    }
     protected void btnSave_Click(object sender, EventArgs e)
     {
        

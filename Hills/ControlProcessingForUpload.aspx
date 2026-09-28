@@ -1,110 +1,77 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage1.Master" AutoEventWireup="true" CodeFile="ControlProcessingForUpload.aspx.cs" Inherits="ControlProcessingForUpload" %>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-    <%-- <asp:Label ID = "lblSeparator" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>--%>
-
-  <asp:Label ID="lblCustomerMaster" runat="server" Align= "center" Text="Monthly Closure Control" CssClass="XSmall"
-        width="787px"    Font-Size ="12pt" Font-Bold="True"   style="text-align: center"></asp:Label>
-   <asp:Label ID = "lblSeparator1" runat = "server" align = "center" Height="15px" Width = "901px" ></asp:Label>
-    <div style="overflow:auto; height: 471px; width: 1163px;">
-
- 
-    <asp:panel ID="Pnlgv" runat="server" Width="725px" Height="286px" CssClass="XSmall"
-            GroupingText = "Processing Month Change" >
-     <table style="height: 40px; width: 669px;">
-       <tr>
-         <td style="text-align: left; width: 114px;" >
-            <asp:Label ID="lblCompName" runat="server" Text="Company Name" 
-                Font-Bold="True"></asp:Label>
-        </td>
-         <td style="width: 171px"> <asp:DropDownList ID="ddlCompanyName" runat="server" 
-                 AutoPostBack="true" OnSelectedIndexChanged = "ddlCompanyChanged"   Height="16px" Width="268px">
-                    </asp:DropDownList>
-        </td>
-        <td>
-             <asp:Button ID="btnSave" runat="server"  Height="21px"   Text="Save" Width="43px" onclick="btnSave_Click" />
-
-        </td>
-       </tr>
-    </table>
-  
-        <div id="divCustomer" runat="server"  
-            style="overflow:auto; height:208px; width:711px">
-    <asp:GridView ID="GrdControlProcess" runat="server" CellPadding="3" 
-             Width="694px" Font-Names="Verdana" AutoGenerateColumns="False" 
-            Height="16px" GridLines="Vertical" BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-        >
-         <EditRowStyle Font-Size="XX-Small" />
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-            HorizontalAlign="Left" />
-        <AlternatingRowStyle BackColor="#DCDCDC" />
-
-        <Columns>
-            <asp:TemplateField HeaderText="CompanyId"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>'  ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="ControlProcessingId"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblControlProcessingId" runat="server" Text='<%# Eval("ControlProcessingId") %>'  ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="10px" />
-            </asp:TemplateField>
-           <asp:TemplateField HeaderText="Company Name"  Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblCompanyName" runat="server" Text='<%# Eval("CompanyName") %>' Width="250px"  ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="250px" /><ItemStyle Width = "250px" />
-            </asp:TemplateField>
-             <asp:TemplateField HeaderText="Year Month" Visible="true">
-            <ItemTemplate>
-            <asp:Label ID="lblYYYYMM" runat="server" Text='<%# Eval("PaySlipYearMonth") %>' width ="60px" ></asp:Label></ItemTemplate>
-              <HeaderStyle Width="60px"/>
-            </asp:TemplateField>
-
-           <asp:TemplateField HeaderText="PF From Date" Visible="true" >
-                    <ItemTemplate> <asp:label ID="lblPFFrom" runat="server" Text='<%# Eval("PFPeriodFrom","{0:dd-MM-yyyy}") %>' Width="70px"  > </asp:label>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-          <asp:TemplateField HeaderText="PF To Date" Visible="true" >
-                    <ItemTemplate> <asp:label ID="lblPFTo" runat="server" Text='<%# Eval("PFPeriodTo","{0:dd-MM-yyyy}") %>' Width="70px"  ></asp:label>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-         <asp:TemplateField HeaderText="ESI From Date" Visible="true" >
-                    <ItemTemplate> <asp:label ID="lblESIFrom" runat="server" Text='<%# Eval("ESIPeriodFrom","{0:dd-MM-yyyy}") %>' Width="70px"  ></asp:label>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-         <asp:TemplateField HeaderText="ESI To Date" Visible="true" >
-                    <ItemTemplate> <asp:label ID="lblESITo" runat="server" Text='<%# Eval("ESIPeriodTo","{0:dd-MM-yyyy}") %>' Width="70px"  ></asp:label>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-         <asp:TemplateField HeaderText="Overtime From Date" Visible="true" >
-                    <ItemTemplate> <asp:label ID="lblOvertimeFrom" runat="server" Text='<%# Eval("OverTimePeriodFrom","{0:dd-MM-yyyy}") %>' Width="70px"  ></asp:label>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-         <asp:TemplateField HeaderText="PF From Date" Visible="true" >
-                    <ItemTemplate> <asp:label ID="lblOvertimeTo" runat="server" Text='<%# Eval("OverTimePeriodTo","{0:dd-MM-yyyy}") %>' Width="70px"  ></asp:Label>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-         <asp:TemplateField HeaderText="Working Days" Visible="true" >
-                    <ItemTemplate> <asp:TextBox ID="txtWorkingDays" runat="server" Text='<%# Eval("WorkingDays") %>' Width="70px"  ></asp:TextBox>
-                    </ItemTemplate>  <HeaderStyle Width="90px" /><ItemStyle HorizontalAlign ="Right" />
-                    </asp:TemplateField>
-
-        </Columns>
-        <sortedascendingcellstyle backcolor="#F1F1F1" />
-        <sortedascendingheaderstyle backcolor="#0000A9" />
-        <sorteddescendingcellstyle backcolor="#CAC9C9" />
-        <sorteddescendingheaderstyle backcolor="#000065" />
-    </asp:GridView>
+<div class="tis-page">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Tender</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblCustomerMaster" runat="server" Text="Monthly closure control" /></h1>
+            <p class="tis-page-header__desc">Review the current processing month for a company and set the number of working days in it.</p>
+        </div>
     </div>
+    <span class="tis-hidden"><asp:Label ID="lblSeparator1" runat="server" /></span>
 
-    </asp:panel>
-    <br />
-
-    </div>
+    <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-card">
+        <div class="tis-card__header">
+            <div class="tis-card__heading">
+                <div class="tis-card__title">Processing month change</div>
+                <div class="tis-card__subtitle">Working days cannot exceed the number of days in the month.</div>
+            </div>
+        </div>
+        <div class="tis-card__body">
+            <div class="tis-toolbar">
+                <div class="tis-field tis-toolbar__grow">
+                    <asp:Label ID="lblCompName" runat="server" Text="Company" AssociatedControlID="ddlCompanyName" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlCompanyName" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged" />
+                </div>
+            </div>
+        </div>
+        <div id="divCustomer" runat="server" class="tis-table-wrap tis-table-wrap--tall">
+            <asp:GridView ID="GrdControlProcess" runat="server" AutoGenerateColumns="False">
+                <Columns>
+                    <asp:TemplateField HeaderText="CompanyId" Visible="false">
+                        <ItemTemplate><asp:Label ID="lblCompanyId" runat="server" Text='<%# Eval("CompanyId") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ControlProcessingId" Visible="false">
+                        <ItemTemplate><asp:Label ID="lblControlProcessingId" runat="server" Text='<%# Eval("ControlProcessingId") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Company" Visible="false">
+                        <ItemTemplate><asp:Label ID="lblCompanyName" runat="server" Text='<%# Eval("CompanyName") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Year month" Visible="true" ItemStyle-CssClass="code">
+                        <ItemTemplate><asp:Label ID="lblYYYYMM" runat="server" Text='<%# Eval("PaySlipYearMonth") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="PF from" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:Label ID="lblPFFrom" runat="server" Text='<%# Eval("PFPeriodFrom","{0:dd-MM-yyyy}") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="PF to" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:Label ID="lblPFTo" runat="server" Text='<%# Eval("PFPeriodTo","{0:dd-MM-yyyy}") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ESI from" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:Label ID="lblESIFrom" runat="server" Text='<%# Eval("ESIPeriodFrom","{0:dd-MM-yyyy}") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="ESI to" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:Label ID="lblESITo" runat="server" Text='<%# Eval("ESIPeriodTo","{0:dd-MM-yyyy}") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Overtime from" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:Label ID="lblOvertimeFrom" runat="server" Text='<%# Eval("OverTimePeriodFrom","{0:dd-MM-yyyy}") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Overtime to" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:Label ID="lblOvertimeTo" runat="server" Text='<%# Eval("OverTimePeriodTo","{0:dd-MM-yyyy}") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Working days" Visible="true" HeaderStyle-CssClass="num" ItemStyle-CssClass="num">
+                        <ItemTemplate><asp:TextBox ID="txtWorkingDays" runat="server" Text='<%# Eval("WorkingDays") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                <EmptyDataTemplate>
+                    <tis:EmptyState ID="emptyControlProcess" runat="server" Icon="calendar" Title="No processing month yet"
+                        Text="Choose a company. If nothing appears, ask an admin to create its processing month." />
+                </EmptyDataTemplate>
+            </asp:GridView>
+        </div>
+        <div class="tis-card__footer">
+            <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="tis-btn tis-btn--primary" />
+        </div>
+    </asp:Panel>
+</div>
 </asp:Content>
-

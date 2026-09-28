@@ -201,7 +201,7 @@ public partial class CRAMIOWHeadDtlMaster : System.Web.UI.Page
                     txtCRAMIOWHeadCode.Text = ((Label)row.FindControl("lblIOWHeadCode")).Text;
                     txtCRAMIOWHeadName.Text = ((Label)row.FindControl("lblIOWHeadName")).Text;
                     txtIOWCode.Text = txtCRAMIOWHeadCode.Text+"."; // first charcaters to match IOW Headcode
-                    Pnlgv.Visible = false;
+                    GrdIOWHeadMaster.SelectedIndex = row.RowIndex;
                     pnlIOWAdd.Visible = true;
                     LoadGridIOWDtl(Convert.ToInt32(ddlCompany.SelectedValue));
                     pnlIOW.Visible = true;

@@ -107,175 +107,123 @@
     }
 </script>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<h1 class="tis-page-title">
-    <asp:Label ID="lblassignprogramtoroles" runat="server" Text="Assign Program To Roles" />
-</h1>
+<div class="tis-page" data-density="compact">
+    <div class="tis-page-header">
+        <div class="tis-page-header__text">
+            <span class="tis-eyebrow">Admin</span>
+            <h1 class="tis-page-header__title"><asp:Label ID="lblassignprogramtoroles" runat="server" Text="Assign programs to roles" /></h1>
+            <p class="tis-page-header__desc">Create a role with its screen permissions, or pick an existing role and edit its permissions one program at a time.</p>
+        </div>
+    </div>
 
-    <div class="tis-card">
-    <asp:Panel ID="pnlRoleDetails" runat="server" Height="38px" CssClass="XSmall">
-        <table>
-            <tr>
-                <td colspan="20" align="right">
-                        <asp:RadioButtonList ID="rdbtnRole" runat="server" RepeatDirection="Horizontal"
-                            Width="242px" 
-                            OnSelectedIndexChanged="rdbtnRole_SelectedIndexChanged" AutoPostBack="True" 
-                            Font-Bold="False">
-                            <asp:ListItem Selected="True" Value="1" Text="New Role"/>
-                            <asp:ListItem  Value="2" Text="Update Role"/>
-                        </asp:RadioButtonList>
-                </td>
-              
-                <td id="tdRoleName" colspan="20" align ="right" style="height: 41px" runat="server" visible="true">
-                    <asp:Label ID="lblRoleName" runat="server" Text="Role Name" Width="76px" 
-                    Font-Bold="True"></asp:Label>
-                </td>
-                <td id="tdRoleFields" colspan="20" style="height: 41px" runat="server" visible="true">
-                    <asp:TextBox ID="txtNewRoleName" runat="server"  
-                        Width="235px" Visible="true" MaxLength="20"></asp:TextBox>
-                    <asp:DropDownList ID="ddlRoleName" runat="server" Width="215px" 
-                        Visible="False" AutoPostBack="True" 
-                        DataTextField="RoleName" DataValueField="RoleId" 
-                        OnSelectedIndexChanged="ddlRoleName_SelectedIndexChanged" Height="19px">
-                    </asp:DropDownList>
-                </td>
-            <td >
-                   <asp:Label ID="lblMainmenu" runat="server" Text="MainMenu" Width="59px" 
-                             Font-Bold="True"      ForeColor="Black"></asp:Label></td>
-                  <td class="style75"  >
-                   <asp:DropDownList ID="ddlMainMenu" runat="server" Width="113px" 
-                         DataTextField="MainMenu" DataValueField="MainMenu" Height="22px" AutoPostBack = "true"
-                   OnSelectedIndexChanged="ddlMainMenu_SelectedIndexChanged">
-            </asp:DropDownList></td>
-            <td><asp:TextBox ID="txtMainMenu" runat="server"  Width="10px" Visible="false" ></asp:TextBox></td>
-           </tr>
-       </table>
+    <asp:Panel ID="pnlRoleDetails" runat="server" CssClass="tis-card">
+        <div class="tis-card__body">
+            <div class="tis-toolbar">
+                <div class="tis-field">
+                    <span class="tis-label">Mode</span>
+                    <asp:RadioButtonList ID="rdbtnRole" runat="server" RepeatLayout="Flow" RepeatDirection="Horizontal" CssClass="tis-segmented"
+                        OnSelectedIndexChanged="rdbtnRole_SelectedIndexChanged" AutoPostBack="True">
+                        <asp:ListItem Selected="True" Value="1" Text="New role" />
+                        <asp:ListItem Value="2" Text="Update role" />
+                    </asp:RadioButtonList>
+                </div>
+                <div class="tis-field tis-toolbar__grow">
+                    <div id="tdRoleName" runat="server" visible="true">
+                        <asp:Label ID="lblRoleName" runat="server" Text="Role name" AssociatedControlID="txtNewRoleName" CssClass="tis-label" />
+                    </div>
+                    <div id="tdRoleFields" runat="server" visible="true">
+                        <asp:TextBox ID="txtNewRoleName" runat="server" Visible="true" MaxLength="20" placeholder="e.g. Estimator" />
+                        <asp:DropDownList ID="ddlRoleName" runat="server" Visible="False" AutoPostBack="True"
+                            DataTextField="RoleName" DataValueField="RoleId"
+                            OnSelectedIndexChanged="ddlRoleName_SelectedIndexChanged" />
+                    </div>
+                </div>
+                <div class="tis-field">
+                    <asp:Label ID="lblMainmenu" runat="server" Text="Main menu" AssociatedControlID="ddlMainMenu" CssClass="tis-label" />
+                    <asp:DropDownList ID="ddlMainMenu" runat="server" DataTextField="MainMenu" DataValueField="MainMenu" AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlMainMenu_SelectedIndexChanged" />
+                </div>
+                <asp:TextBox ID="txtMainMenu" runat="server" Visible="false" />
+            </div>
+        </div>
     </asp:Panel>
-    <br />
-    <asp:panel ID="Pnlgv" runat="server" CssClass="XXSmall">
-        <div class="tis-table-wrap">
-    <asp:GridView ID="GrdAssignProgam" runat="server" CellPadding="3" 
-            Width="599px"  AutoGenerateColumns="False" Height="126px" GridLines="Vertical" 
-             onrowcancelingedit="GrdAssignProgam_RowCancelingEdit" 
-                onrowdeleting="GrdAssignProgam_RowDeleting" 
-                onrowediting="GrdAssignProgam_RowEditing" BackColor="White" 
-                BorderColor="#999999" BorderStyle="None" BorderWidth="1px" 
-                onrowupdating="GrdAssignProgam_RowUpdating"
-                DataKeyNames="ProgramId" onrowcommand="GrdAssignProgam_RowCommand" 
-                onrowdatabound="GrdAssignProgam_RowDataBound">
-        <EditRowStyle Font-Size="X-Small" />
-        <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
-        <RowStyle BackColor="#EEEEEE" ForeColor="Black" />
-        <PagerStyle BackColor="#999999" ForeColor="Black" HorizontalAlign="Center" />
-        <SelectedRowStyle BackColor="#008A8C" Font-Bold="True" ForeColor="White" />
-        <HeaderStyle BackColor="#000084" Font-Bold="True" ForeColor="White" 
-            HorizontalAlign="Left" />
-        <AlternatingRowStyle BackColor="#DCDCDC" />
-        <Columns>
-             <asp:TemplateField HeaderText="ProgramId" Visible="false">
-            <ItemTemplate>
-            <asp:Label ID="lblProgramId" runat="server" Text='<%# Eval("ProgramId") %>'  ></asp:Label></ItemTemplate>
-             <HeaderStyle Width="100px" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="ProgramName" >
-            <ItemTemplate>
-            <asp:Label ID="lblProgramName" runat="server" Text='<%# Eval("ProgramName") %>'   Width="300px"></asp:Label></ItemTemplate>
-            <EditItemTemplate>
-            <asp:Label ID="lblProgramName" runat="server" Text='<%# Bind("ProgramName") %>'   Width="300px"></asp:Label></ItemTemplate>
-            </EditItemTemplate>
-             <HeaderStyle Width="300px" />
-                <ItemStyle Width="300px" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Access" >
-             <HeaderTemplate>
-            <asp:checkbox id="ShowAllAccess" text="Access" checked="false" autopostback="true" runat="server" OnCheckedChanged="ShowAllAccess_CheckedChanged" />
-            <asp:Label ID="lblAccess" Text="Access" runat="server" Visible="false"></asp:Label>
-            </HeaderTemplate>
-            <ItemTemplate>
-            <asp:CheckBox ID="chkAccess" runat="server" Checked='<%# Eval("CanAccess") %>'  ></asp:CheckBox></ItemTemplate>
-             <EditItemTemplate>
-            <asp:CheckBox ID="chkEditAccess" runat="server" Checked='<%# Bind("CanAccess") %>'  ></asp:CheckBox></ItemTemplate>
-            </EditItemTemplate>
-             <HeaderStyle Width="5px" HorizontalAlign="Center" VerticalAlign="Middle" />
-                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Create">
-            <HeaderTemplate>
-            <asp:checkbox id="ShowAllCreate" text="Create" checked="false" autopostback="true" runat="server" OnCheckedChanged="ShowAllCreate_CheckedChanged" />
-             <asp:Label ID="lblCreate" Text="Create" runat="server" Visible="false"></asp:Label>
-            </HeaderTemplate>
-             <ItemTemplate>
-              <asp:CheckBox ID="chkCreate" runat="server" Checked='<%# Eval("CanCreate") %>'  ></asp:CheckBox></ItemTemplate>
-              <EditItemTemplate>
-            <asp:CheckBox ID="chkEditCreate" runat="server" Checked='<%# Bind("CanCreate") %>'  ></asp:CheckBox></ItemTemplate>
-            </EditItemTemplate>
-             <HeaderStyle Width="10px" HorizontalAlign="Center" VerticalAlign="Middle"  />
-             <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Edit">
-             <HeaderTemplate>
-            <asp:checkbox id="ShowAllEdit" text="Edit" checked="false" autopostback="true" runat="server" OnCheckedChanged="ShowAllEdit_CheckedChanged" />
-             <asp:Label ID="lblEdit" Text="Edit" runat="server" Visible="false"></asp:Label>
-            </HeaderTemplate>
-             <ItemTemplate>
-              <asp:CheckBox ID="chkEdit" runat="server" Checked='<%# Eval("CanEdit") %>'  ></asp:CheckBox></ItemTemplate>
-              <EditItemTemplate>
-            <asp:CheckBox ID="chkModEdit" runat="server" Checked='<%# Bind("CanEdit") %>'  ></asp:CheckBox></ItemTemplate>
-            </EditItemTemplate>
-                <HeaderStyle Width="10px" HorizontalAlign="Center" VerticalAlign="Middle"  />
-                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-            </asp:TemplateField>
-            <asp:TemplateField HeaderText="Delete">
-             <HeaderTemplate>
-            <asp:checkbox id="ShowAllDelete" text="Delete" checked="false" autopostback="true" runat="server" OnCheckedChanged="ShowAllDelete_CheckedChanged" />
-            <asp:Label ID="lblDelete" Text="Delete" runat="server" Visible="false"></asp:Label>
-            </HeaderTemplate>
-             <ItemTemplate>
-              <asp:CheckBox ID="chkDelete" runat="server" Checked='<%# Eval("CanDelete") %>'  ></asp:CheckBox></ItemTemplate>
-              <EditItemTemplate>
-            <asp:CheckBox ID="chkEditDelete" runat="server" Checked='<%# Bind("CanDelete") %>'  ></asp:CheckBox></ItemTemplate>
-            </EditItemTemplate>
-                <HeaderStyle Width="10px" HorizontalAlign="Center" VerticalAlign="Middle"  />
-                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-            </asp:TemplateField>
-          <asp:TemplateField HeaderText="View" Visible="false">
-             <ItemTemplate>
-               <asp:CheckBox ID="chkPrint" runat="server" Checked='<%# Eval("CanPrint") %>'  ></asp:CheckBox></ItemTemplate>
-               <EditItemTemplate>
-            <asp:CheckBox ID="chkEditPrint" runat="server" Checked='<%# Bind("CanPrint") %>'  ></asp:CheckBox></ItemTemplate>
-            </EditItemTemplate>
-              <HeaderStyle Width="10px" HorizontalAlign="Center" VerticalAlign="Middle"  />
-              <ItemStyle  HorizontalAlign="Center" VerticalAlign="Middle" />
-            </asp:TemplateField>
-            <asp:ButtonField ButtonType="Link" Text="Select All" HeaderText="Select All" 
-                 CommandName="SelectAll" ControlStyle-Width="50px" CausesValidation="True">
-            <ControlStyle Width="50px" />
-            <ItemStyle Width="60px" />
-            </asp:ButtonField>
-             <asp:CommandField HeaderText="Edit" ShowEditButton="True" />
-           
-        </Columns>
-        <sortedascendingcellstyle backcolor="#F1F1F1" />
-        <sortedascendingheaderstyle backcolor="#0000A9" />
-        <sorteddescendingcellstyle backcolor="#CAC9C9" />
-        <sorteddescendingheaderstyle backcolor="#000065" />
-    </asp:GridView>
-    </div>
-    </asp:panel>
-        <asp:Panel ID="pnlSave" runat="server" CssClass="XSmall" Width="728px">
-            <table style="width: 670px">
-                <tr>
-                    <td style="width: 216px; text-align: right">
-                        <asp:Button ID="btnSave" Text="Save" runat="server" onclick="btnSave_Click" 
-                            style="margin-left: 0px; text-align: right;" />
-                    </td>
-                    <td> <asp:HiddenField ID="HidDeleteCount" Value="0" runat="server" />
-                    </td>
-                    <td>
-                <asp:HiddenField ID="HidUpdateCount" Value="0" runat="server" />
-                </td>
-                </tr>
-            </table>
-        </asp:Panel>
-    </div>
-</asp:Content>
 
+    <asp:Panel ID="Pnlgv" runat="server" CssClass="tis-card">
+        <div class="tis-card__header">
+            <div class="tis-card__heading">
+                <div class="tis-card__title">Program permissions</div>
+                <div class="tis-card__subtitle">Tick what the role can access, create, edit and delete. The header boxes tick a whole column.</div>
+            </div>
+        </div>
+        <div class="tis-table-wrap tis-table-wrap--xtall">
+            <asp:GridView ID="GrdAssignProgam" runat="server" AutoGenerateColumns="False"
+                OnRowCancelingEdit="GrdAssignProgam_RowCancelingEdit"
+                OnRowDeleting="GrdAssignProgam_RowDeleting"
+                OnRowEditing="GrdAssignProgam_RowEditing"
+                OnRowUpdating="GrdAssignProgam_RowUpdating"
+                DataKeyNames="ProgramId" OnRowCommand="GrdAssignProgam_RowCommand"
+                OnRowDataBound="GrdAssignProgam_RowDataBound">
+                <Columns>
+                    <asp:TemplateField HeaderText="ProgramId" Visible="false">
+                        <ItemTemplate><asp:Label ID="lblProgramId" runat="server" Text='<%# Eval("ProgramId") %>' /></ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Program" ItemStyle-CssClass="wrap">
+                        <ItemTemplate><asp:Label ID="lblProgramName" runat="server" Text='<%# Eval("ProgramName") %>' /></ItemTemplate>
+                        <EditItemTemplate><asp:Label ID="lblProgramName" runat="server" Text='<%# Bind("ProgramName") %>' /></EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Access" HeaderStyle-CssClass="check" ItemStyle-CssClass="check">
+                        <HeaderTemplate>
+                            <asp:CheckBox ID="ShowAllAccess" runat="server" Text="Access" Checked="false" AutoPostBack="true" OnCheckedChanged="ShowAllAccess_CheckedChanged" />
+                            <asp:Label ID="lblAccess" runat="server" Text="Access" Visible="false" />
+                        </HeaderTemplate>
+                        <ItemTemplate><asp:CheckBox ID="chkAccess" runat="server" Checked='<%# Eval("CanAccess") %>' /></ItemTemplate>
+                        <EditItemTemplate><asp:CheckBox ID="chkEditAccess" runat="server" Checked='<%# Bind("CanAccess") %>' /></EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Create" HeaderStyle-CssClass="check" ItemStyle-CssClass="check">
+                        <HeaderTemplate>
+                            <asp:CheckBox ID="ShowAllCreate" runat="server" Text="Create" Checked="false" AutoPostBack="true" OnCheckedChanged="ShowAllCreate_CheckedChanged" />
+                            <asp:Label ID="lblCreate" runat="server" Text="Create" Visible="false" />
+                        </HeaderTemplate>
+                        <ItemTemplate><asp:CheckBox ID="chkCreate" runat="server" Checked='<%# Eval("CanCreate") %>' /></ItemTemplate>
+                        <EditItemTemplate><asp:CheckBox ID="chkEditCreate" runat="server" Checked='<%# Bind("CanCreate") %>' /></EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Edit" HeaderStyle-CssClass="check" ItemStyle-CssClass="check">
+                        <HeaderTemplate>
+                            <asp:CheckBox ID="ShowAllEdit" runat="server" Text="Edit" Checked="false" AutoPostBack="true" OnCheckedChanged="ShowAllEdit_CheckedChanged" />
+                            <asp:Label ID="lblEdit" runat="server" Text="Edit" Visible="false" />
+                        </HeaderTemplate>
+                        <ItemTemplate><asp:CheckBox ID="chkEdit" runat="server" Checked='<%# Eval("CanEdit") %>' /></ItemTemplate>
+                        <EditItemTemplate><asp:CheckBox ID="chkModEdit" runat="server" Checked='<%# Bind("CanEdit") %>' /></EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Delete" HeaderStyle-CssClass="check" ItemStyle-CssClass="check">
+                        <HeaderTemplate>
+                            <asp:CheckBox ID="ShowAllDelete" runat="server" Text="Delete" Checked="false" AutoPostBack="true" OnCheckedChanged="ShowAllDelete_CheckedChanged" />
+                            <asp:Label ID="lblDelete" runat="server" Text="Delete" Visible="false" />
+                        </HeaderTemplate>
+                        <ItemTemplate><asp:CheckBox ID="chkDelete" runat="server" Checked='<%# Eval("CanDelete") %>' /></ItemTemplate>
+                        <EditItemTemplate><asp:CheckBox ID="chkEditDelete" runat="server" Checked='<%# Bind("CanDelete") %>' /></EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="View" Visible="false" HeaderStyle-CssClass="check" ItemStyle-CssClass="check">
+                        <ItemTemplate><asp:CheckBox ID="chkPrint" runat="server" Checked='<%# Eval("CanPrint") %>' /></ItemTemplate>
+                        <EditItemTemplate><asp:CheckBox ID="chkEditPrint" runat="server" Checked='<%# Bind("CanPrint") %>' /></EditItemTemplate>
+                    </asp:TemplateField>
+                    <asp:ButtonField ButtonType="Link" Text="Select all" HeaderText="Row" CommandName="SelectAll" CausesValidation="True"
+                        ControlStyle-CssClass="tis-link" HeaderStyle-CssClass="actions" ItemStyle-CssClass="actions" />
+                    <asp:CommandField HeaderText="Edit" ShowEditButton="True"
+                        ControlStyle-CssClass="tis-link" HeaderStyle-CssClass="actions" ItemStyle-CssClass="actions" />
+                </Columns>
+                <EmptyDataTemplate>
+                    <tis:EmptyState ID="emptyPrograms" runat="server" Icon="shield" Title="No programs to show"
+                        Text="Pick a role, or choose another main menu, to see its program permissions." />
+                </EmptyDataTemplate>
+            </asp:GridView>
+        </div>
+        <asp:Panel ID="pnlSave" runat="server" CssClass="tis-card__footer tis-card__footer--between">
+            <span class="tis-help">Save creates the new role with the ticked permissions. Existing roles are changed row by row with Edit.</span>
+            <asp:Button ID="btnSave" runat="server" Text="Save" OnClick="btnSave_Click" CssClass="tis-btn tis-btn--primary" />
+            <asp:HiddenField ID="HidDeleteCount" Value="0" runat="server" />
+            <asp:HiddenField ID="HidUpdateCount" Value="0" runat="server" />
+        </asp:Panel>
+    </asp:Panel>
+</div>
+</asp:Content>
