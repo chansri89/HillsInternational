@@ -166,7 +166,7 @@ public partial class NewExcelItemRateUploadRev : System.Web.UI.Page
         PnlNotOKDeptSales.Visible = true;
         foreach (GridViewRow gvr in GrdWtNotOKDeptSales.Rows)
         {
-            gvr.ForeColor = System.Drawing.Color.Red;
+            gvr.CssClass = "is-error";
         }
     }
     private void LoadGrdUpLoadStatus(List<DepotSalesMsg> UploadList)

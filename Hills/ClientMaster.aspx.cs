@@ -44,6 +44,15 @@ public partial class ClientMaster : System.Web.UI.Page
             List<ClientTypeMsg> cltypeList = LoadClientType();
         }
     }
+    protected void btnNew_Click(object sender, EventArgs e)
+    {
+        if (ddlCompany.SelectedIndex > 0) WCompanyId = Convert.ToInt32(ddlCompany.SelectedValue);
+        AllClear();
+        btnSave.Text = "Save";
+        txtClientCode.Enabled = true;
+        GrdClientMaster.SelectedIndex = -1;
+        txtClientCode.Focus();
+    }
     protected void btnClear_Click(object sender, EventArgs e)
     {
         
@@ -169,7 +178,7 @@ public partial class ClientMaster : System.Web.UI.Page
                 chkIsActive.Visible = true;
                 btnSave.Text = "Update";
                 pnlAdd.GroupingText = "Update Client";
-                Pnlgv.Visible = false;
+                GrdClientMaster.SelectedIndex = row.RowIndex;
                 pnlAdd.Visible = true;
                 break;
             }

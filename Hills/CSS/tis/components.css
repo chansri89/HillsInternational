@@ -121,6 +121,21 @@ input[type="submit"]:disabled, input[type="button"]:disabled {
 }
 .tis-card__footer--between { justify-content: space-between; }
 
+/* Card whose title is the Panel's GroupingText (code-behind switches it, e.g. "Add Client" / "Update Client").
+   asp:Panel renders <div class="tis-card tis-card--legend"><fieldset><legend>Title</legend>...</fieldset></div>. */
+.tis-card--legend > fieldset { display: block; margin: 0; padding: 0; border: 0; min-width: 0; }
+.tis-card--legend > fieldset > legend {
+    float: left;
+    width: 100%;
+    margin: 0;
+    padding: 14px 18px;
+    font-size: var(--tis-fs-md);
+    font-weight: var(--tis-w-semibold);
+    color: var(--tis-text);
+    border-bottom: 1px solid var(--tis-divider);
+}
+.tis-card--legend > fieldset > legend + * { clear: both; }
+
 /* Section heading inside a card body */
 .tis-section-title {
     display: flex;
@@ -181,6 +196,7 @@ table.tis-table, .tis-table-wrap > div > table, .tis-table-wrap > table {
     height: var(--tis-row-h);
     padding: var(--tis-cell-py) var(--tis-cell-px);
     vertical-align: middle;
+    white-space: nowrap;
     border: 0 !important;
     border-bottom: 1px solid var(--tis-divider) !important;
     background: transparent;
@@ -199,7 +215,7 @@ table.tis-table, .tis-table-wrap > div > table, .tis-table-wrap > table {
 .tis-table .num, .tis-table .tis-num { text-align: right; white-space: nowrap; }
 .tis-table .center { text-align: center; }
 .tis-table .code { font-family: var(--tis-font-mono); font-size: 0.9em; color: var(--tis-muted); white-space: nowrap; }
-.tis-table .wrap { white-space: normal; min-width: 220px; }
+.tis-table .wrap { white-space: normal; min-width: 220px; max-width: 420px; }
 .tis-table .nowrap { white-space: nowrap; }
 .tis-table .actions { width: 1%; white-space: nowrap; text-align: right; }
 .tis-table .check { width: 36px; text-align: center; }
@@ -299,6 +315,7 @@ table.tis-table, .tis-table-wrap > div > table, .tis-table-wrap > table {
 .tis-alert--success { background: var(--tis-success-soft); }
 .tis-alert--success .tis-icon { color: var(--tis-success); }
 .tis-alert strong { color: var(--tis-text); }
+.tis-alert:empty { display: none; }
 
 /* Server message label (lblMessage): hidden when empty */
 .tis-message { display: block; font-size: var(--tis-fs-sm); color: var(--tis-danger); }

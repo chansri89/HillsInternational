@@ -20,7 +20,7 @@ public class TisNavItem
     public string SectionHtml { get { return HttpUtility.HtmlEncode(Section ?? string.Empty); } }
     public string UrlAttr { get { return HttpUtility.HtmlAttributeEncode(Url); } }
     public string LinkClass { get { return IsActive ? "tis-nav__link is-active" : "tis-nav__link"; } }
-    public string AriaCurrent { get { return IsActive ? "page" : "false"; } }
+    public string AriaCurrent { get { return IsActive ? "page" : string.Empty; } }
     public string SectionClass { get { return StartsSection ? "tis-nav__section" : "tis-hidden"; } }
     public string ModuleSectionClass { get { return StartsSection ? "tis-module__section" : "tis-hidden"; } }
 }
