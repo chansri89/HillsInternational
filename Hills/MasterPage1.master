@@ -119,7 +119,11 @@
                 </header>
 
                 <main id="main" class="tis-content" tabindex="-1">
-                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+                    <asp:UpdatePanel ID="upPageContent" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </main>
             </div>
         </div>

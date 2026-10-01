@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="tis-card__body">
-            <div class="tis-form-grid tis-form-grid--4">
+            <div class="tis-form-grid tis-form-grid--4 tis-report-filters">
                 <div class="tis-field">
                     <asp:Label ID="lblCompany" runat="server" Text="Company" AssociatedControlID="ddlCompany" CssClass="tis-label" />
                     <asp:DropDownList ID="ddlCompany" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged"
@@ -45,6 +45,12 @@
                     <asp:Label ID="lblProject" runat="server" Text="Project" AssociatedControlID="ddlProject" CssClass="tis-label" />
                     <asp:DropDownList ID="ddlProject" runat="server" DataTextField="ProjectName" DataValueField="ProjectCode" />
                 </div>
+                <div class="tis-field tis-report-filter-actions">
+                    <span class="tis-cluster">
+                        <asp:Button ID="btnClear" runat="server" OnClick="btnClear_Click" Text="Clear" CssClass="tis-btn tis-btn--ghost" />
+                        <asp:Button ID="btnView" runat="server" OnClick="btnView_Click" Text="View report" CssClass="tis-btn tis-btn--primary" />
+                    </span>
+                </div>
             </div>
             <asp:RadioButtonList ID="rbtType" runat="server" Visible="false" RepeatDirection="Horizontal" RepeatLayout="Flow" CssClass="tis-segmented">
                 <asp:ListItem Text="Cost only" Selected="true" Value="1" />
@@ -53,10 +59,6 @@
         </div>
         <div class="tis-card__footer tis-card__footer--between">
             <span class="tis-help"><asp:Label ID="Label1" runat="server" Text="The report shows data once quotes have been received and values are available." /></span>
-            <span class="tis-cluster">
-                <asp:Button ID="btnClear" runat="server" OnClick="btnClear_Click" Text="Clear" CssClass="tis-btn tis-btn--ghost" />
-                <asp:Button ID="btnView" runat="server" OnClick="btnView_Click" Text="View report" CssClass="tis-btn tis-btn--primary" />
-            </span>
         </div>
     </asp:Panel>
 

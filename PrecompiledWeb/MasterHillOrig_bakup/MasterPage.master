@@ -1,0 +1,134 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs"
+    Inherits="MasterPage" %>
+
+<%@ Register Assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"
+    Namespace="System.Web.UI" TagPrefix="asp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <%-- //Clear Clipboard--%>
+   <script language="javascript" type="text/javascript">
+       function AccessClipboardData() {
+//           try {
+//               window.clipboardData.setData('text', "Print Screen Disabled");
+//           } catch (err) {
+//               txt = "There was an error on this page.\n\n";
+//               txt += "Error description: " + err.description + "\n\n";
+//               txt += "Click OK to continue.\n\n";
+//               alert(txt);
+//           }
+       }
+       //scan every 0.3 Secs (300ms) to clear the clipboard
+       setInterval("AccessClipboardData()", 300);
+       var ClipBoardText = "";
+       if (window.clipboardData) {
+           ClipBoardText = window.clipboardData.getData('text');
+           if (ClipBoardText != "Print Screen Disabled") {
+               alert('Sorry !! Print Screen Disabled');
+               ////hide the div which contains your data          
+               ////document.all("divmaster").style.display = "none"
+           }
+       }
+</script>
+<head id="Head1" runat="server">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <title>Hills Login</title>
+     <link id="Link1" href="~/css/scs.css" rel="stylesheet" type="text/css" runat="server"/> 
+    <style type="text/css">
+        .style14
+        {
+            height: 489px;
+            background-color:#e8f6f6;
+        }
+        .style16
+        {
+            width: 1048px;
+        }
+        .style17
+        {
+            width: 73px;
+        }
+         .Small
+        {
+            font-family:verdana; Font-Size:Small
+        }
+        .XSmall
+        {
+            font-family:verdana; Font-Size:X-Small
+        }
+    </style>
+    <%--<link href="CSS/sampleStyleSheet.css" rel="stylesheet" type="text/css" />--%>
+</head>
+<body oncontextmenu="return false" 
+    style="background: url(Images/MasterPage.JPG) no-repeat; height: 729px; background-color: #e8f6f6">
+    <form id="form1" runat="server">
+    <div class="wrap">
+ 
+     </div>
+  
+    <div style="width: 1284px">
+    <asp:Panel ID="Panel1" runat="server" Height="60px" BorderStyle ="Ridge" Width="1286px" CssClass="XSmall">
+        <table width="1284px" >
+            <tr><td></td>
+                <td class="style17" >
+                    <asp:Image ID="Image3" runat="server" ImageUrl="~/Images/CompanyLeft.jpg" 
+                        Width="65px"  Height="50px" style="margin-left: 0px" />
+                </td>
+            
+                <td class="style16" align = "center" > 
+                <asp:Label ID="lblHeading" runat="server" Height="20px" Text="Tender Insight System" Font-Size = "Large" Font-Italic="true"
+                                Width="394px" ForeColor="Navy"  />
+                                  </td >                
+                <td>
+                    <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/CompanyRight.jpg" 
+                        Width="70px"  Height="55px" style="margin-left: 0px" />
+                </td><td></td>
+            </tr>
+        </table>
+    </asp:Panel>
+    </div>
+        <table width="1284px" style="height: 496px; margin-top: 0px;" >
+            <tr>
+              
+                <td id="td3" class="style14" align="left" runat="server">
+                    <div style="background-color: Transparent" class="XSmall">  
+                    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server"  >
+                        <ContentTemplate>                 
+                        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"  >
+                        &nbsp;<br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />            
+                        </asp:ContentPlaceHolder>
+                        </ContentTemplate>
+                        </asp:UpdatePanel>                                              
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br />
+    </form>
+</body>
+</html>

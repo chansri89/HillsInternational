@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="tis-card__body">
-            <div class="tis-form-grid tis-form-grid--4">
+            <div class="tis-form-grid tis-form-grid--4 tis-report-filters">
                 <div class="tis-field">
                     <asp:Label ID="lblCompany" runat="server" Text="Company" AssociatedControlID="ddlCompany" CssClass="tis-label" />
                     <asp:DropDownList ID="ddlCompany" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged"
@@ -54,13 +54,15 @@
                         <asp:ListItem Selected="false" Value="2" Text="Table" />
                     </asp:RadioButtonList>
                 </div>
+                <div class="tis-field tis-report-filter-actions">
+                    <span class="tis-cluster">
+                        <asp:Button ID="btnGo" runat="server" Text="View report" OnClick="btnGo_Click" CssClass="tis-btn tis-btn--primary" />
+                    </span>
+                </div>
             </div>
         </div>
         <div class="tis-card__footer tis-card__footer--between">
             <span class="tis-help">Matrix gives a cross-tab view; Table lists the same data row by row.</span>
-            <span class="tis-cluster">
-                <asp:Button ID="btnGo" runat="server" Text="View report" OnClick="btnGo_Click" CssClass="tis-btn tis-btn--primary" />
-            </span>
         </div>
     </asp:Panel>
 

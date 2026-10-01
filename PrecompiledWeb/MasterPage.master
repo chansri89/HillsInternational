@@ -1,0 +1,56 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+<!DOCTYPE html>
+<html lang="en">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Sign in - Hills TIS</title>
+    <script type="text/javascript">
+        (function () { try { document.documentElement.setAttribute("data-theme", localStorage.getItem("tis.theme") || "light"); } catch (e) { } })();
+    </script>
+    <link href="CSS/tis/tokens.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/base.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/layout.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/components.css" rel="stylesheet" type="text/css" />
+    <link href="CSS/tis/pages.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="tis-auth-body">
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" />
+        <div class="tis-auth">
+            <section class="tis-auth__brand" aria-label="About Tender Insight System">
+                <div class="tis-auth__logo">
+                    <img src="Images/Hill%20Logo.jpg" alt="" />
+                    <span>Hill International</span>
+                </div>
+                <div class="tis-auth__pitch">
+                    <h1 class="tis-auth__title"><asp:Label ID="lblHeading" runat="server" Text="Tender Insight System" /></h1>
+                    <p class="tis-auth__lead">Construction tender cost estimation, from client BOQ to final quote.</p>
+                    <ul class="tis-auth__points">
+                        <li><svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-check"></use></svg>Import client BOQs straight from Excel</li>
+                        <li><svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-check"></use></svg>Map tender lines to IOW cost codes</li>
+                        <li><svg class="tis-icon" aria-hidden="true"><use href="Images/icons.svg#i-check"></use></svg>Compare quotes and rates across projects</li>
+                    </ul>
+                </div>
+                <div class="tis-auth__version">Version <asp:Label ID="lblVersion" runat="server" /></div>
+            </section>
+
+            <main class="tis-auth__panel" id="main">
+                <button type="button" class="tis-iconbtn tis-theme-toggle tis-auth__theme" data-tis-theme-toggle="1" aria-label="Toggle dark mode" title="Toggle dark mode">
+                    <svg class="tis-icon tis-icon-moon" aria-hidden="true"><use href="Images/icons.svg#i-moon"></use></svg>
+                    <svg class="tis-icon tis-icon-sun" aria-hidden="true"><use href="Images/icons.svg#i-sun"></use></svg>
+                </button>
+                <div class="tis-auth__form">
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <ContentTemplate>
+                            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server" />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                </div>
+            </main>
+        </div>
+    </form>
+    <script src="JS/tis-ui.js" type="text/javascript"></script>
+</body>
+</html>

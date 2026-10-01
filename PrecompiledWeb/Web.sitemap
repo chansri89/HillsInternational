@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+   
+   <siteMapNode url="~/Default.aspx" title="Home"  description="Home">
+     <!--<siteMapNode url="~/UserActivities.aspx" title="UserActivities"  description="UserActivities"/>
+      <siteMapNode url="~/Default.aspx?1" title="Admin"  description="Admin">
+      <siteMapNode url="~/AssignProgramtoRoles.aspx" title="Assign Program to Roles"  description="Assign Program to Roles" />
+      <siteMapNode url="~/AssignUserRoles.aspx" title="Assign Roles to User"  description="Assign Roles to User" />
+      <siteMapNode url="~/ForgotPassword.aspx" title="Forgot Password"  description="Forgot Password" /> -->
+      </siteMapNode>
+  
+</siteMap>

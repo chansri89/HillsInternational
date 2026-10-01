@@ -128,7 +128,10 @@ input[type="submit"]:disabled, input[type="button"]:disabled {
     float: left;
     width: 100%;
     margin: 0;
-    padding: 14px 18px;
+    padding: 10px 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: var(--tis-fs-md);
     font-weight: var(--tis-w-semibold);
     color: var(--tis-text);
@@ -501,11 +504,25 @@ table.tis-table, .tis-table-wrap > div > table, .tis-table-wrap > table {
 .tis-report {
     min-height: 480px;
     overflow: auto;
-    background: var(--tis-sunken);
+    color: #1A1F36;
+    color-scheme: light;
+    background: #FFFFFF;
     border: 1px solid var(--tis-border);
     border-radius: var(--tis-r-lg);
 }
 .tis-report > div, .tis-report table { max-width: 100%; }
+.tis-report table { color: #1A1F36; background-color: #FFFFFF; }
+.tis-report input[type="image"], .tis-report a > img, .tis-report button img {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    max-width: none;
+    opacity: 1;
+    visibility: visible;
+    filter: none;
+    vertical-align: middle;
+}
+.tis-report input[type="image"] { padding: 0; background: transparent; border: 0; box-shadow: none; }
 .tis-report__empty { min-height: 480px; }
 
 /* ----------------------------------------------------------- stats row */

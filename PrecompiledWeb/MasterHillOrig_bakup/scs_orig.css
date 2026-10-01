@@ -1,0 +1,58 @@
+﻿
+         .MenuStyle
+        {
+             font-weight:bold; font-family:Verdana; font-size:small; background-color:#3366CC;   font-style:italic;
+             width:auto; display:inline ; position:relative; float:left; list-style:none;
+        }
+        .ForegroundStyle 
+        {z-index: 123; position: relative;  top: 0px; left: 0px;   width: 90px; font-size:14px;     font-family:Verdana; 
+        }
+  
+        .XSmall
+        {
+            font-family:Verdana; font-size:11px; 
+        }
+              .XXSmall
+        {
+            font-family:Verdana; font-size:xx-small;
+        }
+        .Small
+        {
+            font-family:Verdana; font-size:small; 
+        }
+       
+    .buttonclass
+    {
+        font-weight: normal; color:White; width :50px; height :20px; font-size:x-small; background-color:blue; font-family:Verdana;
+        padding-left: 2px; padding-right:3px;
+        border-left-style: none;border-left-color: inherit; border-left-width: 2px;
+        border-right-style: none; border-right-color: inherit; border-right-width: 2px;
+        border-bottom-style:outset;   border-bottom-color: inherit;border-bottom-width: 2px;
+        border-top-style: none; border-top-color: inherit; border-top-width: 2px;
+       
+        
+    }
+    .buttonclass:hover
+    {
+        color: black;
+        width :50px;
+        height:20px;
+        font-weight:bolder;
+        elevation:higher;
+        cursor:pointer;
+        background-image: linear-gradient(to Bottom, Orange,white,Green);   /**/ 
+    }
+ 
+        .Small
+        {
+            font-family:Verdana; font-size:small;
+        }
+        .Large
+        {
+            font-family:Verdana; font-size:16px;
+        }
+        .GridHeaderAlign 
+        {
+            text-align:center; font-Family:"Verdana"; vertical-align:middle;
+            background-color:#000084; font-weight:bold; color:White; font-size:x-small;
+        }  

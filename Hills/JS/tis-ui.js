@@ -101,7 +101,11 @@
         });
         each(doc.querySelectorAll(".tis-nav__link, .tis-nav__toggle"), function (el) {
             var label = el.querySelector(".tis-nav__label");
-            if (label && !el.getAttribute("title")) el.setAttribute("data-tip", label.textContent.trim());
+            if (label && !el.getAttribute("title")) {
+                var text = label.textContent.trim();
+                el.setAttribute("data-tip", text);
+                el.setAttribute("title", text);
+            }
         });
         var active = doc.querySelector(".tis-nav .tis-nav__link.is-active");
         if (active && active.scrollIntoView) {

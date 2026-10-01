@@ -1,0 +1,477 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{DEE4D80A-249D-077D-0052-D70780D744BC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>WindowsApplication</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>vshillsintl</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\ASPNETDB.MDF">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_Data\aspnetdb_log.ldf">
+      <DependentUpon>ASPNETDB.MDF</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="App_WebReferences\AgilerMailService\configuration.svcinfo" />
+    <Content Include="App_WebReferences\AgilerMailService\configuration91.svcinfo" />
+    <Content Include="App_WebReferences\AgilerMailService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </Content>
+    <Content Include="AssignProgramtoRoles.aspx" />
+    <Content Include="AssignUserRoles.aspx" />
+    <Content Include="A_ExcelUploadDSR.aspx" />
+    <Content Include="A_ProjectInputIOWCommonFactor.aspx" />
+    <Content Include="A_ProjectInputIOWCostCalculation.aspx" />
+    <Content Include="A_ProjectInputSheet.aspx" />
+    <Content Include="ChangePassword.aspx" />
+    <Content Include="ClientMaster.aspx" />
+    <Content Include="ClientMasterUnderconstr.aspx" />
+    <Content Include="ClientProject.aspx" />
+    <Content Include="CompanyMaster.aspx" />
+    <Content Include="ControlProcessingForUpload.aspx" />
+    <Content Include="CRAMGroupMaster.aspx" />
+    <Content Include="CRAMIOWCostCalculation.aspx" />
+    <Content Include="CRAMIOWHeadDtlContextMaster.aspx" />
+    <Content Include="CRAMIOWHeadDtlMaster.aspx" />
+    <Content Include="CRAMIOWHeadMaster.aspx" />
+    <Content Include="CRAMSubGroupMaster.aspx" />
+    <Content Include="CSS\AjaxTabs.css" />
+    <Content Include="CSS\bootstrap.min.css" />
+    <Content Include="CSS\Calendar.css" />
+    <Content Include="CSS\ComboBox.deskin.css" />
+    <Content Include="CSS\Common.deskin.css" />
+    <Content Include="CSS\Filter.deskin.css" />
+    <Content Include="CSS\font-awesome.css" />
+    <Content Include="CSS\font-awesome.min.css" />
+    <Content Include="CSS\Grid.deskin.css" />
+    <Content Include="CSS\login-modern.css" />
+    <Content Include="CSS\Login.css" />
+    <Content Include="CSS\MediaStylesheet.css" />
+    <Content Include="CSS\modern.css" />
+    <Content Include="CSS\sampleStyleSheet.css" />
+    <Content Include="CSS\scs.css" />
+    <Content Include="CSS\style.css" />
+    <Content Include="CSS\theme.css" />
+    <Content Include="Default.aspx" />
+    <Content Include="Document\TextFile.txt" />
+    <Content Include="EmployeeMaster.aspx" />
+    <Content Include="EnterpriseMaster.aspx" />
+    <Content Include="FinancialYearMaster.aspx" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="ForgotPassword.aspx" />
+    <Content Include="Images\Calendar.gif" />
+    <Content Include="Images\colapse1.JPG" />
+    <Content Include="Images\CompanyLeft.jpg" />
+    <Content Include="Images\CompanyLogo.jpg" />
+    <Content Include="Images\CompanyLogoHills.jpg" />
+    <Content Include="Images\CompanyRight.jpg" />
+    <Content Include="Images\Expand1.JPG" />
+    <Content Include="Images\Hill Logo.jpg" />
+    <Content Include="Images\progress.gif" />
+    <Content Include="Images\ProgressBar.gif" />
+    <Content Include="Images\resultset_first.gif" />
+    <Content Include="Images\resultset_last.gif" />
+    <Content Include="Images\resultset_next.gif" />
+    <Content Include="Images\resultset_previous.gif" />
+    <Content Include="IOWCommonFactorMaster.aspx" />
+    <Content Include="ItemCategoryMaster.aspx" />
+    <Content Include="ItemGroupMaster.aspx" />
+    <Content Include="ItemMaster.aspx" />
+    <Content Include="ItemSubCategoryMaster.aspx" />
+    <Content Include="JS\bootstrap.min.js" />
+    <Content Include="JS\jquery-1.9.1.js" />
+    <Content Include="JS\jquery.backstretch.js" />
+    <Content Include="JS\jquery.js" />
+    <Content Include="JS\modern-ui.js" />
+    <Content Include="Login.aspx" />
+    <Content Include="LoginUser.aspx" />
+    <Content Include="MasterHillOrig_bakup\scs_orig.css" />
+    <Content Include="Mobile\Default.aspx" />
+    <Content Include="NewExcelBudgetRateUploadRev.aspx" />
+    <Content Include="NewExcelItemRateUploadRev.aspx" />
+    <Content Include="NewExcelTenderPackageUploadRev.aspx" />
+    <Content Include="NewExcelTenderPackageUploadWithIOWRev.aspx" />
+    <Content Include="NewExcelTenderQuoteUploadRev.aspx" />
+    <Content Include="ProjectClosure.aspx" />
+    <Content Include="ProjectSectorClassMaster.aspx" />
+    <Content Include="ProjectSectorGroupMaster.aspx" />
+    <Content Include="RoleNameChange.aspx" />
+    <Content Include="Roles.aspx" />
+    <Content Include="rptCRAMIOWCostListing.aspx" />
+    <Content Include="rptItemRateReport.aspx" />
+    <Content Include="rptTenderIOWItemQty.aspx" />
+    <Content Include="rptTenderIOWMappingCost.aspx" />
+    <Content Include="rptTenderQuoteHistory.aspx" />
+    <Content Include="rptTenderQuoteReports.aspx" />
+    <Content Include="rptTenderRateComparision.aspx" />
+    <Content Include="StateMaster.aspx" />
+    <Content Include="TenderIOWMapping.aspx" />
+    <Content Include="TenderIOWMappingCost.aspx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Code\BusinessLayer\ProcessBus.cs" />
+    <Compile Include="App_Code\GridViewExportUtil.cs" />
+    <Compile Include="App_Code\Library\LibFunctions.cs" />
+    <Compile Include="App_Code\MailingClass.cs" />
+    <Compile Include="App_Code\MessageLayer\BaseClass.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App_Code\MessageLayer\ChangePasswordMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\CompanyMessage.cs" />
+    <Compile Include="App_Code\MessageLayer\CustomerMessage.cs" />
+    <Compile Include="App_Code\MessageLayer\DateMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\DepartmentMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\DesignationMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\EmployeeMasterMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\EnterpriseMasterMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\ExcelUploadMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\FinancialYearMasterMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\FiscalYearMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\LoginInfoMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\MailDetailMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\PresentationUtils.cs" />
+    <Compile Include="App_Code\MessageLayer\ProgramMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\ReportMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\RoleMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\RoleNameChangeMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\StateMasterMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\UploadMsg.cs" />
+    <Compile Include="App_Code\MessageLayer\UserPermission.cs" />
+    <Compile Include="App_Code\MessageLayer\ValidationMsg.cs" />
+    <Compile Include="App_WebReferences\AgilerMailService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="AssignProgramtoRoles.aspx.cs">
+      <DependentUpon>AssignProgramtoRoles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AssignUserRoles.aspx.cs">
+      <DependentUpon>AssignUserRoles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="A_ExcelUploadDSR.aspx.cs">
+      <DependentUpon>A_ExcelUploadDSR.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="A_ProjectInputIOWCommonFactor.aspx.cs">
+      <DependentUpon>A_ProjectInputIOWCommonFactor.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="A_ProjectInputIOWCostCalculation.aspx.cs">
+      <DependentUpon>A_ProjectInputIOWCostCalculation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="A_ProjectInputSheet.aspx.cs">
+      <DependentUpon>A_ProjectInputSheet.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientMaster.aspx.cs">
+      <DependentUpon>ClientMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientMasterUnderconstr.aspx.cs">
+      <DependentUpon>ClientMasterUnderconstr.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ClientProject.aspx.cs">
+      <DependentUpon>ClientProject.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CompanyMaster.aspx.cs">
+      <DependentUpon>CompanyMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ControlProcessingForUpload.aspx.cs">
+      <DependentUpon>ControlProcessingForUpload.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CRAMGroupMaster.aspx.cs">
+      <DependentUpon>CRAMGroupMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CRAMIOWCostCalculation.aspx.cs">
+      <DependentUpon>CRAMIOWCostCalculation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CRAMIOWHeadDtlContextMaster.aspx.cs">
+      <DependentUpon>CRAMIOWHeadDtlContextMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CRAMIOWHeadDtlMaster.aspx.cs">
+      <DependentUpon>CRAMIOWHeadDtlMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CRAMIOWHeadMaster.aspx.cs">
+      <DependentUpon>CRAMIOWHeadMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CRAMSubGroupMaster.aspx.cs">
+      <DependentUpon>CRAMSubGroupMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EmployeeMaster.aspx.cs">
+      <DependentUpon>EmployeeMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EnterpriseMaster.aspx.cs">
+      <DependentUpon>EnterpriseMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FinancialYearMaster.aspx.cs">
+      <DependentUpon>FinancialYearMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="IOWCommonFactorMaster.aspx.cs">
+      <DependentUpon>IOWCommonFactorMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ItemCategoryMaster.aspx.cs">
+      <DependentUpon>ItemCategoryMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ItemGroupMaster.aspx.cs">
+      <DependentUpon>ItemGroupMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ItemMaster.aspx.cs">
+      <DependentUpon>ItemMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ItemSubCategoryMaster.aspx.cs">
+      <DependentUpon>ItemSubCategoryMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="LoginUser.aspx.cs">
+      <DependentUpon>LoginUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MasterHillOrig_bakup\MasterPage.master.cs">
+      <DependentUpon>MasterPage.master</DependentUpon>
+    </Compile>
+    <Compile Include="MasterHillOrig_bakup\MasterPage1.master.cs">
+      <DependentUpon>MasterPage1.master</DependentUpon>
+    </Compile>
+    <Compile Include="MasterHillOrig_bakup\MasterPage3.master.cs">
+      <DependentUpon>MasterPage3.master</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPage.master.cs">
+      <DependentUpon>MasterPage.master</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPage1.master.cs">
+      <DependentUpon>MasterPage1.master</DependentUpon>
+    </Compile>
+    <Compile Include="MasterPage3.master.cs">
+      <DependentUpon>MasterPage3.master</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Mobile\Mobile.master.cs">
+      <DependentUpon>Mobile.master</DependentUpon>
+    </Compile>
+    <Compile Include="NewExcelBudgetRateUploadRev.aspx.cs">
+      <DependentUpon>NewExcelBudgetRateUploadRev.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewExcelItemRateUploadRev.aspx.cs">
+      <DependentUpon>NewExcelItemRateUploadRev.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewExcelTenderPackageUploadRev.aspx.cs">
+      <DependentUpon>NewExcelTenderPackageUploadRev.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewExcelTenderPackageUploadWithIOWRev.aspx.cs">
+      <DependentUpon>NewExcelTenderPackageUploadWithIOWRev.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NewExcelTenderQuoteUploadRev.aspx.cs">
+      <DependentUpon>NewExcelTenderQuoteUploadRev.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectClosure.aspx.cs">
+      <DependentUpon>ProjectClosure.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectSectorClassMaster.aspx.cs">
+      <DependentUpon>ProjectSectorClassMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectSectorGroupMaster.aspx.cs">
+      <DependentUpon>ProjectSectorGroupMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RoleNameChange.aspx.cs">
+      <DependentUpon>RoleNameChange.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Roles.aspx.cs">
+      <DependentUpon>Roles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptCRAMIOWCostListing.aspx.cs">
+      <DependentUpon>rptCRAMIOWCostListing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptItemRateReport.aspx.cs">
+      <DependentUpon>rptItemRateReport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptTenderIOWItemQty.aspx.cs">
+      <DependentUpon>rptTenderIOWItemQty.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptTenderIOWMappingCost.aspx.cs">
+      <DependentUpon>rptTenderIOWMappingCost.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptTenderQuoteHistory.aspx.cs">
+      <DependentUpon>rptTenderQuoteHistory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptTenderQuoteReports.aspx.cs">
+      <DependentUpon>rptTenderQuoteReports.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="rptTenderRateComparision.aspx.cs">
+      <DependentUpon>rptTenderRateComparision.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="StateMaster.aspx.cs">
+      <DependentUpon>StateMaster.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TenderIOWMapping.aspx.cs">
+      <DependentUpon>TenderIOWMapping.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="TenderIOWMappingCost.aspx.cs">
+      <DependentUpon>TenderIOWMappingCost.aspx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App_Code\BusinessLayer\vssver2.scc" />
+    <None Include="App_Code\ClassDiagram.cd" />
+    <None Include="App_Code\MessageLayer\vssver2.scc" />
+    <None Include="App_WebReferences\AgilerMailService\Service11.wsdl" />
+    <None Include="App_WebReferences\AgilerMailService\Service3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_WebReferences\AgilerMailService\Service32.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="App_WebReferences\AgilerMailService\Service33.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CRAMIOWRateUpdate.aspx.cs.exclude" />
+    <None Include="CRAMIOWRateUpdate.aspx.exclude" />
+    <None Include="CSS\Excluded\Copy of CRAMIOWHeadDtlContextMaster.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\Copy of CRAMIOWHeadDtlContextMaster.aspx.exclude" />
+    <None Include="CSS\Excluded\CRAMElementMaster.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\CRAMElementMaster.aspx.exclude" />
+    <None Include="CSS\Excluded\CRAMPackageMaster.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\CRAMPackageMaster.aspx.exclude" />
+    <None Include="CSS\Excluded\CRAMTradeMaster.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\CRAMTradeMaster.aspx.exclude" />
+    <None Include="CSS\Excluded\ExcelImportAuctionSalesRM.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\ExcelImportAuctionSalesRM.aspx.exclude" />
+    <None Include="CSS\Excluded\IOWMaster.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\IOWMaster.aspx.exclude" />
+    <None Include="CSS\Excluded\ItemRate.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\ItemRate.aspx.exclude" />
+    <None Include="CSS\Excluded\rptAdvanceList.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\rptAdvanceList.aspx.exclude" />
+    <None Include="CSS\Excluded\rptIOWRateReports.aspx.cs.exclude" />
+    <None Include="CSS\Excluded\rptIOWRateReports.aspx.exclude" />
+    <None Include="fonts\fontawesome-webfont.eot" />
+    <None Include="fonts\fontawesome-webfont.ttf" />
+    <None Include="fonts\fontawesome-webfont.woff" />
+    <None Include="fonts\FontAwesome.otf" />
+    <None Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="fonts\glyphicons-halflings-regular.ttf" />
+    <None Include="fonts\glyphicons-halflings-regular.woff" />
+    <None Include="MasterHillOrig_bakup\MasterPage.master" />
+    <None Include="MasterHillOrig_bakup\MasterPage1.master" />
+    <None Include="MasterHillOrig_bakup\MasterPage1Orig.master.cs.exclude" />
+    <None Include="MasterHillOrig_bakup\MasterPage1Orig.master.exclude" />
+    <None Include="MasterHillOrig_bakup\MasterPage3.master" />
+    <None Include="MasterHillOrig_bakup\MasterPage3Orig.master.cs.exclude" />
+    <None Include="MasterHillOrig_bakup\MasterPage3Orig.master.exclude" />
+    <None Include="MasterPage.master" />
+    <None Include="MasterPage1.master" />
+    <None Include="MasterPage3.master" />
+    <None Include="Mobile\Mobile.master" />
+    <None Include="NewExcelBudgetRateUpload.aspx.cs.exclude" />
+    <None Include="NewExcelBudgetRateUpload.aspx.exclude" />
+    <None Include="NewExcelTenderPackageUpload.aspx.cs.exclude" />
+    <None Include="NewExcelTenderPackageUpload.aspx.exclude" />
+    <None Include="NewExcelTenderQuoteUpload.aspx.cs.exclude" />
+    <None Include="NewExcelTenderQuoteUpload.aspx.exclude" />
+    <None Include="REFERENCE.bak.md" />
+    <None Include="Reports\CRAM\Copy of rptTenderIOWCostDetailListing.rdlc.exclude" />
+    <None Include="Reports\CRAM\rptIOWCostListingAsis.rdlc.exclude" />
+    <None Include="Reports\TenderReports\Copy of rptTenderComparision.rdlc.exclude" />
+    <None Include="Reports\TenderReports\rptTenderComparision.rdlc.exclude" />
+    <None Include="Reports\TenderReports\rptTenderCostOnlyReports.rdlc.exclude" />
+    <None Include="TenderIOWMapping.aspx.cs.exclude" />
+    <None Include="TenderIOWMapping.aspx.exclude" />
+    <None Include="Web.config" />
+    <None Include="Web.sitemap" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_GlobalResources\AgilerMail.resx" />
+    <EmbeddedResource Include="Reports\CRAM\rptIOWCostListing.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptIOWCostSummaryListing.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptIOWCostSummaryListing_Orig.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptIOWRateReports.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptItemRateReport.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptTenderCRAMIOWCostDetail.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptTenderIOWCostDetailListing.rdlc" />
+    <EmbeddedResource Include="Reports\CRAM\rptTenderIOWCostListing.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\Copy of Copy of rptTenderReports_260516.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\Copy of rptTenderQuoteHistory_orig.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\rptTenderComparision.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\rptTenderIOWItemQtyMatrix.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\rptTenderIOWItemQtytbl.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\rptTenderQuoteHistory.rdlc" />
+    <EmbeddedResource Include="Reports\TenderReports\rptTenderReports.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".vs\vshillsintl\v17\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>

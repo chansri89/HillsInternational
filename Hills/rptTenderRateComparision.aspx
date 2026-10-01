@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="tis-card__body">
-            <div class="tis-form-grid tis-form-grid--4">
+            <div class="tis-form-grid tis-form-grid--4 tis-report-filters">
                 <div class="tis-field">
                     <asp:Label ID="lblCompany" runat="server" Text="Company" AssociatedControlID="ddlCompany" CssClass="tis-label" />
                     <asp:DropDownList ID="ddlCompany" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlCompanyChanged"
@@ -47,6 +47,11 @@
                     <asp:Label ID="lblfromRateMonth" runat="server" Text="Rate year month" AssociatedControlID="ddlFromYearMonth" CssClass="tis-label" />
                     <asp:DropDownList ID="ddlFromYearMonth" runat="server" MaxLength="8" DataTextField="ForYearMonth" DataValueField="ForYearMonth" />
                 </div>
+                <div class="tis-field tis-report-filter-actions">
+                    <span class="tis-cluster">
+                        <asp:Button ID="btnGo" runat="server" Text="View report" OnClick="btnGo_Click" CssClass="tis-btn tis-btn--primary" />
+                    </span>
+                </div>
             </div>
             <asp:Label ID="lblTOYearMonth" runat="server" Text="To YYYYMM" Visible="false" CssClass="tis-label" />
             <asp:DropDownList ID="ddlToYearMonth" runat="server" Visible="false" MaxLength="8" DataTextField="ForYearMonth" DataValueField="ForYearMonth" />
@@ -56,9 +61,6 @@
         </div>
         <div class="tis-card__footer tis-card__footer--between">
             <span class="tis-help">Rates are taken from the selected rate year month.</span>
-            <span class="tis-cluster">
-                <asp:Button ID="btnGo" runat="server" Text="View report" OnClick="btnGo_Click" CssClass="tis-btn tis-btn--primary" />
-            </span>
         </div>
     </asp:Panel>
 

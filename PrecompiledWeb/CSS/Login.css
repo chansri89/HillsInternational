@@ -1,0 +1,106 @@
+body {
+	margin:0px;
+	padding:0px;
+	font: normal 80%/20px Verdana, Geneva, sans-serif;
+	
+}
+*{	margin:493px 0px 0px 0px;
+	padding:0px;
+}
+img, a {
+	border:0px;
+	outline:none;
+}
+* html input {
+	
+	vertical-align: middle;
+}
+
+.clr{ clear:both;}
+.wrap {
+	width:100%;
+	margin:0px;
+	padding:0px;
+}
+.HomePage_body {
+	margin:-20px 0 0 0;
+	padding:0px;
+	width:100%;
+	
+}
+.Login_body {
+	margin:0px;
+	padding:0px;
+	width:100%;
+	
+}
+.leftLogin{ width:45%; float:left; background:url(Login/left_bg.jpg) repeat-x 0 0;}
+.rightLogin{width:55%; float:right; background:url(Login/right_bg.jpg) repeat-x 0 0; position:relative;
+    top: 0px;
+    left: 0px;
+    height: 6595px;
+}
+.leftLogin .cont{ width:415px; float:right;
+    height: 18px;
+}
+.cont h3{ margin:50px 0 0 20px; padding:0px; font:"Arial Black", Gadget, sans-serif; font-size:17px; color:#244b8f;}
+.cont p{margin:15px 0 15px 20px; padding:0px; font-size:12px; text-align:justify;}
+
+.rightLogin .cont{ width:480px; float:left; padding:140px 0 0 0; margin:0px 0 0 50px;
+    height: 6386px;
+}
+.cont .slogan{ position:absolute; top:20px; left:0px; font:italic 14px verdana; color:#666; font-weight:bold; width:550px; text-align:center;}
+.boxMid{ background:url(Images/login_midbg.jpg) repeat-y 0 0; width:479px; 
+padding:0px;
+}
+
+.loginImg{ text-align:center;}
+.txtBoxs{ margin:10px 0 0 0; padding:0px; font-size:12px;}
+
+.txtBoxs label{ padding:10px 0; float:left; font-weight:bold; color:#333;}
+.pad10{ padding:5px 30px 15px 30px; border-left:2px solid gray; border-right: 2px solid gray;}
+.log_input{ padding:0 0 0 5px; float:left; border:1px solid #275196; height:25px; width:376px;
+}
+.remember{padding:15px 0 0 0px; margin:0px;}
+.remember input{ float:left; margin-right:10px;}
+.remember label{margin:0px; padding:0px; float:left; line-height:12px;}
+.loginBTN{padding:20px 0 0 0px; margin:0px;}
+.loginBTN label{margin:0px; padding:0px 0 0 10px; float:left; line-height:26px;}
+.loginBTN a{ color:#2087b8; text-decoration:none; }
+
+.bottomLine{ padding:25px 0px 0px 0px; border-bottom:1px solid #a90807;}
+.netLink{ margin:15px 0 0 0; padding:0px; text-align:center; font-weight:bold; color:#333;}
+.netLink a{ color:#2087b8; text-decoration:none;}
+
+.agree{ font-style:normal;
+}
+.agree input{ float:left; margin:2px 0px 0 0; padding:0px; }
+.agree label{ padding:0 10px 0 0; margin:0px; font:normal 12px/16px verdana !important;}
+.pb10{ padding-bottom:10px;}
+
+
+.footerH{ text-align:center; font-size:0.8em; line-height:30px; padding:0px 0 0 0; margin:10px 0 0 0; width:100%; margin-top: 150px;}
+.logo_footer{ width:100%; text-align:center;}
+
+.blue-right{
+background-color: #183674;
+height: 41px;
+width: 692px;
+float: left;
+position: absolute;
+left: 567px;
+top: 63px;
+}
+.blue-left {
+background-color: #265196;
+height: 41px;
+width: 161px;
+float: left;
+position: absolute;
+top: 113px;
+left: 0px;
+}
+
+/* Home page */
+
+

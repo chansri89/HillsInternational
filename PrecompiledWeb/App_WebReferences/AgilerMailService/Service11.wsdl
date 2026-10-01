@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Service1" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://www.ganiniinfotech.in/WCF_AgilerMail/Service.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://www.ganiniinfotech.in/WCF_AgilerMail/Service.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://www.ganiniinfotech.in/WCF_AgilerMail/Service.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/WCF_AgilerMail" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IService1_CliDet_InputMessage">
+    <wsdl:part name="parameters" element="tns:CliDet" />
+  </wsdl:message>
+  <wsdl:message name="IService1_CliDet_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CliDetResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_SaveDailyParameterinWeb_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveDailyParameterinWeb" />
+  </wsdl:message>
+  <wsdl:message name="IService1_SaveDailyParameterinWeb_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveDailyParameterinWebResponse" />
+  </wsdl:message>
+  <wsdl:message name="IService1_SaveWkParamDatainWeb_InputMessage">
+    <wsdl:part name="parameters" element="tns:SaveWkParamDatainWeb" />
+  </wsdl:message>
+  <wsdl:message name="IService1_SaveWkParamDatainWeb_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SaveWkParamDatainWebResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IService1">
+    <wsdl:operation name="CliDet">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/CliDet" message="tns:IService1_CliDet_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/CliDetResponse" message="tns:IService1_CliDet_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveDailyParameterinWeb">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/SaveDailyParameterinWeb" message="tns:IService1_SaveDailyParameterinWeb_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/SaveDailyParameterinWebResponse" message="tns:IService1_SaveDailyParameterinWeb_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SaveWkParamDatainWeb">
+      <wsdl:input wsaw:Action="http://tempuri.org/IService1/SaveWkParamDatainWeb" message="tns:IService1_SaveWkParamDatainWeb_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IService1/SaveWkParamDatainWebResponse" message="tns:IService1_SaveWkParamDatainWeb_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IService1" type="tns:IService1">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CliDet">
+      <soap:operation soapAction="http://tempuri.org/IService1/CliDet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveDailyParameterinWeb">
+      <soap:operation soapAction="http://tempuri.org/IService1/SaveDailyParameterinWeb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SaveWkParamDatainWeb">
+      <soap:operation soapAction="http://tempuri.org/IService1/SaveWkParamDatainWeb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service1">
+    <wsdl:port name="BasicHttpBinding_IService1" binding="tns:BasicHttpBinding_IService1">
+      <soap:address location="http://www.ganiniinfotech.in/WCF_AgilerMail/Service.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -37,8 +37,8 @@
     /* Text */
     --tis-text: #1A1F36;
     --tis-text-2: #3C4257;
-    --tis-muted: #697386;
-    --tis-faint: #A3ACB9;
+    --tis-muted: #596273;
+    --tis-faint: #7A8494;
     --tis-inverse: #FFFFFF;
 
     /* Brand / accent */
@@ -155,10 +155,10 @@
     --tis-border-strong: #3A4357;
     --tis-divider: #222938;
 
-    --tis-text: #E6E9F0;
-    --tis-text-2: #C4CAD6;
-    --tis-muted: #8792A2;
-    --tis-faint: #5A6474;
+    --tis-text: #F2F4F8;
+    --tis-text-2: #D8DEE8;
+    --tis-muted: #B5BECC;
+    --tis-faint: #99A5B7;
     --tis-inverse: #0E121B;
 
     --tis-accent: #7A73FF;

@@ -1,0 +1,62 @@
+/* ============================================================================
+   Hills TIS - Login screen (modern, responsive, centered card)
+   ========================================================================== */
+.tis-login-body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--tis-space-5);
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 45%, #7c3aed 100%);
+    background-attachment: fixed;
+}
+
+.tis-login-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--tis-space-8);
+    width: 100%;
+    max-width: 900px;
+}
+
+.tis-login-brand { color: #fff; text-align: left; }
+.tis-login-logo {
+    height: 64px; width: auto;
+    background: #fff; padding: 8px; border-radius: var(--tis-radius);
+    box-shadow: var(--tis-shadow);
+}
+.tis-login-title {
+    font-size: 2rem; font-weight: 800; margin: var(--tis-space-4) 0 var(--tis-space-2);
+    line-height: 1.15;
+}
+.tis-login-subtitle { font-size: var(--tis-fs-md); opacity: 0.9; margin: 0; }
+
+.tis-login-card {
+    background: var(--tis-surface);
+    border-radius: var(--tis-radius-lg);
+    box-shadow: var(--tis-shadow-lg);
+    padding: var(--tis-space-6);
+    width: 100%;
+}
+
+/* Modern form styling for login controls (inside content placeholder) */
+.tis-login-card .tis-login-heading {
+    font-size: var(--tis-fs-xl); font-weight: 700; color: var(--tis-text);
+    margin: 0 0 var(--tis-space-5);
+}
+.tis-login-card .tis-field { margin-bottom: var(--tis-space-4); }
+.tis-login-card input[type="text"],
+.tis-login-card input[type="password"] { width: 100%; }
+.tis-login-card .tis-login-actions {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--tis-space-3); margin-top: var(--tis-space-5); flex-wrap: wrap;
+}
+.tis-login-card .tis-login-actions input[type="submit"] { min-width: 120px; }
+
+@media (max-width: 720px) {
+    .tis-login-wrap { grid-template-columns: 1fr; gap: var(--tis-space-5); max-width: 420px; }
+    .tis-login-brand { text-align: center; }
+    .tis-login-title { font-size: 1.6rem; }
+}

@@ -1,0 +1,69 @@
+﻿body 
+{
+   
+}
+
+
+.txtbox
+{
+    color: midnightblue;
+    font-family: Verdana;
+    font-size: 20px;
+    height: 16px;
+    text-align: center;
+    width: 500px;
+}
+/*.txtbox:hover
+{
+    background-color:White;
+    color:Red;
+    
+}
+*/
+.forgotpwd
+{
+    font-family: Verdana;
+    font-size: xx-small;
+    height: 16px;
+    width:100px;
+    text-align: center;
+    color:Black;
+}
+.forgotpwd:hover
+{
+    color:Blue;
+}
+.head
+{
+    color: maroon;
+    font-family: Verdana;
+    font-size: 20px;
+    height: 16px;
+    text-align: center;
+    width: 500px;
+}
+.lbl
+{
+    text-indent:bold;
+    height:16px;
+    width:100px;
+    font-size:xx-small;
+    font-family:Verdana;
+    text-align:center;   
+}
+.ddl
+{
+     height:16px;
+     width:100px;
+     font-size:xx-small;
+     font-family:Verdana;
+     text-align:left;   
+}
+.btnsave
+{
+    font-family: Verdana;
+    font-size: xx-small;
+    height: 18px;
+    text-align: center;
+    width: 40px;
+}
